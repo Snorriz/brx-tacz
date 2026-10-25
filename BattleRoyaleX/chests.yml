@@ -19,6 +19,9 @@
 # For WeaponMechanics, format is 'WeaponMechanics:<ITEM_ID> : Amount :: Chance'
 # For ItemsAdder, format is 'ItemsAdder:<your_item> : Amount :: Chance'
 # For MMOItems, format is 'MMOItems:<type>:<name> : Amount :: Chance'
+# For TaCZ (Timeless and Classy Guns, Forge mod on ArcLight), format is 'TACZ:<namespace>:<gun_id>[:ammo] : Amount :: Chance'
+# For example, 'TACZ:tacz:ak47 : 1 :: 15%' or 'TACZ:tacz:ai_awp:5 : 1 :: 10%' (5 rounds in the magazine)
+# 'TIMELESS:<gun_id>' also works and defaults to the 'tacz' namespace.
 
 Chests:
   Normal:

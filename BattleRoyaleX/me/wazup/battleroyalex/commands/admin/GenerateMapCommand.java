@@ -47,7 +47,7 @@ public class GenerateMapCommand extends SubCommand {
       float var8 = var6.worldBorderInitialSize / 2.0F;
       Location var9 = var7.clone().add(-var8, 0.0, -var8);
       Location var10 = var7.clone().add(var8, 0.0, var8);
-      ArrayList var11 = new ArrayList();
+      ArrayList<Material> var11 = new ArrayList<>();
       MapGeneratingCuboid var12 = new MapGeneratingCuboid(var9, var10);
       CuboidIterator var13 = (CuboidIterator)var12.iterator();
       int var14 = var12.getXSize();
@@ -124,7 +124,7 @@ public class GenerateMapCommand extends SubCommand {
 
       var6.mapPixels = new ArrayList(16384);
       ArrayList var32 = new ArrayList();
-      HashMap var33 = CustomMapsManager.getInstance().colorPalette;
+      HashMap<String, Byte> var33 = CustomMapsManager.getInstance().colorPalette;
       int var35 = 0;
       int var39 = 0;
       int var42 = 128 / var16;

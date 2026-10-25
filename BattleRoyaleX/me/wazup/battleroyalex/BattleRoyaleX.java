@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -95,6 +96,12 @@ import org.bukkit.util.EulerAngle;
 
 public class BattleRoyaleX extends JavaPlugin {
    private static BattleRoyaleX instance;
+
+   // ---- TaCZ (Timeless and Classy Guns, Forge mod) reflection hook ----
+   // The plugin runs on ArcLight (Forge+Bukkit hybrid), so we cannot compile against
+   // the mod's classes: everything is resolved at runtime through reflection.
+   public Object taczApi;
+   public Constructor<?> resourceLocationCtor;
    public ArrayList<String> players = new ArrayList();
    public ArrayList<String> lobbyPlayers = new ArrayList();
    public ArrayList<String> protectedPlayers = new ArrayList();
@@ -148,9 +155,8 @@ public class BattleRoyaleX extends JavaPlugin {
    public boolean offHandAvailable;
 
    public void onEnable() {
-      loadConfig0();
       instance = this;
-      Object v1 = new MainCommand();
+      MainCommand v1 = new MainCommand();
       this.getCommand("battleroyale").setExecutor(v1);
       this.getCommand("battleroyale").setTabCompleter(v1);
       new CustomMapsManager();
@@ -192,10 +198,7 @@ public class BattleRoyaleX extends JavaPlugin {
 
       this.QualityArmoryEnabled = Bukkit.getPluginManager().isPluginEnabled("QualityArmory");
       if (this.QualityArmoryEnabled && this.getConfig().getBoolean("Disable-Quality-Armory-Recoil")) {
-         Object v2 = QualityArmory.getGuns();
-
-         while (v2.hasNext()) {
-            Object v3 = (Gun)v2.next();
+         for (Gun v3 : QualityArmory.getGuns()) {
             v3.setRecoil(0.0);
          }
       }
@@ -216,6 +219,10 @@ public class BattleRoyaleX extends JavaPlugin {
       if (Bukkit.getPluginManager().isPluginEnabled("CrackShot")) {
          this.crackShotAPI = new CSUtility();
       }
+
+      // TaCZ is a Forge mod: it has no Bukkit plugin to check, so we always try to
+      // resolve its API classes through reflection (no-op if the mod is not installed).
+      Utils.initTaczHook(this);
 
       if (Bukkit.getPluginManager().isPluginEnabled("ItemEdit")) {
          this.itemEdit = ItemEdit.get().getServerStorage();
@@ -250,13 +257,13 @@ public class BattleRoyaleX extends JavaPlugin {
          Bukkit.getConsoleSender().sendMessage(var11 + "Found MVdWPlaceholderAPI, Hooked: true");
       }
 
-      for (Object v4 : Utils.getOnlinePlayers()) {
+      for (Player v4 : Utils.getOnlinePlayers()) {
          this.playerData.put(v4.getName(), new PlayerData(v4));
       }
 
       this.setupMetrics();
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "=============================================");
-      Bukkit.getConsoleSender().sendMessage(var11 + ChatColor.GREEN + "Plugin has been enabled (v" + this.getDescription().getVersion() + ")");
+      Bukkit.getConsoleSender().sendMessage("" + var11 + ChatColor.GREEN + "Plugin has been enabled (v" + this.getDescription().getVersion() + ")");
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "=============================================");
    }
 
@@ -315,7 +322,7 @@ public class BattleRoyaleX extends JavaPlugin {
                   this.index = 0;
                }
 
-               for (String var4 : (List)BattleRoyaleX.this.lobbyPlayers.clone()) {
+               for (String var4 : (List<String>)BattleRoyaleX.this.lobbyPlayers.clone()) {
                   PlayerData var5 = (PlayerData)BattleRoyaleX.this.playerData.get(var4);
                   if (var5.lobbyScoreboard != null) {
                      var5.lobbyScoreboard.setName(var1x);
@@ -413,7 +420,7 @@ public class BattleRoyaleX extends JavaPlugin {
          }
       }
 
-      ArrayList var10 = new ArrayList();
+      ArrayList<Arena> var10 = new ArrayList<>();
 
       for (Arena var7 : this.arenas.values()) {
          if (var7.enabled && var7.state.AVAILABLE() && var7.players.size() + var4 <= var7.maxPlayers) {
@@ -423,7 +430,7 @@ public class BattleRoyaleX extends JavaPlugin {
 
       if (var2 != null && !var2.isEmpty()) {
          boolean var12 = var2.equalsIgnoreCase("solo");
-         ArrayList var14 = new ArrayList();
+         ArrayList<Arena> var14 = new ArrayList<>();
          if (var12) {
             for (Arena var18 : var10) {
                if (var18.teamSize > 1) {
@@ -916,7 +923,7 @@ public class BattleRoyaleX extends JavaPlugin {
       if (var36.getBoolean("Saving-Task.Enabled")) {
          this.savingTask = (new BukkitRunnable() {
             public void run() {
-               final List var1x = Utils.getOnlinePlayers();
+               final List<Player> var1 = Utils.getOnlinePlayers();
                (new BukkitRunnable() {
                   int currentPlayer = 0;
 
@@ -925,7 +932,7 @@ public class BattleRoyaleX extends JavaPlugin {
                         this.cancel();
                         Bukkit.getConsoleSender().sendMessage(Customization.getInstance().prefix + "Players stats have been saved!");
                      } else {
-                        Player var1x = (Player)var1.get(this.currentPlayer);
+                        Player var1x = var1.get(this.currentPlayer);
                         if (var1x != null && var1x.isOnline()) {
                            PlayerData var2 = (PlayerData)BattleRoyaleX.this.playerData.get(var1x.getName());
                            var2.save(var1x);
@@ -958,11 +965,11 @@ public class BattleRoyaleX extends JavaPlugin {
          (new BukkitRunnable() {
                public void run() {
                   try {
-                     Object v1 = (HttpURLConnection)new URL("https://api.spigotmc.org/legacy/update.php?resource=94613").openConnection();
+                     HttpURLConnection v1 = (HttpURLConnection)new URL("https://api.spigotmc.org/legacy/update.php?resource=94613").openConnection();
                      v1.setRequestMethod("GET");
-                     Object v2 = new BufferedReader(new InputStreamReader(v1.getInputStream())).readLine();
+                     String v2 = new BufferedReader(new InputStreamReader(v1.getInputStream())).readLine();
                      BattleRoyaleX.this.availableUpdate = !v2.equals(BattleRoyaleX.this.getDescription().getVersion());
-                     Object v3 = Customization.getInstance().prefix
+                     String v3 = Customization.getInstance().prefix
                         + (
                            BattleRoyaleX.this.availableUpdate
                               ? "Found a new available version! " + ChatColor.LIGHT_PURPLE + "download at " + BattleRoyaleX.this.downloadURL
@@ -971,7 +978,7 @@ public class BattleRoyaleX extends JavaPlugin {
                      if (var1 == null) {
                         Bukkit.getConsoleSender().sendMessage(v3);
 
-                        for (Object v5 : Utils.getOnlinePlayers()) {
+                        for (Player v5 : Utils.getOnlinePlayers()) {
                            if (v5.hasPermission("battleroyalex.admin")) {
                               v5.sendMessage(v3);
                            }
@@ -994,8 +1001,8 @@ public class BattleRoyaleX extends JavaPlugin {
          this.arenaSelector.clear(var1);
       }
 
-      ArrayList var15 = new ArrayList();
-      ArrayList var2 = new ArrayList();
+      ArrayList<Arena> var15 = new ArrayList<>();
+      ArrayList<Arena> var2 = new ArrayList<>();
 
       for (Arena var4 : this.arenas.values()) {
          if (var4.mode.equals(ArenaMode.Plunder)) {
@@ -1005,37 +1012,37 @@ public class BattleRoyaleX extends JavaPlugin {
          }
       }
 
-      HashMap var16 = new HashMap();
+      HashMap<Arena, Integer> var16 = new HashMap<>();
 
       for (Arena var5 : var15) {
          var16.put(var5, var5.teamSize);
       }
 
-      LinkedList var18 = new LinkedList(var16.entrySet());
+      LinkedList<Entry<Arena, Integer>> var18 = new LinkedList<>(var16.entrySet());
       Collections.sort(var18, new Comparator<Entry<Arena, Integer>>() {
          public int compare(Entry<Arena, Integer> var1, Entry<Arena, Integer> var2x) {
             return (Integer)var1.getValue() - (Integer)var2x.getValue();
          }
       });
-      HashMap var19 = new HashMap();
+      HashMap<Arena, Integer> var19 = new HashMap<>();
 
       for (Arena var7 : var2) {
          var19.put(var7, var7.teamSize);
       }
 
-      LinkedList var20 = new LinkedList(var19.entrySet());
+      LinkedList<Entry<Arena, Integer>> var20 = new LinkedList<>(var19.entrySet());
       Collections.sort(var20, new Comparator<Entry<Arena, Integer>>() {
          public int compare(Entry<Arena, Integer> var1, Entry<Arena, Integer> var2) {
             return (Integer)var1.getValue() - (Integer)var2.getValue();
          }
       });
-      ArrayList var21 = new ArrayList();
+      ArrayList<Arena> var21 = new ArrayList<>();
 
-      for (Entry var9 : var18) {
+      for (Entry<Arena, Integer> var9 : var18) {
          var21.add(var9.getKey());
       }
 
-      for (Entry var24 : var20) {
+      for (Entry<Arena, Integer> var24 : var20) {
          var21.add(var24.getKey());
       }
 
@@ -1096,9 +1103,9 @@ public class BattleRoyaleX extends JavaPlugin {
             public void run() {
                Customization var1 = Customization.getInstance();
                Bukkit.getConsoleSender().sendMessage(var1.prefix + "Updating leaderboards...");
-               final HashMap var2 = new HashMap();
-               final HashMap var3 = new HashMap();
-               final HashMap var4 = new HashMap();
+               final HashMap<Stat, Integer> var2 = new HashMap<>();
+               final HashMap<Location, Integer> var3 = new HashMap<>();
+               final HashMap<Location, Stat> var4 = new HashMap<>();
 
                for (Location var6 : BattleRoyaleX.this.topSigns.keySet()) {
                   Block var7 = var6.getBlock();
@@ -1130,7 +1137,9 @@ public class BattleRoyaleX extends JavaPlugin {
                               );
                         } else {
                            var3.put(var6, var9);
-                           var4.put(var6, var10);
+                           if (var10 != null) {
+                              var4.put(var6, var10);
+                           }
                            if (!var2.containsKey(var10) || (Integer)var2.get(var10) < var9) {
                               var2.put(var10, var9);
                            }
@@ -1177,12 +1186,12 @@ public class BattleRoyaleX extends JavaPlugin {
                      public void run() {
                         try {
                            HashMap var1 = BattleRoyaleXAPI.getAllPlayersData();
-                           final HashMap var2x = new HashMap();
-                           final HashMap var3x = new HashMap();
+                           final HashMap<Stat, Entry<String, Integer>> var2x = new HashMap<>();
+                           final HashMap<Stat, List<Entry<String, Integer>>> var3x = new HashMap<>();
 
                            for (Stat var5 : var2.keySet()) {
                               int var6 = (Integer)var2.get(var5);
-                              List var7 = BattleRoyaleXAPI.getTopPlayers(var1, var5, var6);
+                              List<Entry<String, Integer>> var7 = BattleRoyaleXAPI.getTopPlayers(var1, var5, var6);
                               var3x.put(var5, var7);
                               if (var5.holoLeaderboard) {
                                  var2x.put(var5, var7.get(0));
@@ -1192,7 +1201,7 @@ public class BattleRoyaleX extends JavaPlugin {
                            if (BattleRoyaleX.this.hologramsManager != null && BattleRoyaleX.this.hologramsManager.leaderboardHologramLocation != null) {
                               for (Stat var12 : Stat.values()) {
                                  if (var12.holoLeaderboard && !var2x.containsKey(var12)) {
-                                    var2x.put(var12, BattleRoyaleXAPI.getTopPlayers(var1, var12, 1).get(0));
+                                    var2x.put(var12, (Entry<String, Integer>)BattleRoyaleXAPI.getTopPlayers(var1, var12, 1).get(0));
                                  }
                               }
                            }
@@ -1200,7 +1209,7 @@ public class BattleRoyaleX extends JavaPlugin {
                            (new BukkitRunnable() {
                                  public void run() {
                                     for (Stat var2xx : var2.keySet()) {
-                                       List var3xx = (List)var3x.get(var2xx);
+                                       List<Entry<String, Integer>> var3xx = var3x.get(var2xx);
 
                                        for (Location var5 : var4.keySet()) {
                                           if (((Stat)var4.get(var5)).equals(var2xx)) {
@@ -1223,7 +1232,7 @@ public class BattleRoyaleX extends JavaPlugin {
                                  }
                               })
                               .runTask(BattleRoyaleX.instance);
-                        } catch (SQLException var8) {
+                        } catch (Exception var8) {
                            var8.printStackTrace();
                         }
                      }

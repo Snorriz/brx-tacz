@@ -41,7 +41,7 @@ public class RanksManager {
          var1.sendMessage(((String)Customization.getInstance().messages.get("Player-Rank-Up")).replace("%rank%", String.valueOf(var3.player_rank)));
          AchievementsManager.getInstance().checkPlayer(var1, AchievementType.PLAYER_RANK, var3.player_rank);
          if (Config.getInstance().rankCommands.containsKey(var3.player_rank)) {
-            for (String var5 : (List)Config.getInstance().rankCommands.get(var3.player_rank)) {
+            for (String var5 : (List<String>)Config.getInstance().rankCommands.get(var3.player_rank)) {
                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), var5.replace("%player%", var1.getName()));
             }
          }

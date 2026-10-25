@@ -40,7 +40,7 @@ public class FlexibleScoreboard {
          int var9 = this.getCharacterCount(var6, '%');
          if (var9 > 0 && var9 % 2 == 0) {
             if (var9 / 2 > 1) {
-               ArrayList var10 = new ArrayList();
+               ArrayList<String> var10 = new ArrayList<>();
 
                for (byte var11 = 1; var11 < var9; var11 += 2) {
                   var10.add("%" + var6.split("%")[var11] + "%");
@@ -77,7 +77,7 @@ public class FlexibleScoreboard {
          this.scoreboard.resetScores(var5.currentText);
          String var6 = var5.originalText;
          if (this.multiplePlaceholders.containsKey(var4)) {
-            for (String var8 : (List)this.multiplePlaceholders.get(var4)) {
+            for (String var8 : (List<String>)this.multiplePlaceholders.get(var4)) {
                var6 = var6.replace(var8, ((FlexibleScoreboard.PlaceholderEntry)this.placeholders.get(var8)).currentValue);
             }
          } else {

@@ -17,7 +17,7 @@ public class QAListener implements Listener {
       Player var2 = var1.getPlayer();
       if (BattleRoyaleX.getInstance().players.contains(var2.getName())) {
          if (Config.getInstance().qualityArmoryGunsDamageModification) {
-            if (var1.isHeadshot()) {
+            if (var1.isHeadshot(var1.getDamaged())) {
                var1.setCancelled(true);
                if (var1.getDamaged() instanceof Damageable) {
                   ((Damageable)var1.getDamaged()).damage(Config.getInstance().qualityArmoryHeadShotDamage, var2);

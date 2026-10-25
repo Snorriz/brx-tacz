@@ -1585,9 +1585,8 @@ public enum XMaterial {
 
    @Nonnull
    protected static Optional<XMaterial> matchDefinedXMaterial(@Nonnull String var0, byte var1) {
-      Boolean var2 = null;
       boolean var3 = var0.equalsIgnoreCase("MAP");
-      if (XMaterial.Data.ISFLAT || !var3 && var1 <= 0 && !var2 = isDuplicated(var0)) {
+      if (XMaterial.Data.ISFLAT || !var3 && var1 <= 0) {
          Optional var4 = getIfPresent(var0);
          if (var4.isPresent()) {
             return var4;
@@ -1600,7 +1599,7 @@ public enum XMaterial {
       }
 
       boolean var5 = var6 == CARROTS || var6 == POTATOES || var6 == BRICKS;
-      return XMaterial.Data.ISFLAT || !var5 || (var2 == null ? !isDuplicated(var0) : !var2) ? Optional.of(var6) : getIfPresent(var0);
+      return XMaterial.Data.ISFLAT || !var5 ? Optional.of(var6) : getIfPresent(var0);
    }
 
    @Nonnull

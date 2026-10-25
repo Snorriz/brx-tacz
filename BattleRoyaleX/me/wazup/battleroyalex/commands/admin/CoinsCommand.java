@@ -39,7 +39,7 @@ public class CoinsCommand extends SubCommand {
                      } else {
                         var3.sendMessage(var2.prefix + "Couldn't find that player in the database!");
                      }
-                  } catch (SQLException var2x) {
+                  } catch (Exception var2x) {
                      var2x.printStackTrace();
                   }
                }
