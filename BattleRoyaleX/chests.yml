@@ -1,0 +1,31 @@
+# Simple Format: 'Item : Amount :: Chance'
+# Complex Format: 'Item:Durability : Amount : name:<name> : lore:<lore> : enchant:<enchantment>:level :: Chance'
+# Example (1): 'IRON_SWORD : 1 :: 20%' -> This will give a normal iron sword
+# Example (2): 'IRON_SWORD : 1 : name:&cSword :: 20%' -> This will give a normal iron sword, but with a custom name!
+# Example (3): 'IRON_SWORD : 1 : name:&6God Sword : enchant:DAMAGE_ALL:1 :: 5%' -> This will give an iron sword named 'God Sword' with a sharpness 1 enchantment
+# For a list of enchantments, visit https://hub.spigotmc.org/javadocs/spigot/org/bukkit/enchantments/Enchantment.html
+# There is no lock on the enchantment level!
+# For POTIONS, if your server is below 1.9 then use  POTION:DURABILITY to make potions like POTION:16421, otherwise you should use the form
+# POTION/SPLASH_POTION/LINGERING_POTION:POTION_TYPE:EXTENDED:UPGRADED
+# Example of the form -> 'SPLASH_POTION:INSTANT_DAMAGE:false:true : 1'
+# List of potion types: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionType.html
+# TIPPED_ARROW has the same format as potions -> # Example of the form -> 'TIPPED_ARROW:POISON:false:true : 1'
+# If you want to add QualityArmor guns / items, the format is: 'QualityArmory:<Item> : Amount :: Chance'
+# For example, 'QualityArmory:awp : 1 :: 15%'
+# If QualityArmory was installed on the server before this file was generated, the plugin will automatically add QualityArmory items to the lists below.
+# For CrackShot, format is 'CrackShot:<Item> : Amount :: Chance'
+# For CrackShotPlus, format is 'CrackShotPlus:<Item> : Amount :: Chance'
+# For ItemEdit, format is 'ItemEdit:<ITEM_ID> : Amount :: Chance'
+# For WeaponMechanics, format is 'WeaponMechanics:<ITEM_ID> : Amount :: Chance'
+# For ItemsAdder, format is 'ItemsAdder:<your_item> : Amount :: Chance'
+# For MMOItems, format is 'MMOItems:<type>:<name> : Amount :: Chance'
+
+Chests:
+  Normal:
+    min-items: 2
+    max-items: 5
+    items: []
+  Carepackage:
+    min-items: 2
+    max-items: 5
+    items: []

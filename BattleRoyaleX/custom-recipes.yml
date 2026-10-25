@@ -1,0 +1,21 @@
+# Custom recipes
+# Keep Regenerate-Default-Recipes set to false unless you want the plugin to regenerate the default recipes upon reload
+# Format:
+# Items format: 'Material_Type:Durability : Amount : enchant:<enchantment>:level : name:<name> : lore:<lore>'
+# Setting durability is optional
+# For list of material types visit https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
+# For a list of enchantments, visit https://hub.spigotmc.org/javadocs/spigot/org/bukkit/enchantments/Enchantment.html
+# You can also use the old/usual names of enchantments such as SHARPNESS, SMITE, ... Thanks to XEnchantment by CryptoMorin
+# Example 'IRON_SWORD:50 : 1 : enchant:DAMAGE_ALL:2 : name:&4GOD SWORD : lore:&b its a cool sword!'
+# This will create an iron sword with a durability of 50 and sharpness 2 enchantment on it and the name of 'GOD SWORD' with a dark red color and a lore that says 'Its a cool sword' in an aqua color
+# There is no lock on the enchantment level!
+# For POTIONS, if your server is below 1.9 then use POTION:DURABILITY to make potions like POTION:16421, otherwise you should use the form
+# POTION/SPLASH_POTION/LINGERING_POTION:POTION_TYPE:EXTENDED:UPGRADED
+# Example of the form -> 'SPLASH_POTION:INSTANT_DAMAGE:false:true : 1'
+# List of potion types: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionType.html
+# Clear default recipes for option completely removes the default minecraft recipes for an item. If you want to overwrite an item, for example
+# You want the crafting recipe of a stone pickaxe to give an iron pickaxe, you have to clear default recipe for STONE_PICKAXE, and then you can add your own custom recipe same way as before
+
+Regenerate-Default-Recipes: true
+
+Clear-Default-Recipes-For: ['TIPPED_ARROW']
