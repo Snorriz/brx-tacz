@@ -72,7 +72,11 @@ public class ListCommand extends SubCommand {
             + var7.maxPlayers;
          if (var1.clickableTextManager != null && var3 instanceof Player) {
             var8 = var8 + ChatColor.GRAY + " (Click to join)";
-            var1.clickableTextManager.sendMessage((Player)var3, var8, "battleroyale join " + var7.name);
+            try {
+               var1.clickableTextManager.sendMessage((Player)var3, var8, "battleroyale join " + var7.name);
+            } catch (Exception var9x) {
+               var3.sendMessage(var8);
+            }
          } else {
             var3.sendMessage(var8);
          }

@@ -83,7 +83,7 @@ public class AchievementsManager {
       for (AchievementType var7 : AchievementType.values()) {
          int var8 = var12[var7.ordinal()];
 
-         for (AchievementsManager.Achievement var10 : (ArrayList)this.achievements.get(var7)) {
+         for (AchievementsManager.Achievement var10 : (ArrayList<AchievementsManager.Achievement>)this.achievements.get(var7)) {
             ItemStack var11 = new ItemStackBuilder(var8 >= var10.score ? Config.getInstance().achievementUnlocked : Config.getInstance().achievementLocked)
                .setName(Config.getInstance().achievementDescription.replace("%description%", var10.description))
                .addLore(
@@ -102,7 +102,7 @@ public class AchievementsManager {
    }
 
    public void checkPlayer(Player var1, AchievementType var2, int var3) {
-      for (AchievementsManager.Achievement var5 : (ArrayList)this.achievements.get(var2)) {
+      for (AchievementsManager.Achievement var5 : (ArrayList<AchievementsManager.Achievement>)this.achievements.get(var2)) {
          if (var3 == var5.score) {
             var5.send(var1);
             break;

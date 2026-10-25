@@ -551,7 +551,7 @@ public class Arena {
             if (this.players.size() + (var12.party != null ? var12.party.players.size() : 1) > this.maxPlayers) {
                var1.sendMessage((String)Customization.getInstance().messages.get("Arena-Full"));
             } else {
-               List var13 = var12.party != null ? Utils.getPlayers(var12.party.players) : Collections.singletonList(var1);
+               List<Player> var13 = var12.party != null ? Utils.getPlayers(var12.party.players) : Collections.singletonList(var1);
                Arena.CustomTeam var5 = this.getAvailableTeam(var13.size());
                if (var5 == null) {
                   var1.sendMessage((String)Customization.getInstance().messages.get("No-Available-Team"));
@@ -591,7 +591,7 @@ public class Arena {
                         .replace("%player%", var15.getName())
                         .replace("%players%", String.valueOf(this.players.size()))
                         .replace("%maxplayers%", String.valueOf(this.maxPlayers));
-                     List var9 = this.getPlayers();
+                     List<Player> var9 = this.getPlayers();
 
                      for (Player var11 : var9) {
                         var11.sendMessage(var16);
@@ -662,7 +662,7 @@ public class Arena {
    public void leave(Player var1) {
       BattleRoyaleX var2 = BattleRoyaleX.getInstance();
       PlayerData var3 = (PlayerData)var2.playerData.get(var1.getName());
-      ArrayList var4 = new ArrayList();
+      ArrayList<Player> var4 = new ArrayList<>();
       if (this.state.AVAILABLE() && var3.party != null) {
          if (var3.party.leaderName.equals(var1.getName())) {
             for (String var6 : var3.party.players) {
@@ -677,7 +677,7 @@ public class Arena {
          var4.add(var1);
       }
 
-      List var13 = this.getAllPlayers();
+      List<Player> var13 = this.getAllPlayers();
 
       for (Player var7 : var4) {
          for (Player var9 : var13) {
@@ -803,7 +803,7 @@ public class Arena {
       }
 
       this.createScoreboard(false);
-      ArrayList var14 = new ArrayList();
+      ArrayList<Arena.CustomTeam> var14 = new ArrayList<>();
 
       for (Arena.CustomTeam var3 : this.aliveTeams) {
          if (var3.players.isEmpty()) {
@@ -812,7 +812,7 @@ public class Arena {
       }
 
       this.aliveTeams.removeAll(var14);
-      List var16 = this.getPlayers();
+      List<Player> var16 = this.getPlayers();
       String var17 = this.votesManager.getVoted(2);
       if (!var17.equals("Default")) {
          World var4 = Bukkit.getWorld(this.worldName);
@@ -835,7 +835,7 @@ public class Arena {
          this.scenario.registerArena(this);
       }
 
-      ArrayList var20 = new ArrayList();
+      ArrayList<String> var20 = new ArrayList<>();
 
       for (String var8 : Customization.getInstance().arenaSettings) {
          var20.add(var8.replace("%votedTime%", var17).replace("%votedScenario%", var19).replace("%votedHealth%", var18));
@@ -1031,7 +1031,7 @@ public class Arena {
       this.scoreboard.update("%current_event%", this.getEventName(this.getHighestEvent(this.gameLengthInSeconds)));
       this.task = (new BukkitRunnable() {
          int seconds = Arena.this.gameLengthInSeconds;
-         int nextEventTime = Arena.this.getHighestEvent(Arena.super.seconds);
+         int nextEventTime = Arena.this.getHighestEvent(this.seconds);
          String lastEventTimer = "";
 
          public void run() {
@@ -1142,7 +1142,7 @@ public class Arena {
       this.updateItem();
       this.scoreboard.update("%current_event%", "Ending");
       this.cancelTask();
-      ArrayList var1 = new ArrayList();
+      ArrayList<String> var1 = new ArrayList<>();
       if (this.mode.equals(ArenaMode.Normal)) {
          if (this.aliveTeams.size() == 1) {
             var1 = ((Arena.CustomTeam)this.aliveTeams.get(0)).players;
@@ -1175,7 +1175,7 @@ public class Arena {
          }
       }
 
-      ArrayList var15 = new ArrayList();
+      ArrayList<String> var15 = new ArrayList<>();
       ChatColor var17 = Utils.getRandomColor();
       List var19 = this.getTopKillers();
 
@@ -1284,7 +1284,7 @@ public class Arena {
    }
 
    public void stop() {
-      List var1 = this.getAllPlayers();
+      List<Player> var1 = this.getAllPlayers();
       Bukkit.getPluginManager().callEvent(new BRArenaStopEvent(this.name, this.worldName, var1));
 
       for (String var3 : Config.getInstance().executed_commands_arena_end) {
@@ -1335,9 +1335,13 @@ public class Arena {
                   if (var15.equals(" ")) {
                      var10.sendMessage(var15);
                   } else {
-                     BattleRoyaleX.getInstance()
-                        .clickableTextManager
-                        .sendMessage(var10, var15, "battleroyalex autojoin " + (this.teamSize == 1 ? "SOLO" : "TEAM"));
+                     try {
+                        BattleRoyaleX.getInstance()
+                           .clickableTextManager
+                           .sendMessage(var10, var15, "battleroyalex autojoin " + (this.teamSize == 1 ? "SOLO" : "TEAM"));
+                     } catch (Exception var16x) {
+                        var10.sendMessage(var15);
+                     }
                   }
                }
 
@@ -1367,7 +1371,7 @@ public class Arena {
    }
 
    public void kill(Player var1, Arena.PAData var2, String var3) {
-      List var4 = this.getAllPlayers();
+      List<Player> var4 = this.getAllPlayers();
 
       for (Player var6 : var4) {
          var6.sendMessage(var3);
@@ -1421,7 +1425,7 @@ public class Arena {
    public void startBus(final Location[] var1, final List<Player> var2) {
       final float var3 = 1.0F;
       final Vector var4 = var1[1].clone().subtract(var1[0]).toVector().normalize().setY(0).multiply(var3);
-      final ArrayList var5 = new ArrayList();
+      final ArrayList<LivingEntity> var5 = new ArrayList<>();
 
       for (Player var7 : var2) {
          var7.teleport(var1[0]);
@@ -1536,7 +1540,7 @@ public class Arena {
    }
 
    public void spawnSupplyDrop(final Location var1) {
-      ArrayList var2 = new ArrayList();
+      ArrayList<Location> var2 = new ArrayList<>();
 
       for (int var3 = 0; var3 < 10; var3++) {
          for (int var4 = 0; var4 < 10; var4++) {
@@ -1579,7 +1583,7 @@ public class Arena {
    }
 
    public List<Player> getEnemies(Player var1) {
-      ArrayList var2 = new ArrayList();
+      ArrayList<Player> var2 = new ArrayList<>();
       Arena.CustomTeam var3 = ((Arena.PAData)this.players.get(var1.getName())).team;
 
       for (Player var5 : this.getPlayers()) {

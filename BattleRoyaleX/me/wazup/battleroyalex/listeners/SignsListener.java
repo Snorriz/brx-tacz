@@ -142,7 +142,7 @@ public class SignsListener implements Listener {
 
             if (!var5) {
                var1.setLine(2, ChatColor.DARK_RED + "Invalid");
-               Object var17 = ChatColor.GREEN + Stat.values()[0].name();
+               String var17 = ChatColor.GREEN + Stat.values()[0].name();
 
                for (int var21 = 1; var21 < Stat.values().length; var21++) {
                   var17 = var17 + ChatColor.YELLOW + ", " + ChatColor.GREEN + Stat.values()[var21].name();

@@ -63,7 +63,7 @@ public class GUIListener implements Listener {
                || Utils.compareItem(var5, (ItemStack)Customization.getInstance().items.get("Minus"))) {
                boolean var44 = Utils.compareItem(var5, (ItemStack)Customization.getInstance().items.get("Plus"));
                ItemStack var61 = var3.getItem(var44 ? var1.getSlot() + 9 : var1.getSlot() - 9);
-               Object var71 = ChatColor.stripColor(var61.getItemMeta().getDisplayName()).split(": ")[0];
+               String var71 = ChatColor.stripColor(var61.getItemMeta().getDisplayName()).split(": ")[0];
                int var76 = var1.getAction().equals(InventoryAction.PICKUP_HALF) ? 20 : 1;
                int var82 = Integer.valueOf(ChatColor.stripColor(var61.getItemMeta().getDisplayName()).split(": ")[1]) + (var44 ? var76 : -var76);
                if (var82 >= 1) {
@@ -114,7 +114,8 @@ public class GUIListener implements Listener {
                   var21.eachBorderShrinkageAmount = (var21.worldBorderInitialSize - var21.worldBorderFinalSize) / var14;
                   var21.createBorder(Bukkit.getWorld(var21.worldName), var21.mapCenterX, var21.mapCenterZ, var21.worldBorderInitialSize);
 
-                  for (String var17 : var70.keySet()) {
+                  for (Object var17x : var70.keySet()) {
+                     String var17 = (String)var17x;
                      var84.set(var17, var70.get(var17));
                   }
 

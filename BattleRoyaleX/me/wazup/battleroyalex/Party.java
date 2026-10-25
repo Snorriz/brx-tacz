@@ -83,7 +83,7 @@ public class Party {
       for (Object var4 : this.players) {
          ChatColor var5 = var4.equals(this.leaderName) ? ChatColor.GOLD : ChatColor.GRAY;
          var1.addLore(new String[]{ChatColor.GRAY + "- " + var5 + var4});
-         ItemStack var6 = Utils.getSkull((String)var4, var5 + var4);
+         ItemStack var6 = Utils.getSkull((String)var4, "" + var5 + var4);
          if (!var4.equals(this.leaderName)) {
             new ItemStackBuilder(var6)
                .addLore(new String[]{ChatColor.YELLOW + "Left click to promote to leader!", " ", ChatColor.YELLOW + "Right click to kick!"})
@@ -178,11 +178,14 @@ public class Party {
             .replace("%seconds%", String.valueOf(Config.getInstance().partyInvitationLength))
       );
       if (BattleRoyaleX.getInstance().clickableTextManager != null) {
-         BattleRoyaleX.getInstance()
-            .clickableTextManager
-            .sendMessage(
-               var1, (String)Customization.getInstance().messages.get("Party-Invite-Receive-Clickable-Message"), "battleroyale party join " + this.leaderName
-            );
+         try {
+            BattleRoyaleX.getInstance()
+               .clickableTextManager
+               .sendMessage(
+                  var1, (String)Customization.getInstance().messages.get("Party-Invite-Receive-Clickable-Message"), "battleroyale party join " + this.leaderName
+               );
+         } catch (Exception var4x) {
+         }
       }
 
       Bukkit.getScheduler().scheduleSyncDelayedTask(BattleRoyaleX.getInstance(), new Runnable() {

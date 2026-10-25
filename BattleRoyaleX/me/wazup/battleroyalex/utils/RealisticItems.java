@@ -104,7 +104,7 @@ public class RealisticItems {
    }
 
    public void giveItemsFromBlock(Block var1, ArrayList<ItemStack> var2, final Location var3) {
-      final ArrayList var4 = new ArrayList();
+      final ArrayList<Item> var4 = new ArrayList<>();
 
       for (ItemStack var6 : var2) {
          Item var7 = var1.getWorld().dropItem(var1.getLocation().add(0.5, 1.0, 0.5), var6);

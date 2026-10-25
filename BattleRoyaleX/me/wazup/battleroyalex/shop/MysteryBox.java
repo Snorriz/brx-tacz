@@ -113,14 +113,14 @@ public class MysteryBox {
             var1.sendMessage((String)Customization.getInstance().messages.get("Not-Enough-Space"));
          } else {
             ItemStack var3 = null;
-            HashMap var4 = (HashMap)this.contents.clone();
+            HashMap<String, Integer> var4 = (HashMap<String, Integer>)this.contents.clone();
 
             while (var3 == null && !var4.isEmpty()) {
                String var5 = Utils.randomizeList(var4);
-               HashMap var6 = (HashMap)this.rarities.clone();
+               HashMap<String, Integer> var6 = (HashMap<String, Integer>)this.rarities.clone();
 
                while (var3 == null && !var6.isEmpty()) {
-                  ArrayList var7 = new ArrayList();
+                  ArrayList<Sellable> var7 = new ArrayList<>();
                   if (var5.equalsIgnoreCase("kits")) {
                      var7.addAll(BattleRoyaleX.getInstance().kits.values());
                   } else if (var5.equalsIgnoreCase("celebrations")) {
@@ -129,7 +129,7 @@ public class MysteryBox {
 
                   String var8 = Utils.randomizeList(var6);
                   Rarity var9 = Rarity.valueOf(var8.toUpperCase());
-                  ArrayList var10 = new ArrayList();
+                  ArrayList<Sellable> var10 = new ArrayList<>();
 
                   for (Sellable var12 : var7) {
                      if (var12.rarity != var9 || !var12.permission.isEmpty() && !var1.hasPermission(var12.permission)) {

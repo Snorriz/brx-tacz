@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import me.wazup.battleroyalex.BattleRoyaleX;
 import me.wazup.battleroyalex.utils.ItemStackBuilder;
 import me.wazup.battleroyalex.utils.SmartInventory;
@@ -39,7 +40,7 @@ public class RecipeManager {
 
       if (!var1.getStringList("Clear-Default-Recipes-For").isEmpty()) {
          Bukkit.resetRecipes();
-         ArrayList var2 = new ArrayList();
+         ArrayList<Recipe> var2 = new ArrayList<>();
          List var3 = var1.getStringList("Clear-Default-Recipes-For");
          Iterator var4 = Bukkit.recipeIterator();
 
@@ -79,7 +80,7 @@ public class RecipeManager {
                String[] var8 = new String[3];
                int var9 = 0;
                int var10 = 0;
-               LinkedHashMap var11 = new LinkedHashMap();
+               LinkedHashMap<Character, ItemStack> var11 = new LinkedHashMap<>();
 
                for (String var13 : var1.getStringList(var28 + "Recipe")) {
                   String var14 = "";
@@ -121,7 +122,7 @@ public class RecipeManager {
                   ((ShapedRecipe)var34).shape(var8);
 
                   for (char var39 : var11.keySet()) {
-                     ItemStack var41 = (ItemStack)var11.get(var39);
+                     ItemStack var41 = var11.get(var39);
                      ((ShapedRecipe)var34).setIngredient(var39, var41.getType(), var41.getDurability());
                   }
                }

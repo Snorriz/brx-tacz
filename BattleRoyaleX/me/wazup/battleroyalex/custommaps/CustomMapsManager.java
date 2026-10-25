@@ -105,7 +105,7 @@ public class CustomMapsManager {
       this.colorPalette = new HashMap();
       FileConfiguration var1 = FilesManager.getInstance().getConfig("map-palette.yml");
       if (var1.getConfigurationSection("Materials") == null || var1.getConfigurationSection("Materials").getKeys(false).isEmpty()) {
-         HashMap var2 = new HashMap();
+         HashMap<String, Color> var2 = new HashMap<>();
          this.addMaterialColor(var2, XMaterial.GRASS, new Color(49, 101, 25));
          this.addMaterialColor(var2, XMaterial.TALL_GRASS, new Color(49, 101, 25));
          this.addMaterialColor(var2, XMaterial.COBBLESTONE, new Color(130, 130, 130));

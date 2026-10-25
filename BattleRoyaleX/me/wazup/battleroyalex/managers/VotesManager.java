@@ -62,7 +62,7 @@ public class VotesManager {
 
    public int getVotes(int var1, String var2) {
       int var3 = 0;
-      HashMap var4 = ((VotesManager.Entry)this.entries.get(var1)).voters;
+      HashMap<String, String> var4 = ((VotesManager.Entry)this.entries.get(var1)).voters;
 
       for (String var6 : var4.keySet()) {
          if (((String)var4.get(var6)).equals(var2)) {
@@ -74,7 +74,7 @@ public class VotesManager {
    }
 
    public List<String> getAllOptions(int var1) {
-      ArrayList var2 = new ArrayList();
+      ArrayList<String> var2 = new ArrayList<>();
 
       for (String var4 : ((VotesManager.Entry)this.entries.get(var1)).voters.values()) {
          if (!var2.contains(var4)) {

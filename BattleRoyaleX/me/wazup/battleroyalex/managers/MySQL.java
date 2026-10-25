@@ -1,5 +1,6 @@
 package me.wazup.battleroyalex.managers;
 
+import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
@@ -41,15 +42,15 @@ public class MySQL {
       this.DELETE_PLAYER = "delete from " + var1 + " where player_name=?";
    }
 
-   public void close() {
+   public void close() throws SQLException {
       this.connection.close();
    }
 
-   public void connect() {
+   public void connect() throws SQLException {
       this.connection = DriverManager.getConnection(this.url, this.username, this.password);
    }
 
-   public Connection getConnection() {
+   public Connection getConnection() throws SQLException {
       if (this.connection == null || !this.connection.isValid(5)) {
          this.connect();
       }
@@ -57,7 +58,7 @@ public class MySQL {
       return this.connection;
    }
 
-   public void setupTable() {
+   public void setupTable() throws SQLException {
       Connection var1 = this.getConnection();
       Statement var2 = var1.createStatement();
       var2.executeUpdate(this.TABLE);

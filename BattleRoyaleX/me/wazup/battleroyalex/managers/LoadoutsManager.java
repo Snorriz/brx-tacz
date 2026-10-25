@@ -31,7 +31,7 @@ public class LoadoutsManager {
       int var2 = 0;
 
       for (String var4 : var1.getConfigurationSection("Loadout-Items").getKeys(false)) {
-         List var5 = var1.getStringList("Loadout-Items." + var4);
+         List<String> var5 = var1.getStringList("Loadout-Items." + var4);
          Inventory var6 = Bukkit.createInventory(null, Utils.getInventorySize(var5.size() + 1), ChatColor.BLUE + "Loadout: " + ChatColor.RED + var4);
          var6.setItem(var6.getSize() - 1, (ItemStack)Customization.getInstance().items.get("Back"));
          int var7 = 0;

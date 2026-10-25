@@ -24,9 +24,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class DefaultsManager {
    public static void createDefaultKits(FileConfiguration var0) {
-      HashMap var1 = new HashMap();
-      HashMap var2 = new HashMap();
-      HashMap var3 = new HashMap();
+      HashMap<String, String> var1 = new HashMap<>();
+      HashMap<String, List<String>> var2 = new HashMap<>();
+      HashMap<String, List<String>> var3 = new HashMap<>();
       var1.put("Tactician", "IRON_SWORD, false, COMMON, 1000, AIR, LEATHER_CHESTPLATE, AIR, AIR");
       var2.put("Tactician", Arrays.asList(new String[]{"IRON_SWORD : 1", "POTION:NIGHT_VISION:true:false : 1"}));
       var3.put("Tactician", Arrays.asList(new String[]{"&7Start with a set of items", "&7that will help you eliminate the others"}));
@@ -71,8 +71,8 @@ public class DefaultsManager {
 
       for (String var5 : var1.keySet()) {
          String var6 = (String)var1.get(var5);
-         List var7 = (List)var2.get(var5);
-         List var8 = (List)var3.get(var5);
+         List<String> var7 = (List<String>)var2.get(var5);
+         List<String> var8 = (List<String>)var3.get(var5);
          String var9 = "Kits." + var5 + ".";
          int var10 = 0;
          var0.set(var9 + "item", var6.split(", ")[var10++]);
@@ -137,10 +137,10 @@ public class DefaultsManager {
          try {
             ArrayList var1 = new ArrayList();
             if (var0.getStringList("Loadout-Items.Main Weapon").isEmpty()) {
-               Iterator var2 = QualityArmory.getGuns();
+               Iterable<Gun> var2 = QualityArmory.getGuns();
 
-               while (var2.hasNext()) {
-                  Gun var3 = (Gun)var2.next();
+               while (var2.iterator().hasNext()) {
+                  Gun var3 = var2.iterator().next();
                   if (!var3.getAmmoType().getName().equals("9mm")) {
                      var1.add("QualityArmory:" + var3.getName() + " : 1 :: " + Math.min((int)var3.getDamage(), 4));
                   }
@@ -153,10 +153,10 @@ public class DefaultsManager {
 
             if (var0.getStringList("Loadout-Items.Secondary Weapon").isEmpty()) {
                var1 = new ArrayList();
-               Iterator var7 = QualityArmory.getGuns();
+               Iterable<Gun> var7 = QualityArmory.getGuns();
 
-               while (var7.hasNext()) {
-                  Gun var9 = (Gun)var7.next();
+               while (var7.iterator().hasNext()) {
+                  Gun var9 = var7.iterator().next();
                   if (var9.getAmmoType().getName().equals("9mm")) {
                      var1.add("QualityArmory:" + var9.getName() + " : 1 :: 1");
                   }
@@ -167,10 +167,10 @@ public class DefaultsManager {
 
             if (var0.getStringList("Loadout-Items.Items").isEmpty()) {
                var1 = new ArrayList();
-               Iterator var8 = QualityArmory.getMisc();
+               Iterable<CustomBaseObject> var8 = QualityArmory.getMisc();
 
-               while (var8.hasNext()) {
-                  CustomBaseObject var10 = (CustomBaseObject)var8.next();
+               while (var8.iterator().hasNext()) {
+                  CustomBaseObject var10 = var8.iterator().next();
                   var1.add("QualityArmory:" + var10.getName() + " : 1 :: 1");
                }
 
@@ -205,31 +205,31 @@ public class DefaultsManager {
       var0.options().copyDefaults(true);
       if (BattleRoyaleX.getInstance().QualityArmoryEnabled) {
          List var1 = var0.getStringList("Chests.Normal.items");
-         Iterator var2 = QualityArmory.getGuns();
+         Iterable<Gun> var2 = QualityArmory.getGuns();
 
-         while (var2.hasNext()) {
-            Gun var3 = (Gun)var2.next();
+         while (var2.iterator().hasNext()) {
+            Gun var3 = var2.iterator().next();
             var1.add("QualityArmory:" + var3.getName() + " : 1 :: 15%");
          }
 
-         Iterator var11 = QualityArmory.getAmmo();
+         Iterable<Ammo> var11 = QualityArmory.getAmmo();
 
-         while (var11.hasNext()) {
-            Ammo var4 = (Ammo)var11.next();
+         while (var11.iterator().hasNext()) {
+            Ammo var4 = var11.iterator().next();
             var1.add("QualityArmory:" + var4.getName() + " : " + var4.getMaxItemStack() + " :: 50%");
          }
 
-         Iterator var12 = QualityArmory.getArmor();
+         Iterable<ArmorObject> var12 = QualityArmory.getArmor();
 
-         while (var12.hasNext()) {
-            ArmorObject var5 = (ArmorObject)var12.next();
+         while (var12.iterator().hasNext()) {
+            ArmorObject var5 = var12.iterator().next();
             var1.add("QualityArmory:" + var5.getName() + " : 1 :: 20%");
          }
 
-         Iterator var13 = QualityArmory.getMisc();
+         Iterable<CustomBaseObject> var13 = QualityArmory.getMisc();
 
-         while (var13.hasNext()) {
-            CustomBaseObject var6 = (CustomBaseObject)var13.next();
+         while (var13.iterator().hasNext()) {
+            CustomBaseObject var6 = (CustomBaseObject)var13.iterator().next();
             var1.add("QualityArmory:" + var6.getName() + " : 1 :: 20%");
          }
 
@@ -237,8 +237,8 @@ public class DefaultsManager {
          var1 = var0.getStringList("Chests.Carepackage.items");
          var2 = QualityArmory.getGuns();
 
-         while (var2.hasNext()) {
-            Gun var14 = (Gun)var2.next();
+         while (var2.iterator().hasNext()) {
+            Gun var14 = var2.iterator().next();
             if (!(var14.getDamage() < 8.0)) {
                var1.add("QualityArmory:" + var14.getName() + " : 1 :: 5%");
             }
@@ -248,8 +248,8 @@ public class DefaultsManager {
          var1 = var0.getStringList("Chests.Supply-Drops.items");
          var2 = QualityArmory.getGuns();
 
-         while (var2.hasNext()) {
-            Gun var15 = (Gun)var2.next();
+         while (var2.iterator().hasNext()) {
+            Gun var15 = var2.iterator().next();
             if (!(var15.getDamage() < 8.0)) {
                var1.add("QualityArmory:" + var15.getName() + " : 1 :: 10%");
             }

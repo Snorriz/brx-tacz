@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.lang.reflect.Constructor;
 import me.DeeCaaD.CrackShotPlus.CSPapi;
 import me.wazup.battleroyalex.BattleRoyaleX;
 import me.wazup.battleroyalex.managers.Config;
@@ -71,6 +72,10 @@ public class Utils {
 
    public static void error(String var0) {
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Battle Royale X] " + var0);
+   }
+
+   public static void info(String var0) {
+      Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[Battle Royale X] " + var0);
    }
 
    public static List<Player> getPlayers(Collection<String> var0) {
@@ -277,6 +282,22 @@ public class Utils {
             }
 
             var5 = new ItemStackBuilder(var13);
+         } else if (var4.split(":")[0].equals("TACZ") || var4.split(":")[0].equals("TIMELESS") || var4.split(":")[0].equals("TAKECHAIMSGUNS")) {
+            // Timeless and Classy Guns (TaCZ, Forge mod) support: handled through reflection
+            // because it's a Forge mod running on ArcLight (Forge+Bukkit hybrid server),
+            // so the plugin cannot be compiled against its classes directly.
+            // Syntax examples:
+            //   TACZ:tacz:ak47 : 1
+            //   TACZ:bbm:kar98k : 1
+            //   TIMELESS:ak47 : 1          (defaults to the "tacz" namespace)
+            // An optional third colon-separated field sets the starting ammo count:
+            //   TACZ:tacz:ak47:30 : 1
+            ItemStack var32 = getTaczItemStack(var3[0]);
+            if (var32 == null) {
+               return null;
+            }
+
+            var5 = new ItemStackBuilder(var32);
          } else if (var4.split(":")[0].equals("ITEMEDIT")) {
             ItemStack var14 = null;
             if (BattleRoyaleX.getInstance().itemEdit != null) {
@@ -396,6 +417,323 @@ public class Utils {
       }
 
       return var5.build();
+   }
+
+   public static ItemStack getTaczItemStack(String rawToken) {
+      if (BattleRoyaleX.getInstance().taczApi == null) {
+         return null;
+      } else {
+         try {
+            // Expected token formats (the whole token has been uppercased by getItemStack,
+            // so we lowercase the gun id / namespace back: TaCZ ResourceLocations are case-sensitive):
+            //   TACZ:<namespace>:<gunId>[:<ammoCount>]
+            //   TIMELESS:<gunId>[:<ammoCount>]        (namespace defaults to "tacz")
+            String[] parts = rawToken.toLowerCase().split(":");
+            String prefix = rawToken.split(":")[0].toUpperCase();
+            String namespace = "tacz";
+            String gunId = null;
+            int ammoCount = -1;
+            if (prefix.equals("TAKECHAIMSGUNS")) {
+               // TAKECHAIMSGUNS is the legacy full name of the mod; it always means the default pack
+               if (parts.length >= 3) {
+                  // TIMELESS-style explicit namespace still supported: TAKECHAIMSGUNS:<ns>:<gun>[:ammo]
+                  namespace = parts[1];
+                  gunId = parts[2];
+                  if (parts.length >= 4) {
+                     try {
+                        ammoCount = Integer.parseInt(parts[3]);
+                     } catch (NumberFormatException ignored) {
+                     }
+                  }
+               } else if (parts.length == 2) {
+                  gunId = parts[1];
+               }
+            } else if (parts.length >= 3) {
+               namespace = parts[1];
+               gunId = parts[2];
+               if (parts.length >= 4) {
+                  try {
+                     ammoCount = Integer.parseInt(parts[3]);
+                  } catch (NumberFormatException ignored) {
+                  }
+               }
+            } else if (parts.length == 2) {
+               gunId = parts[1];
+            }
+
+            if (gunId == null || gunId.isEmpty()) {
+               return null;
+            }
+
+            Object gunRL = BattleRoyaleX.getInstance().resourceLocationCtor.newInstance(namespace, gunId);
+            Object builder = taczGunItemBuilderCreate.invoke(null);
+            taczGunItemBuilderSetId.invoke(builder, gunRL);
+
+            int effectiveAmmo = ammoCount;
+            if (effectiveAmmo < 0) {
+               // No explicit ammo requested: fill the magazine with the gun's default ammo amount
+               Object gunIndex = timelessApiGetCommonGunIndex.invoke(null, gunRL);
+               boolean present = (Boolean)taczOptionalIsPresent.invoke(gunIndex);
+               if (present) {
+                  Object maxAmmo = null;
+                  // Preferred path: CommonGunIndex#getGunData().getAmmoAmount()
+                  if (taczCommonGunIndexGetGunData != null && taczGunDataGetAmmoAmount != null) {
+                     try {
+                        Object gunData = taczCommonGunIndexGetGunData.invoke(gunIndex);
+                        if (gunData != null) {
+                           maxAmmo = taczGunDataGetAmmoAmount.invoke(gunData);
+                        }
+                     } catch (Throwable ignored) {
+                     }
+                  }
+
+                  // Fallback path: CommonGunIndex#getPojo().getData() -> CommonAssetsManager.getGunData(rl).getAmmoAmount()
+                  if (!(maxAmmo instanceof Integer)
+                        && taczCommonGunIndexGetPojo != null
+                        && taczGunIndexPojoGetData != null
+                        && taczGunDataGetAmmoAmount != null) {
+                     try {
+                        Object pojo = taczCommonGunIndexGetPojo.invoke(gunIndex);
+                        Object dataRL = taczGunIndexPojoGetData.invoke(pojo);
+                        Object gunData = commonAssetsManagerGetInstance.invoke(null);
+                        if (gunData != null && dataRL != null) {
+                           Object resolvedData = commonAssetsGetGunData.invoke(gunData, dataRL);
+                           if (resolvedData != null) {
+                              maxAmmo = taczGunDataGetAmmoAmount.invoke(resolvedData);
+                           }
+                        }
+                     } catch (Throwable ignored) {
+                     }
+                  }
+
+                  if (maxAmmo instanceof Integer) {
+                     effectiveAmmo = (Integer)maxAmmo;
+                  }
+               }
+            }
+
+            if (effectiveAmmo >= 0) {
+               taczGunItemBuilderSetAmmoCount.invoke(builder, effectiveAmmo);
+            }
+
+            // GunItemBuilder leaves the fire mode as UNKNOWN and the barrel empty by default.
+            // Bolt-action / single-shot guns refuse to cycle their bolt unless a round is
+            // chambered, so when available we set the builder's own fire-mode / ammo-in-barrel
+            // options BEFORE build(); otherwise we fall back to post-build IGun NBT editing.
+            Object semiMode = null;
+            if (taczFireModeSemi != null) {
+               semiMode = taczFireModeSemi.get(null);
+            } else if (taczFireModeValues != null) {
+               Object allModes = taczFireModeValues.invoke(null);
+               if (allModes instanceof Object[]) {
+                  for (Object m : (Object[])allModes) {
+                     if ("SEMI".equals(m.toString())) {
+                        semiMode = m;
+                        break;
+                     }
+                  }
+               }
+            }
+
+            boolean configuredBeforeBuild = false;
+            try {
+               if (semiMode != null && taczGunItemBuilderSetFireMode != null) {
+                  taczGunItemBuilderSetFireMode.invoke(builder, semiMode);
+                  if (effectiveAmmo > 0 && taczGunItemBuilderSetAmmoInBarrel != null) {
+                     taczGunItemBuilderSetAmmoInBarrel.invoke(builder, Boolean.TRUE);
+                  }
+                  configuredBeforeBuild = true;
+               }
+            } catch (IllegalAccessException | InvocationTargetException ignored) {
+               // Older/newer TaCZ builds without these builder options: use the IGun fallback below
+            }
+
+            ItemStack result = (ItemStack)taczGunItemBuilderBuild.invoke(builder);
+            if (result != null && !result.getType().equals(Material.AIR)) {
+               if (!configuredBeforeBuild) {
+                  try {
+                     Object iGun = taczIGunGetIGunOrNull.invoke(null, result);
+                     if (iGun != null) {
+                        if (semiMode != null && taczIGunSetFireMode != null) {
+                           taczIGunSetFireMode.invoke(iGun, result, semiMode);
+                        }
+
+                        if (taczIGunGetCurrentAmmoCount != null && taczIGunSetCurrentAmmoCount != null) {
+                           int magazine = effectiveAmmo >= 0 ? effectiveAmmo : 30;
+                           if (magazine > 0) {
+                              int current = (Integer)taczIGunGetCurrentAmmoCount.invoke(iGun, result);
+                              if (current > 0) {
+                                 taczIGunSetCurrentAmmoCount.invoke(iGun, result, current - 1);
+                                 if (taczIGunSetBulletInBarrel != null) {
+                                    taczIGunSetBulletInBarrel.invoke(iGun, result, Boolean.TRUE);
+                                 }
+                              }
+                           }
+                        }
+                     }
+                  } catch (Throwable ignored) {
+                     // Post-processing is best-effort: a failure here must not lose the gun item
+                  }
+               }
+
+               return result;
+            } else {
+               return null;
+            }
+         } catch (IllegalAccessException | InvocationTargetException | InstantiationException var7) {
+            error("Could not generate TaCZ item for \"" + rawToken + "\"");
+            var7.printStackTrace();
+            return null;
+         }
+      }
+   }
+
+   // ---- TaCZ reflection method handles (populated by initTaczHook) ----
+   static Method timelessApiGetCommonGunIndex;
+   static Method taczGunItemBuilderCreate;
+   static Method taczGunItemBuilderSetId;
+   static Method taczGunItemBuilderSetAmmoCount;
+   static Method taczGunItemBuilderSetFireMode;
+   static Method taczGunItemBuilderSetAmmoInBarrel;
+   static Method taczGunItemBuilderBuild;
+   static Method taczOptionalIsPresent;
+   static Method taczCommonGunIndexGetGunData;
+   static Method taczCommonGunIndexGetPojo;
+   static Method taczGunIndexPojoGetData;
+   static Method taczGunDataGetAmmoAmount;
+   static Method commonAssetsManagerGetInstance;
+   static Method commonAssetsGetGunData;
+   static Method taczIGunGetIGunOrNull;
+   static Method taczIGunSetFireMode;
+   static Method taczIGunSetBulletInBarrel;
+   static Method taczIGunGetCurrentAmmoCount;
+   static Method taczIGunSetCurrentAmmoCount;
+   static java.lang.reflect.Field taczFireModeSemi;
+   static Method taczFireModeValues;
+   static Method taczFireModeValueOf;
+
+   private static Method taczGetMethod(ClassLoader classLoader, String className, String methodName, Class<?>... params) {
+      try {
+         Class<?> clazz = loadTaCZClass(classLoader, className);
+         return clazz.getMethod(methodName, params);
+      } catch (Throwable var5) {
+         return null;
+      }
+   }
+
+   public static void initTaczHook(BattleRoyaleX plugin) {
+      plugin.taczApi = null;
+      plugin.resourceLocationCtor = null;
+      try {
+         // On ArcLight (Forge+Bukkit hybrid) the mod classes are loaded by the
+         // plugin's own classloader, but we also try Forge's mod-aware classloader
+         // as a fallback so the hook works on other loaders too.
+         ClassLoader classLoader = plugin.getClass().getClassLoader();
+         Class<?> timelessApiClass = loadTaCZClass(classLoader, "com.tacz.guns.api.TimelessAPI");
+         Class<?> gunItemBuilderClass = loadTaCZClass(classLoader, "com.tacz.guns.api.item.builder.GunItemBuilder");
+         Class<?> commonGunIndexClass = loadTaCZClass(classLoader, "com.tacz.guns.resource.index.CommonGunIndex");
+         Class<?> gunIndexPojoClass = loadTaCZClass(classLoader, "com.tacz.guns.resource.pojo.GunIndexPOJO");
+         Class<?> gunDataClass = loadTaCZClass(classLoader, "com.tacz.guns.resource.pojo.data.gun.GunData");
+         Class<?> assetsManagerClass = loadTaCZClass(classLoader, "com.tacz.guns.resource.CommonAssetsManager");
+         Class<?> resourceLocationClass = loadTaCZClass(classLoader, "net.minecraft.resources.ResourceLocation");
+         Class<?> itemStackClass = loadTaCZClass(classLoader, "net.minecraft.world.item.ItemStack");
+         Class<?> iGunClass = loadTaCZClass(classLoader, "com.tacz.guns.api.item.IGun");
+         Class<?> fireModeClass = loadTaCZClass(classLoader, "com.tacz.guns.api.item.gun.FireMode");
+
+         plugin.resourceLocationCtor = resourceLocationClass.getConstructor(String.class, String.class);
+
+         timelessApiGetCommonGunIndex = timelessApiClass.getMethod("getCommonGunIndex", resourceLocationClass);
+         taczGunItemBuilderCreate = gunItemBuilderClass.getMethod("create");
+         taczGunItemBuilderSetId = gunItemBuilderClass.getMethod("setId", resourceLocationClass);
+         taczGunItemBuilderSetAmmoCount = gunItemBuilderClass.getMethod("setAmmoCount", int.class);
+         taczGunItemBuilderSetFireMode = gunItemBuilderClass.getMethod("setFireMode", fireModeClass);
+         taczGunItemBuilderSetAmmoInBarrel = gunItemBuilderClass.getMethod("setAmmoInBarrel", boolean.class);
+         taczGunItemBuilderBuild = gunItemBuilderClass.getMethod("build");
+         taczOptionalIsPresent = java.util.Optional.class.getMethod("isPresent");
+         taczCommonGunIndexGetGunData = commonGunIndexClass.getMethod("getGunData");
+         taczCommonGunIndexGetPojo = commonGunIndexClass.getMethod("getPojo");
+         taczGunIndexPojoGetData = gunIndexPojoClass.getMethod("getData");
+         taczGunDataGetAmmoAmount = gunDataClass.getMethod("getAmmoAmount");
+         commonAssetsManagerGetInstance = assetsManagerClass.getMethod("getInstance");
+         commonAssetsGetGunData = taczGetMethod(timelessApiClass.getClassLoader(), "com.tacz.guns.resource.CommonAssetsManager", "getGunData", resourceLocationClass);
+         if (commonAssetsGetGunData == null) {
+            // The instance method may live on the ICommonResourceProvider interface instead
+            commonAssetsGetGunData = taczGetMethod(timelessApiClass.getClassLoader(), "com.tacz.guns.resource.ICommonResourceProvider", "getGunData", resourceLocationClass);
+         }
+
+         taczIGunGetIGunOrNull = iGunClass.getMethod("getIGunOrNull", itemStackClass);
+         taczIGunSetFireMode = taczGetMethod(timelessApiClass.getClassLoader(), "com.tacz.guns.api.item.IGun", "setFireMode", itemStackClass, fireModeClass);
+         taczIGunSetBulletInBarrel = taczGetMethod(timelessApiClass.getClassLoader(), "com.tacz.guns.api.item.IGun", "setBulletInBarrel", itemStackClass, boolean.class);
+         taczIGunGetCurrentAmmoCount = taczGetMethod(timelessApiClass.getClassLoader(), "com.tacz.guns.api.item.IGun", "getCurrentAmmoCount", itemStackClass);
+         taczIGunSetCurrentAmmoCount = taczGetMethod(timelessApiClass.getClassLoader(), "com.tacz.guns.api.item.IGun", "setCurrentAmmoCount", itemStackClass, int.class);
+
+         try {
+            taczFireModeSemi = fireModeClass.getField("SEMI");
+         } catch (NoSuchFieldException var8) {
+            taczFireModeSemi = null;
+            taczFireModeValues = taczGetMethod(timelessApiClass.getClassLoader(), "com.tacz.guns.api.item.gun.FireMode", "values");
+            taczFireModeValueOf = taczGetMethod(timelessApiClass.getClassLoader(), "com.tacz.guns.api.item.gun.FireMode", "valueOf", String.class);
+         }
+
+         plugin.taczApi = timelessApiClass;
+         info("Successfully hooked into Timeless and Classy Guns (TaCZ) API.");
+      } catch (ClassNotFoundException | NoSuchMethodException | NoSuchMethodError | NoClassDefFoundError var9) {
+         plugin.taczApi = null;
+         error("Could not hook to TaCZ (Timeless and Classy Guns). TaCZ guns will not be available.");
+      } catch (Throwable var10) {
+         plugin.taczApi = null;
+         error("Unexpected error while hooking to TaCZ: " + var10.getMessage());
+      }
+   }
+
+   private static Class<?> loadTaCZClass(ClassLoader primary, String name) throws ClassNotFoundException {
+      ClassLoader[] candidates = new ClassLoader[]{
+            primary,
+            Thread.currentThread().getContextClassLoader(),
+            ClassLoader.getSystemClassLoader(),
+            Utils.class.getClassLoader()
+      };
+
+      ClassNotFoundException last = null;
+      for (ClassLoader cl : candidates) {
+         if (cl == null) {
+            continue;
+         }
+
+         try {
+            return Class.forName(name, true, cl);
+         } catch (ClassNotFoundException | NoClassDefFoundError var6) {
+            last = var6 instanceof ClassNotFoundException ? (ClassNotFoundException)var6 : new ClassNotFoundException(name, var6);
+         }
+      }
+
+      // Last resort: ArcLight loads Forge mods inside plugin/launcher classloaders that we
+      // cannot guess statically, so scan every Bukkit plugin classloader and the server's
+      // own classloader for the TaCZ main class, then reuse the loader that owns it.
+      if (name.startsWith("com.tacz.") || name.startsWith("net.minecraft.")) {
+         java.util.List<ClassLoader> loaders = new java.util.ArrayList();
+         loaders.add(Bukkit.class.getClassLoader());
+
+         for (org.bukkit.plugin.Plugin p : Bukkit.getPluginManager().getPlugins()) {
+            try {
+               loaders.add(p.getClass().getClassLoader());
+            } catch (Throwable ignored) {
+            }
+         }
+
+         for (ClassLoader cl : loaders) {
+            if (cl == null) {
+               continue;
+            }
+
+            try {
+               return Class.forName(name, true, cl);
+            } catch (ClassNotFoundException | NoClassDefFoundError ignored) {
+            }
+         }
+      }
+
+      throw last != null ? last : new ClassNotFoundException(name);
    }
 
    public static ItemStack getSkull(String var0, String var1) {
@@ -532,7 +870,7 @@ public class Utils {
    }
 
    public static String getProgressBar(int var0, int var1) {
-      Object var2 = "";
+      String var2 = "";
 
       for (int var3 = 0; var3 < var0; var3++) {
          var2 = var2 + ChatColor.GREEN + SPECIAL_CHARACTER.RECTANGLE.toString();
@@ -545,7 +883,7 @@ public class Utils {
       return (String)var2;
    }
 
-   public static void removeAI(LivingEntity var0) {
+   public static void removeAI(LivingEntity var0) throws java.lang.reflect.InvocationTargetException, java.lang.IllegalAccessException, java.lang.NoSuchMethodException {
       if (!BattleRoyaleX.getInstance().below1_10) {
          var0.setAI(false);
       } else {

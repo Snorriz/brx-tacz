@@ -144,7 +144,7 @@ public class Metrics {
          return var3.build();
       }
 
-      protected abstract Metrics.JsonObjectBuilder.JsonObject getChartData();
+      protected abstract Metrics.JsonObjectBuilder.JsonObject getChartData() throws Exception;
    }
 
    public static class JsonObjectBuilder {
@@ -351,7 +351,7 @@ public class Metrics {
          });
       }
 
-      private void sendData(Metrics.JsonObjectBuilder.JsonObject var1) {
+      private void sendData(Metrics.JsonObjectBuilder.JsonObject var1) throws Exception {
          if (this.logSentData) {
             this.infoLogger.accept("Sent bStats metrics data: " + var1.toString());
          }
@@ -432,7 +432,7 @@ public class Metrics {
          }
       }
 
-      private static byte[] compress(String var0) {
+      private static byte[] compress(String var0) throws IOException {
          if (var0 == null) {
             return null;
          }
@@ -473,7 +473,7 @@ public class Metrics {
       }
 
       @Override
-      protected Metrics.JsonObjectBuilder.JsonObject getChartData() {
+      protected Metrics.JsonObjectBuilder.JsonObject getChartData() throws Exception {
          String var1 = (String)this.callable.call();
          return var1 != null && !var1.isEmpty() ? new Metrics.JsonObjectBuilder().appendField("value", var1).build() : null;
       }

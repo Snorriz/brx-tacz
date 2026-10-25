@@ -18,26 +18,30 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class BattleRoyaleXAPI {
    public static HashMap<String, String> getAllPlayersData() {
-      HashMap var0 = new HashMap();
+      HashMap<String, String> var0 = new HashMap<>();
       BattleRoyaleX var1 = BattleRoyaleX.getInstance();
-      if (var1.mySQL != null) {
-         Connection var2 = var1.mySQL.getConnection();
-         PreparedStatement var3 = var2.prepareStatement(var1.mySQL.SELECTALL);
-         ResultSet var4 = var3.executeQuery();
+      try {
+         if (var1.mySQL != null) {
+            Connection var2 = var1.mySQL.getConnection();
+            PreparedStatement var3 = var2.prepareStatement(var1.mySQL.SELECTALL);
+            ResultSet var4 = var3.executeQuery();
 
-         while (var4.next()) {
-            String var5 = var4.getString("player_name");
-            var0.put(var5, var1.playerData.containsKey(var5) ? ((PlayerData)var1.playerData.get(var5)).getStatsString() : var4.getString("stats"));
-         }
+            while (var4.next()) {
+               String var5 = var4.getString("player_name");
+               var0.put(var5, var1.playerData.containsKey(var5) ? ((PlayerData)var1.playerData.get(var5)).getStatsString() : var4.getString("stats"));
+            }
 
-         var4.close();
-         var3.close();
-      } else {
-         for (File var7 : getPlayersFiles()) {
-            YamlConfiguration var8 = YamlConfiguration.loadConfiguration(var7);
-            String var9 = var8.getString("Name");
-            var0.put(var9, var1.playerData.containsKey(var9) ? ((PlayerData)var1.playerData.get(var9)).getStatsString() : var8.getString("Stats"));
+            var4.close();
+            var3.close();
+         } else {
+            for (File var7 : getPlayersFiles()) {
+               YamlConfiguration var8 = YamlConfiguration.loadConfiguration(var7);
+               String var9 = var8.getString("Name");
+               var0.put(var9, var1.playerData.containsKey(var9) ? ((PlayerData)var1.playerData.get(var9)).getStatsString() : var8.getString("Stats"));
+            }
          }
+      } catch (java.sql.SQLException var6) {
+         var6.printStackTrace();
       }
 
       return var0;
@@ -91,6 +95,7 @@ public class BattleRoyaleXAPI {
    public static boolean modifyOfflinePlayerStat(String var0, Stat var1, int var2, boolean var3) {
       BattleRoyaleX var4 = BattleRoyaleX.getInstance();
       boolean var5 = false;
+      try {
       if (var4.mySQL != null) {
          Connection var6 = var4.mySQL.getConnection();
          PreparedStatement var7 = var6.prepareStatement(var4.mySQL.SELECT);
@@ -132,6 +137,9 @@ public class BattleRoyaleXAPI {
                break;
             }
          }
+      }
+      } catch (java.sql.SQLException var14) {
+         var14.printStackTrace();
       }
 
       return var5;

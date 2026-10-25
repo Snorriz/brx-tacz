@@ -547,7 +547,7 @@ public class PlayerListener implements Listener {
                                        var25.teleport(var2.getLocation());
                                     }
 
-                                    List var2x = var1.arena.getEnemies(var2);
+                                    List<Player> var2x = var1.arena.getEnemies(var2);
                                     if (!var2x.isEmpty()) {
                                        int var3 = Integer.MAX_VALUE;
                                        Player var4 = null;
@@ -1523,7 +1523,7 @@ public class PlayerListener implements Listener {
       var8.team.kills++;
       var8.killstreak++;
       if (Config.getInstance().killstreaks.containsKey(var8.killstreak)) {
-         for (String var10 : (List)Config.getInstance().killstreaks.get(var8.killstreak)) {
+         for (String var10 : (List<String>)Config.getInstance().killstreaks.get(var8.killstreak)) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), var10.replace("%player%", var1.getName()));
          }
 

@@ -741,12 +741,12 @@ public class PlayerData {
    }
 
    public int getCoins(Player var1) {
-      return BattleRoyaleX.getInstance().vault != null ? (int)BattleRoyaleX.getInstance().vault.getBalance(var1.getName()) : this.coins;
+      return BattleRoyaleX.getInstance().vault != null ? (int)BattleRoyaleX.getInstance().vault.getBalance(var1) : this.coins;
    }
 
    public void addCoins(Player var1, int var2) {
       if (BattleRoyaleX.getInstance().vault != null) {
-         BattleRoyaleX.getInstance().vault.depositPlayer(var1.getName(), var2);
+         BattleRoyaleX.getInstance().vault.depositPlayer(var1, var2);
       } else {
          this.coins += var2;
       }
@@ -754,7 +754,7 @@ public class PlayerData {
 
    public void removeCoins(Player var1, int var2) {
       if (BattleRoyaleX.getInstance().vault != null) {
-         BattleRoyaleX.getInstance().vault.withdrawPlayer(var1.getName(), var2);
+         BattleRoyaleX.getInstance().vault.withdrawPlayer(var1, var2);
       } else {
          this.coins -= var2;
       }

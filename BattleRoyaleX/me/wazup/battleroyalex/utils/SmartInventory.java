@@ -69,7 +69,7 @@ public class SmartInventory {
 
    public void organize(int var1) {
       Inventory var2 = (Inventory)this.inventories.get(var1);
-      ArrayList var3 = new ArrayList();
+      ArrayList<ItemStack> var3 = new ArrayList<>();
 
       for (int var7 : slots) {
          ItemStack var8 = var2.getItem(var7);
@@ -100,7 +100,7 @@ public class SmartInventory {
    }
 
    public List<ItemStack> getContents(int var1) {
-      ArrayList var2 = new ArrayList();
+      ArrayList<ItemStack> var2 = new ArrayList<>();
       Inventory var3 = (Inventory)this.inventories.get(var1);
 
       for (int var7 : slots) {

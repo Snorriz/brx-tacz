@@ -47,7 +47,7 @@ public class WeakestLinkScenario extends Scenario {
    public void registerArena(final Arena var1) {
       BukkitTask var2 = (new BukkitRunnable() {
          public void run() {
-            HashMap var1x = new HashMap();
+            HashMap<String, Integer> var1x = new HashMap<>();
 
             for (Player var3 : var1.getPlayers()) {
                var1x.put(var3.getName(), (int)var3.getHealth());
@@ -62,7 +62,7 @@ public class WeakestLinkScenario extends Scenario {
                   }
                }
 
-               ArrayList var8 = new ArrayList();
+               ArrayList<String> var8 = new ArrayList<>();
 
                for (String var5 : var1x.keySet()) {
                   if ((Integer)var1x.get(var5) == var6) {
