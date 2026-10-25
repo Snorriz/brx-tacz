@@ -282,7 +282,7 @@ public class Utils {
             }
 
             var5 = new ItemStackBuilder(var13);
-         } else if (var4.split(":")[0].equals("TACZ") || var4.split(":")[0].equals("TIMELESS") || var4.split(":")[0].equals("TAKECHAIMSGUNS")) {
+         } else if (var4.split(":")[0].equals("TACZ") || var4.split(":")[0].equals("TIMELESS") || var4.split(":")[0].equals("TAKECHAIMSGUNS") || var4.split(":")[0].equals("TACZAMMO") || var4.split(":")[0].equals("AMMOTACZ")) {
             // Timeless and Classy Guns (TaCZ, Forge mod) support: handled through reflection
             // because it's a Forge mod running on ArcLight (Forge+Bukkit hybrid server),
             // so the plugin cannot be compiled against its classes directly.
@@ -424,12 +424,16 @@ public class Utils {
          return null;
       } else {
          try {
-            // Expected token formats (the whole token has been uppercased by getItemStack,
-            // so we lowercase the gun id / namespace back: TaCZ ResourceLocations are case-sensitive):
+            // NOTE: getItemStack() uppercases the first segment of the token for routing
+            // (var4), but passes us var3[0] which keeps the original config casing.
+            // To be safe against both behaviours we take the namespace/gun/ammo segments
+            // from the ORIGINAL string and only uppercase the routing prefix ourselves.
+            // Expected token formats:
             //   TACZ:<namespace>:<gunId>[:<ammoCount>]
             //   TIMELESS:<gunId>[:<ammoCount>]        (namespace defaults to "tacz")
-            String[] parts = rawToken.toLowerCase().split(":");
-            String prefix = rawToken.split(":")[0].toUpperCase();
+            //   AMMO:<namespace>:<caliber>  /  TACZAMMO:<ns>:<caliber>  -> ammo stack
+            String[] parts = rawToken.split(":");
+            String prefix = parts[0].toUpperCase();
             String namespace = "tacz";
             String gunId = null;
             int ammoCount = -1;
@@ -459,6 +463,19 @@ public class Utils {
                }
             } else if (parts.length == 2) {
                gunId = parts[1];
+            }
+
+            if (prefix.equals("TACZAMMO") || prefix.equals("AMMOTACZ")) {
+               // Ammo token: TACZAMMO:<namespace>:<caliber>[:count] -> TaCZ ammo item stack.
+               String caliber = parts[2];
+               int count = -1;
+               if (parts.length >= 4) {
+                  try {
+                     count = Integer.parseInt(parts[3]);
+                  } catch (NumberFormatException ignored) {
+                  }
+               }
+               return getTaczAmmoStack(namespace, caliber, count);
             }
 
             if (gunId == null || gunId.isEmpty()) {
@@ -548,24 +565,27 @@ public class Utils {
                // Older/newer TaCZ builds without these builder options: use the IGun fallback below
             }
 
-            ItemStack result = (ItemStack)taczGunItemBuilderBuild.invoke(builder);
+            // On ArcLight, TaCZ returns a NET.MINECRAFT ItemStack which CANNOT be cast to
+            // org.bukkit.inventory.ItemStack (different modules). We bridge it via NMS CraftItemStack.
+            Object rawBuilt = taczGunItemBuilderBuild.invoke(builder);
+            ItemStack result = asBukkitItemStack(rawBuilt);
             if (result != null && !result.getType().equals(Material.AIR)) {
                if (!configuredBeforeBuild) {
                   try {
-                     Object iGun = taczIGunGetIGunOrNull.invoke(null, result);
+                     Object iGun = taczIGunGetIGunOrNull.invoke(null, rawBuilt);
                      if (iGun != null) {
                         if (semiMode != null && taczIGunSetFireMode != null) {
-                           taczIGunSetFireMode.invoke(iGun, result, semiMode);
+                           taczIGunSetFireMode.invoke(iGun, rawBuilt, semiMode);
                         }
 
                         if (taczIGunGetCurrentAmmoCount != null && taczIGunSetCurrentAmmoCount != null) {
                            int magazine = effectiveAmmo >= 0 ? effectiveAmmo : 30;
                            if (magazine > 0) {
-                              int current = (Integer)taczIGunGetCurrentAmmoCount.invoke(iGun, result);
+                              int current = (Integer)taczIGunGetCurrentAmmoCount.invoke(iGun, rawBuilt);
                               if (current > 0) {
-                                 taczIGunSetCurrentAmmoCount.invoke(iGun, result, current - 1);
+                                 taczIGunSetCurrentAmmoCount.invoke(iGun, rawBuilt, current - 1);
                                  if (taczIGunSetBulletInBarrel != null) {
-                                    taczIGunSetBulletInBarrel.invoke(iGun, result, Boolean.TRUE);
+                                    taczIGunSetBulletInBarrel.invoke(iGun, rawBuilt, Boolean.TRUE);
                                  }
                               }
                            }
@@ -588,8 +608,96 @@ public class Utils {
       }
    }
 
+   /**
+    * Converts an arbitrary object returned by reflection into a Bukkit ItemStack.
+    * On ArcLight, mods like TaCZ hand back net.minecraft.world.item.ItemStack objects,
+    * which live in a different module than org.bukkit.inventory.ItemStack and therefore
+    * cannot be cast directly. We bridge through CraftItemStack.asBukkitCopy (reflection,
+    * so this class still compiles against plain Paper API without NMS on the classpath).
+    */
+   public static ItemStack asBukkitItemStack(Object obj) {
+      if (obj == null) {
+         return null;
+      }
+      if (obj instanceof ItemStack) {
+         return (ItemStack)obj;
+      }
+      try {
+         String pkg = org.bukkit.Bukkit.getServer().getClass().getPackage().getName();
+         String version = pkg.substring(pkg.lastIndexOf('.') + 1);
+         Class<?> craftItemStackClass = Class.forName("org.bukkit.craftbukkit." + version + ".inventory.CraftItemStack");
+         Method asBukkitCopy = craftItemStackClass.getMethod("asBukkitCopy", obj.getClass());
+         Object converted = asBukkitCopy.invoke(null, obj);
+         if (converted instanceof ItemStack) {
+            return (ItemStack)converted;
+         }
+      } catch (Throwable ignored) {
+      }
+      // Fallback: some loaders give us a wrapper whose toString/type still works via clone trick
+      try {
+         java.lang.reflect.Method getBukkitStack = obj.getClass().getMethod("getBukkitStack");
+         Object converted = getBukkitStack.invoke(obj);
+         if (converted instanceof ItemStack) {
+            return (ItemStack)converted;
+         }
+      } catch (Throwable ignored) {
+      }
+      return null;
+   }
+
    // ---- TaCZ reflection method handles (populated by initTaczHook) ----
    static Method timelessApiGetCommonGunIndex;
+   static Method timelessApiGetCommonAmmoIndex;
+   static Method taczAmmoItemBuilderCreate;
+   static Method taczAmmoItemBuilderSetId;
+   static Method taczAmmoItemBuilderSetCount;
+   static Method taczAmmoItemBuilderBuild;
+   static Method taczCommonAmmoIndexGetStack;
+
+   /**
+    * Builds a TaCZ ammo item stack via AmmoItemBuilder (fallback: CommonAmmoIndex#getStack()).
+    * count <= 0 means "one full logical stack" as defined by the ammo's stack_size.
+    */
+   public static ItemStack getTaczAmmoStack(String namespace, String caliber, int count) {
+      if (BattleRoyaleX.getInstance().taczApi == null || taczAmmoItemBuilderCreate == null) {
+         return null;
+      }
+      try {
+         Object ammoRL = BattleRoyaleX.getInstance().resourceLocationCtor.newInstance(namespace, caliber);
+         Object builder = taczAmmoItemBuilderCreate.invoke(null);
+         taczAmmoItemBuilderSetId.invoke(builder, ammoRL);
+
+         int effectiveCount = count;
+         if (effectiveCount <= 0 && timelessApiGetCommonAmmoIndex != null) {
+            // Fill to the ammo's configured stack size (e.g. 42 for 9mm, 60 for 7.62x39)
+            try {
+               Object opt = timelessApiGetCommonAmmoIndex.invoke(null, ammoRL);
+               Boolean present = (Boolean)taczOptionalIsPresent.invoke(opt);
+               if (present && taczCommonAmmoIndexGetStack != null) {
+                  Object ammoIndex = java.util.Optional.class.getMethod("get").invoke(opt);
+                  Object stackSize = taczCommonAmmoIndexGetStack.invoke(ammoIndex);
+                  if (stackSize instanceof Integer) {
+                     effectiveCount = (Integer)stackSize;
+                  }
+               }
+            } catch (Throwable ignored) {
+            }
+         }
+         if (effectiveCount > 0 && taczAmmoItemBuilderSetCount != null) {
+            taczAmmoItemBuilderSetCount.invoke(builder, effectiveCount);
+         }
+         Object rawAmmoBuilt = taczAmmoItemBuilderBuild.invoke(builder);
+         ItemStack result = asBukkitItemStack(rawAmmoBuilt);
+         if (result != null && !result.getType().equals(Material.AIR)) {
+            return result;
+         }
+         return null;
+      } catch (Throwable var6) {
+         error("Could not generate TaCZ ammo item for \"" + namespace + ":" + caliber + "\"");
+         return null;
+      }
+   }
+
    static Method taczGunItemBuilderCreate;
    static Method taczGunItemBuilderSetId;
    static Method taczGunItemBuilderSetAmmoCount;
@@ -643,6 +751,35 @@ public class Utils {
          plugin.resourceLocationCtor = resourceLocationClass.getConstructor(String.class, String.class);
 
          timelessApiGetCommonGunIndex = timelessApiClass.getMethod("getCommonGunIndex", resourceLocationClass);
+         // Ammo-side handles (best-effort: TACZAMMO tokens degrade gracefully if missing)
+         timelessApiGetCommonAmmoIndex = taczGetMethod(classLoader, "com.tacz.guns.api.TimelessAPI", "getCommonAmmoIndex", resourceLocationClass);
+         Class<?> ammoItemBuilderClass = null;
+         try {
+            ammoItemBuilderClass = loadTaCZClass(classLoader, "com.tacz.guns.api.item.builder.AmmoItemBuilder");
+         } catch (Throwable ignored) {
+         }
+         if (ammoItemBuilderClass != null) {
+            taczAmmoItemBuilderCreate = ammoItemBuilderClass.getMethod("create");
+            taczAmmoItemBuilderSetId = ammoItemBuilderClass.getMethod("setId", resourceLocationClass);
+            taczAmmoItemBuilderBuild = ammoItemBuilderClass.getMethod("build");
+            try {
+               taczAmmoItemBuilderSetCount = ammoItemBuilderClass.getMethod("setCount", int.class);
+            } catch (NoSuchMethodException var7x) {
+               taczAmmoItemBuilderSetCount = null;
+            }
+         }
+         Class<?> commonAmmoIndexClass = null;
+         try {
+            commonAmmoIndexClass = loadTaCZClass(classLoader, "com.tacz.guns.resource.index.CommonAmmoIndex");
+         } catch (Throwable ignored) {
+         }
+         if (commonAmmoIndexClass != null) {
+            try {
+               taczCommonAmmoIndexGetStack = commonAmmoIndexClass.getMethod("getStack");
+            } catch (NoSuchMethodException var7y) {
+               taczCommonAmmoIndexGetStack = null;
+            }
+         }
          taczGunItemBuilderCreate = gunItemBuilderClass.getMethod("create");
          taczGunItemBuilderSetId = gunItemBuilderClass.getMethod("setId", resourceLocationClass);
          taczGunItemBuilderSetAmmoCount = gunItemBuilderClass.getMethod("setAmmoCount", int.class);
