@@ -1,0 +1,75 @@
+# ============================================================
+# chests.yml bilanciata per TaCZ (ArcLight 1.20.1 + Forge)
+# Nota munizioni: NON serve il prefisso TACZAMMO: -> le ammo
+# sono item normali di TaCZ, si usano con la sintassi standard
+#   'TACZ:<namespace>:<ammo_id> : Amount :: Chance'
+# Amount = numero di STACK (1 stack pieno):
+#   9mm=42, 45acp=36, 50ae=30, 556x45=48, 762x39=60,
+#   338=24, 50bmg=10, 12g=48, 57x28=64  (stack size vanilla TaCZ)
+# ============================================================
+
+Chests:
+  Normal:
+    min-items: 2
+    max-items: 4
+    items:
+    # ---- utility / healing ----
+    - 'GOLDEN_APPLE : 1 :: 12%'
+    - 'MILK_BUCKET : 1 :: 8%'
+    - 'COMPASS : 1 :: 10%'
+    - 'FISHING_ROD : 1 :: 8%'
+    - 'CAKE : 1 :: 8%'
+    # ---- difesa base ----
+    - 'LEATHER_HELMET : 1 :: 10%'
+    - 'LEATHER_CHESTPLATE : 1 :: 10%'
+    - 'CHAINMAIL_CHESTPLATE : 1 :: 8%'
+    - 'IRON_HELMET : 1 :: 6%'
+    - 'IRON_LEGGINGS : 1 :: 6%'
+    # ---- esplosivi / controllo ----
+    - 'TNT : 4 :: 6%'
+    - 'WEB : 2 :: 8%'
+    - 'STONE_PICKAXE : 1 :: 8%'
+    # ---- PISTOLE TaCZ (tutti trovano un'arma nei chest normali) ----
+    - 'TACZ:tacz:glock_17 : 1 :: 12%'
+    - 'TACZ:tacz:m1911 : 1 :: 10%'
+    - 'TACZ:tacz:cz75 : 1 :: 8%'
+    - 'TACZ:tacz:deagle : 1 :: 5%'
+    # ---- munizioni abbinate (stack pieni) ----
+    - 'TACZ:tacz:9mm : 1 :: 18%'
+    - 'TACZ:tacz:45acp : 1 :: 14%'
+    - 'TACZ:tacz:50ae : 1 :: 6%'
+  Carepackage:
+    min-items: 3
+    max-items: 5
+    items:
+    - 'GOLDEN_APPLE : 3 :: 40%'
+    - 'DIAMOND_CHESTPLATE : 1 :: 35%'
+    - 'DIAMOND_HELMET : 1 :: 30%'
+    - 'TACZ:tacz:m870 : 1 :: 30%'
+    - 'TACZ:tacz:vector45 : 1 :: 25%'
+    - 'TACZ:tacz:hk_mp5a5 : 1 :: 25%'
+    - 'TACZ:tacz:ump45 : 1 :: 20%'
+    - 'TACZ:tacz:12g : 1 :: 30%'
+    - 'TACZ:tacz:45acp : 1 :: 28%'
+    - 'TACZ:tacz:9mm : 1 :: 28%'
+  Supply-Drops:
+    min-items: 3
+    max-items: 5
+    items:
+    - 'BattleRoyaleX:Cash:50 : 2 :: 40%'
+    - 'BattleRoyaleX:Cash:100 : 1 :: 15%'
+    - 'GOLDEN_APPLE : 2 :: 25%'
+    - 'TACZ:tacz:ai_awp : 1 :: 12%'
+    - 'TACZ:tacz:m95 : 1 :: 8%'
+    - 'TACZ:tacz:rpk : 1 :: 12%'
+    - 'TACZ:tacz:m249 : 1 :: 8%'
+    - 'TACZ:tacz:ak47 : 1 :: 15%'
+    - 'TACZ:tacz:m4a1 : 1 :: 15%'
+    - 'TACZ:tacz:aa12 : 1 :: 8%'
+    - 'TACZ:tacz:p90 : 1 :: 10%'
+    - 'TACZ:tacz:762x39 : 1 :: 28%'
+    - 'TACZ:tacz:556x45 : 1 :: 28%'
+    - 'TACZ:tacz:338 : 1 :: 12%'
+    - 'TACZ:tacz:50bmg : 1 :: 8%'
+    - 'TACZ:tacz:12g : 1 :: 15%'
+    - 'TACZ:tacz:57x28 : 1 :: 12%'
