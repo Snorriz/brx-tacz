@@ -1,0 +1,82 @@
+# BattleRoyaleX chests.yml — TaCZ + Miklos's Military Armor (mm_armor) + lrTactical (lrtactical)
+# Armi: TACZ:<ns>:<gun> | Munizioni: TACZAMMO:<ns>:<caliber> | Mod Forge item: MM_ARMOR:<ns>:<id> / LRTACTICAL:<ns>:<id>
+Chests:
+  Normal:
+    min-items: 2
+    max-items: 4
+    items:
+    # ---- Utility classiche ----
+    - 'GOLDEN_APPLE : 1 :: 15%'
+    - 'COMPASS : 1 :: 10%'
+    - 'FISHING_ROD : 1 :: 8%'
+    - 'CAKE : 1 :: 8%'
+    - 'MILK_BUCKET : 1 :: 8%'
+    # ---- Armatura base vanilla ----
+    - 'LEATHER_HELMET : 1 :: 10%'
+    - 'LEATHER_CHESTPLATE : 1 :: 10%'
+    - 'CHAINMAIL_CHESTPLATE : 1 :: 8%'
+    - 'IRON_HELMET : 1 :: 6%'
+    - 'IRON_LEGGINGS : 1 :: 6%'
+    # ---- Esplosivi/utility ----
+    - 'TNT : 4 :: 6%'
+    - 'WEB : 2 :: 8%'
+    - 'STONE_PICKAXE : 1 :: 8%'
+    # ---- PISTOLE TaCZ ----
+    - 'TACZ:tacz:glock_17 : 1 :: 12%'
+    - 'TACZ:tacz:m1911 : 1 :: 10%'
+    - 'TACZ:tacz:cz75 : 1 :: 8%'
+    - 'TACZ:tacz:deagle : 1 :: 5%'
+    # ---- Melee mod (lrTactical) ----
+    - 'LRTACTICAL:lrtactical:melee : 1 :: 8%'
+    # ---- Munizioni ----
+    - 'TACZAMMO:tacz:9mm : 1 :: 20%'
+    - 'TACZAMMO:tacz:45acp : 1 :: 15%'
+    - 'TACZAMMO:tacz:50ae : 1 :: 8%'
+  Carepackage:
+    min-items: 3
+    max-items: 5
+    items:
+    - 'GOLDEN_APPLE : 3 :: 40%'
+    # ---- Armor set Miklos's Military Armor (giubbotto portante) ----
+    - 'MM_ARMOR:mm_armor:vest_6b_45_chestplate : 1 :: 30%'
+    - 'MM_ARMOR:mm_armor:helmet_6b_47emrribbon_helmet : 1 :: 25%'
+    - 'MM_ARMOR:mm_armor:emruniformribbon_leggins : 1 :: 25%'
+    - 'MM_ARMOR:mm_armor:desertboots_boots : 1 :: 25%'
+    # ---- Fucili a pompa / SMG ----
+    - 'TACZ:tacz:m870 : 1 :: 30%'
+    - 'TACZ:tacz:vector45 : 1 :: 25%'
+    - 'TACZ:tacz:hk_mp5a5 : 1 :: 25%'
+    - 'TACZ:tacz:ump45 : 1 :: 20%'
+    - 'TACZAMMO:tacz:12g : 1 :: 35%'
+    - 'TACZAMMO:tacz:45acp : 1 :: 30%'
+    - 'TACZAMMO:tacz:9mm : 1 :: 30%'
+  Supply-Drops:
+    min-items: 3
+    max-items: 5
+    items:
+    - 'BattleRoyaleX:Cash:50 : 2 :: 40%'
+    - 'BattleRoyaleX:Cash:100 : 1 :: 15%'
+    - 'GOLDEN_APPLE : 2 :: 25%'
+    # ---- Top-tier armor Miklos full set garantito nel drop ----
+    - 'MM_ARMOR:mm_armor:helmet_6b_47emrribbon_helmet : 1 :: 40%'
+    - 'MM_ARMOR:mm_armor:vest_6b_45_chestplate : 1 :: 40%'
+    - 'MM_ARMOR:mm_armor:emruniformribbon_leggins : 1 :: 40%'
+    - 'MM_ARMOR:mm_armor:desertboots_boots : 1 :: 40%'
+    # ---- Armi top-tier TaCZ ----
+    - 'TACZ:tacz:ai_awp : 1 :: 12%'
+    - 'TACZ:tacz:m95 : 1 :: 8%'
+    - 'TACZ:tacz:rpk : 1 :: 12%'
+    - 'TACZ:tacz:m249 : 1 :: 8%'
+    - 'TACZ:tacz:ak47 : 1 :: 15%'
+    - 'TACZ:tacz:m4a1 : 1 :: 15%'
+    - 'TACZ:tacz:aa12 : 1 :: 8%'
+    - 'TACZ:tacz:p90 : 1 :: 10%'
+    # ---- Melee mod ----
+    - 'LRTACTICAL:lrtactical:melee : 1 :: 10%'
+    # ---- Munizioni pesanti ----
+    - 'TACZAMMO:tacz:762x39 : 1 :: 30%'
+    - 'TACZAMMO:tacz:556x45 : 1 :: 30%'
+    - 'TACZAMMO:tacz:338 : 1 :: 12%'
+    - 'TACZAMMO:tacz:50bmg : 1 :: 8%'
+    - 'TACZAMMO:tacz:12g : 1 :: 15%'
+    - 'TACZAMMO:tacz:57x28 : 1 :: 12%'

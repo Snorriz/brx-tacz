@@ -298,6 +298,20 @@ public class Utils {
             }
 
             var5 = new ItemStackBuilder(var32);
+         } else if (isForgeModItemPrefix(var4.split(":")[0])) {
+            // Generic Forge-mod item support for ArcLight: creates the item directly from its
+            // registry id via Forge's ItemRegistry (reflection, so this compiles without Forge).
+            // Syntax examples (namespace:id is the exact in-game /give id):
+            //   MM_ARMOR:mm_armor:helmet_6b_47emrribbon_helmet : 1 :: 20%
+            //   LRTACTICAL:lrtactical:melee : 1 :: 20%
+            //   MOD:<any_namespace>:<item_id>[:qty] : amount
+            String[] var33 = var3[0].split(":");
+            ItemStack var34 = getForgeModItemStack(var33);
+            if (var34 == null) {
+               return null;
+            }
+
+            var5 = new ItemStackBuilder(var34);
          } else if (var4.split(":")[0].equals("ITEMEDIT")) {
             ItemStack var14 = null;
             if (BattleRoyaleX.getInstance().itemEdit != null) {
@@ -610,6 +624,65 @@ public class Utils {
             var7.printStackTrace();
             return null;
          }
+      }
+   }
+
+   // ---- Generic Forge-mod item support (Miklos's Military Armor, lrTactical, ...) ----
+   private static final java.util.Set<String> FORGE_MOD_ITEM_PREFIXES = new java.util.HashSet<>(
+         java.util.Arrays.asList("MM_ARMOR", "MMARMOR", "MIKLOSARMOR", "LR_TACTICAL", "LRTACTICAL", "MOD"));
+
+   public static boolean isForgeModItemPrefix(String prefix) {
+      return prefix != null && FORGE_MOD_ITEM_PREFIXES.contains(prefix.toUpperCase());
+   }
+
+   /**
+    * Creates a Bukkit ItemStack from any Forge-mod registry id using pure reflection on
+    * Forge's Registries.ITEM + Item#asItemStack(), bridged to Bukkit through CraftItemStack
+    * (see asBukkitItemStack). Works on ArcLight 1.20.1 (Forge 47.x) with no compile-time
+    * dependency on Forge/Minecraft classes.
+    * Accepted token segments: [PREFIX, namespace, itemId] or [PREFIX, "namespace:itemId"]
+    */
+   public static ItemStack getForgeModItemStack(String[] parts) {
+      if (parts == null || parts.length < 2) {
+         return null;
+      }
+      String namespace = null;
+      String path = null;
+      if (parts.length >= 3) {
+         namespace = parts[1];
+         path = parts[2];
+      } else {
+         int idx = parts[1].indexOf(':');
+         if (idx > 0 && idx < parts[1].length() - 1) {
+            namespace = parts[1].substring(0, idx);
+            path = parts[1].substring(idx + 1);
+         } else {
+            return null;
+         }
+      }
+      try {
+         ClassLoader serverCl = Bukkit.getServer().getClass().getClassLoader();
+         Class<?> rlClass = loadTaCZClass(serverCl, "net.minecraft.resources.ResourceLocation");
+         Object rl = rlClass.getConstructor(String.class, String.class).newInstance(namespace, path);
+
+         Class<?> registriesClass = loadTaCZClass(serverCl, "net.minecraftforge.registries.ForgeRegistries");
+         Object itemRegistry = registriesClass.getField("ITEMS").get(null);
+         Object mcItem = itemRegistry.getClass().getMethod("getValue", rlClass).invoke(itemRegistry, rl);
+         if (mcItem == null) {
+            error("Unknown Forge item id \"" + namespace + ":" + path + "\" (not in the item registry)");
+            return null;
+         }
+
+         Object nmsStack = mcItem.getClass().getMethod("asItemStack").invoke(mcItem);
+         ItemStack result = asBukkitItemStack(nmsStack);
+         if (result == null || result.getType().equals(Material.AIR)) {
+            error("Could not convert Forge item \"" + namespace + ":" + path + "\" to a Bukkit ItemStack");
+            return null;
+         }
+         return result;
+      } catch (Throwable t) {
+         error("Could not generate Forge mod item for \"" + namespace + ":" + path + "\": " + t);
+         return null;
       }
    }
 
