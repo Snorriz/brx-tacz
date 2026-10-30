@@ -239,6 +239,7 @@ public class BattleRoyaleX extends JavaPlugin {
       }
 
       this.mainSetup();
+      me.wazup.battleroyalex.utils.GradientTitle.start();
       Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
       Bukkit.getPluginManager().registerEvents(new GUIListener(), this);
       Bukkit.getPluginManager().registerEvents(new SignsListener(), this);
@@ -606,6 +607,8 @@ public class BattleRoyaleX extends JavaPlugin {
       new FilesManager();
       FileConfiguration var1 = FilesManager.getInstance().getConfig("customization.yml");
       new Customization(var1);
+      // TaxBattle: carica i frame del titolo gradient animato ("TaxPhobia")
+      me.wazup.battleroyalex.utils.GradientTitle.load(var1);
       new Config();
       new RanksManager();
       new RecipeManager();

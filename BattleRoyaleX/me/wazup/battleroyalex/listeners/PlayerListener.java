@@ -287,12 +287,8 @@ public class PlayerListener implements Listener {
 
                if (BattleRoyaleX.getInstance().lobbyPlayers.contains(var2.getName())) {
                   if (Utils.compareItem(var2.getItemInHand(), (ItemStack)Customization.getInstance().items.get("Party"))) {
-                     if (var11.party == null) {
-                        var2.openInventory(BattleRoyaleX.getInstance().partyMenu);
-                     } else {
-                        var2.openInventory(var11.party.gui);
-                     }
-
+                     // TaxBattle: sistema party rimosso
+                     var2.sendMessage(org.bukkit.ChatColor.RED + "Il sistema dei party e' stato rimosso da TaxBattle.");
                      return;
                   }
 
@@ -1463,7 +1459,7 @@ public class PlayerListener implements Listener {
    /** TaxBattle: readable weapon name from the BRX_WEAPON lore tag (TaCZ guns), else vanilla-ish name. */
    private String getWeaponDisplayName(Player killer) {
       try {
-         ItemStack hand = killer.getInventory().getItemInMain();
+         ItemStack hand = killer.getItemInHand();
          if ((hand == null || hand.getType().equals(Material.AIR)) && killer.getInventory().getItemInOffHand() != null) {
             hand = killer.getInventory().getItemInOffHand();
          }
@@ -1553,6 +1549,10 @@ public class PlayerListener implements Listener {
       var1.playSound(var1.getLocation(), SoundsManager.NOTE_PLING, 1.0F, 1.0F);
       RanksManager.getInstance().addExp(var1, var7);
       var5.killers.put(var1.getName(), var5.killers.containsKey(var1.getName()) ? (Integer)var5.killers.get(var1.getName()) + 1 : 1);
+      // TaxBattle: aggiorna le kill personali in scoreboard
+      if (var5.scoreboard != null) {
+         var5.scoreboard.updateForPlayer(var1, "%player_kills%", String.valueOf((Integer)var5.killers.get(var1.getName())));
+      }
       TitleManager.getInstance()
          .sendForcedActionBar(var1, ChatColor.RED + "You now have: " + ChatColor.YELLOW + var5.killers.get(var1.getName()) + ChatColor.RED + " kills!", var4);
       PAData var8 = (PAData)var5.players.get(var1.getName());

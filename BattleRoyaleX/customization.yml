@@ -93,25 +93,25 @@ Messages:
   Bounty-Cancel: '&e&lYour bounty on %player% has been cancelled! You have been refunded %bounty% coins!'
 
 Death-Messages:
-  FALL: '&e%player% &7fell to their death!'
-  ENTITY_ATTACK: '&e%player% &7was killed by a monster!'
-  LAVA: '&e%player% &7thought swimming in lava is fun!'
-  SUFFOCATION: '&e%player% &7suffocated!'
-  VOID: '&e%player% &7fell into the void!'
-  DROWNING: '&e%player% &7does not know how to swim!'
-  FIRE: '&e%player% &7burned to their death!'
-  FIRE_TICK: '&e%player% &7burned to their death!'
-  ENTITY_EXPLOSION: '&e%player% &7exploded into million pieces!'
-  BLOCK_EXPLOSION: '&e%player% &7exploded into million pieces!'
-  UNKNOWN: '&e%player% &7has been killed by an unknown object!'
+  FALL: '&c☠ %player% è caduto nel vuoto... o forse no.'
+  ENTITY_ATTACK: '&c☠ %player% è stato ucciso da un mostro!'
+  LAVA: '&c☠ %player% pensava che nuotare nella lava fosse divertente!'
+  SUFFOCATION: '&c☠ %player% è morto soffocato!'
+  VOID: '&c☠ %player% è caduto nel void!'
+  DROWNING: '&c☠ %player% non sa nuotare!'
+  FIRE: '&c☠ %player% è bruciato vivo!'
+  FIRE_TICK: '&c☠ %player% è bruciato vivo!'
+  ENTITY_EXPLOSION: '&c☠ %player% è esploso in mille pezzi!'
+  BLOCK_EXPLOSION: '&c☠ %player% è esploso in mille pezzi!'
+  UNKNOWN: '&c☠ %player% è stato ucciso da qualcosa di sconosciuto!'
   PLAYER:
-    SUICIDE: '&e%player% &7has killed himself!'
+    SUICIDE: '&c☠ %player% si è tolto la vita da solo!'
     OTHER:
-      - '&c%player% &ehas been killed by &a%killer%&e!'
-      - '&c%player% &ewas brutally murdered by &a%killer%&e!'
-      - '&c%player% &eweapon could not stand against &a%killer%&e!'
-      - '&a%killer% &egave a helping hand in &c%player% &edeath!'
-      - '&a%killer% &ecould not resist killing &c%player%&e!'
+      - '&c⚔ %killer% ha ucciso %player% con un %weapon%!'
+      - '&c%killer% ha eliminato %player% con il suo %weapon%!'
+      - '&c%player% non ha resistito al %weapon% di %killer%!'
+      - '&c%killer% ha fatto fuori %player% usando un %weapon%!'
+      - '&c%player% è caduto sotto i colpi del %weapon% di %killer%!'
 
 Arena-Settings:
   - '&3======== &bArena Settings &3======='
@@ -221,8 +221,29 @@ Lores:
   Inventory-Instructions: '&5- &b&nLeft click to equip &5/ &c&nRight click to sell'
 
 Scoreboards:
+  # TaxBattle: titolo gradient animato (da Fortnite-style). change-interval in millisecondi.
+  Gradient:
+    logo:
+      change-interval: 150
+      texts:
+      - '&#9900FFTaxP&#B039BFh&#C87380o&#DFAC40b&#F6E500ia'
+      - '&#9900FFTaxPh&#B039BFo&#C87380b&#DFAC40i&#F6E500a'
+      - '&#B039BFT&#9900FFaxPho&#B039BFb&#C87380i&#DFAC40a'
+      - '&#C87380T&#B039BFa&#9900FFxPhob&#B039BFi&#C87380a'
+      - '&#DFAC40T&#C87380a&#B039BFx&#9900FFPhobi&#B039BFa'
+      - '&#F6E500T&#DFAC40a&#C87380x&#B039BFP&#9900FFhobia'
+      - '&#F6E500Ta&#DFAC40x&#C87380P&#B039BFh&#9900FFobia'
+      - '&#F6E500Tax&#DFAC40P&#C87380h&#B039BFo&#9900FFbia'
+      - '&#F6E500TaxP&#DFAC40h&#C87380o&#B039BFb&#9900FFia'
+      - '&#F6E500TaxPh&#DFAC40o&#C87380b&#B039BFi&#9900FFa'
+      - '&#DFAC40T&#F6E500axPho&#DFAC40b&#C87380i&#B039BFa'
+      - '&#C87380T&#DFAC40a&#F6E500xPhob&#DFAC40i&#C87380a'
+      - '&#B039BFT&#C87380a&#DFAC40x&#F6E500Phobi&#DFAC40a'
+      - '&#9900FFT&#B039BFa&#C87380x&#DFAC40P&#F6E500hobia'
+      - '&#9900FFTa&#B039BFx&#C87380P&#DFAC40h&#F6E500obia'
+      - '&#9900FFTax&#B039BFP&#C87380h&#DFAC40o&#F6E500bia'
   Lobby:
-    Title: '&d%pointedstar% &6&lBattle Royale X &d%pointedstar%'
+    Title: '&#9900FFT&#B039BFa&#C87380x&#DFAC40P&#F6E500hobia'
     Content:
       - '&e&m-----------'
       - '&a> Coins:'
@@ -240,7 +261,7 @@ Scoreboards:
       - '%selected_celebration%'
       - '&e&m-----------'
   Arena-Lobby:
-    Title: '&d%pointedstar% &6&lBattle Royale X &d%pointedstar%'
+    Title: '&#9900FFT&#B039BFa&#C87380x&#DFAC40P&#F6E500hobia'
     Content:
       - '&e&m-----------'
       - '&a> Time: &f%timer%'
@@ -252,19 +273,17 @@ Scoreboards:
       - '&7%date%'
       - '&e&m-----------'
   Arena-Game:
-    Title: '&d%pointedstar% &6&lBattle Royale X &d%pointedstar%'
+    Title: '&#9900FFT&#B039BFa&#C87380x&#DFAC40P&#F6E500hobia'
     Content:
       - '&e&m-----------'
-      - '&a%current_event% &fin'
-      - '%current_event_timer%'
+      - '&#DFAC40⏱ &eTimer: &f%storm_timer%'
+      - '&7%storm_label%'
       - ' '
-      - '&a> Players:'
-      - '&f%players%&e/&f%max_players%'
-      - ' '
-      - '&aWorld Border'
-      - '-%border_distance%, +%border_distance%'
+      - '&#F6E500❤ &eVivi: &f%alive%'
+      - '&#B039BF⚔ &e%player_name%: &f%player_kills% Kills'
       - ' '
       - '&7%date%'
+      - '&e&m-----------'
 
 Normal-Mode-Start:
   - '&m==============================='

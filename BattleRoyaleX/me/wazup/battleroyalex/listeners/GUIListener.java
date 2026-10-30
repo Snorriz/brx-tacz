@@ -605,15 +605,14 @@ public class GUIListener implements Listener {
                               }
                            }
 
-                           var20.party = new Party(var2, var31);
-                           BattleRoyaleX.getInstance().parties.add(var20.party);
-                           BattleRoyaleX.getInstance().updatePartiesInventory();
-                           var2.openInventory(var20.party.gui);
+                           // TaxBattle: sistema party rimosso
+                           var2.sendMessage(org.bukkit.ChatColor.RED + "Il sistema dei party è stato rimosso da TaxBattle.");
                            return;
                         }
 
                         if (var5.getType().equals(Material.CHEST)) {
-                           BattleRoyaleX.getInstance().partySelector.open(var2);
+                           // TaxBattle: sistema party rimosso
+                           var2.sendMessage(org.bukkit.ChatColor.RED + "Il sistema dei party è stato rimosso da TaxBattle.");
                            return;
                         }
 

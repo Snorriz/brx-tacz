@@ -220,6 +220,11 @@ public class FlexibleScoreboard {
    }
 
    public void apply(Player var1) {
+      // TaxBattle: assicura che i placeholder personali esistano e popola %player_name%
+      if (!this.playerValues.containsKey(var1.getName())) {
+         this.setPlayerPlaceholder(var1.getName(), "%player_kills%", "0");
+      }
+      this.setPlayerPlaceholder(var1.getName(), "%player_name%", var1.getName());
       java.util.HashMap<String, String> mine = this.playerValues.get(var1.getName());
       if (mine == null || mine.isEmpty()) {
          var1.setScoreboard(this.scoreboard);
