@@ -20,6 +20,19 @@ public class FlexibleScoreboard {
    private HashMap<String, FlexibleScoreboard.PlaceholderEntry> placeholders = new HashMap();
    private HashMap<Integer, List<String>> multiplePlaceholders = new HashMap();
    private boolean showHealth;
+   // TaxBattle: per-player placeholder values (e.g. %kills%) so a shared board can still show
+   // personal info. Each player receives their own clone of the Bukkit scoreboard with these
+   // values applied to the "%player%"-anchored line. See apply(Player).
+   private final java.util.HashMap<String, String> globalValues = new java.util.HashMap<>();
+   private final java.util.HashMap<String, java.util.HashMap<String, String>> playerValues = new java.util.HashMap<>();
+
+   public void setPlaceholderValue(String ph, String value) {
+      this.globalValues.put(ph, value);
+   }
+
+   public void setPlayerPlaceholder(String playerName, String ph, String value) {
+      this.playerValues.computeIfAbsent(playerName, k -> new java.util.HashMap<>()).put(ph, value);
+   }
 
    public FlexibleScoreboard(boolean var1, boolean var2, String var3, String... var4) {
       this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
@@ -207,10 +220,37 @@ public class FlexibleScoreboard {
    }
 
    public void apply(Player var1) {
-      var1.setScoreboard(this.scoreboard);
+      java.util.HashMap<String, String> mine = this.playerValues.get(var1.getName());
+      if (mine == null || mine.isEmpty()) {
+         var1.setScoreboard(this.scoreboard);
+      } else {
+         // Per-player clone: copy the shared board and rewrite only the lines that carry
+         // player-specific placeholders (e.g. "%player% Kills" -> "<nome> Kills").
+         Scoreboard personal = Bukkit.getScoreboardManager().getNewScoreboard();
+         Objective personalObj = personal.registerNewObjective("BRX_P", "dummy");
+         personalObj.setDisplaySlot(DisplaySlot.SIDEBAR);
+         personalObj.setDisplayName(this.objective.getDisplayName());
+         for (java.util.Map.Entry<Integer, LineEntry> e : this.lines.entrySet()) {
+            String text = e.getValue().originalText;
+            for (java.util.Map.Entry<String, String> pv : mine.entrySet()) {
+               text = text.replace(pv.getKey(), pv.getValue());
+            }
+            for (java.util.Map.Entry<String, PlaceholderEntry> g : this.placeholders.entrySet()) {
+               text = text.replace(g.getKey(), g.getValue().currentValue);
+            }
+            personalObj.getScore(this.format(text)).setScore(e.getKey());
+         }
+         var1.setScoreboard(personal);
+      }
       if (this.showHealth) {
          var1.setHealth(var1.getHealth() - 0.1);
       }
+   }
+
+   /** TaxBattle: updates a personal placeholder for one player and re-applies his board. */
+   public void updateForPlayer(Player player, String placeholder, String value) {
+      this.setPlayerPlaceholder(player.getName(), placeholder, value);
+      this.apply(player);
    }
 
    private class LineEntry {

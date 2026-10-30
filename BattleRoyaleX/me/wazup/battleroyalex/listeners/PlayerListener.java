@@ -1460,13 +1460,49 @@ public class PlayerListener implements Listener {
       }
    }
 
+   /** TaxBattle: readable weapon name from the BRX_WEAPON lore tag (TaCZ guns), else vanilla-ish name. */
+   private String getWeaponDisplayName(Player killer) {
+      try {
+         ItemStack hand = killer.getInventory().getItemInMain();
+         if ((hand == null || hand.getType().equals(Material.AIR)) && killer.getInventory().getItemInOffHand() != null) {
+            hand = killer.getInventory().getItemInOffHand();
+         }
+
+         if (hand != null && hand.hasItemMeta() && hand.getItemMeta().hasLore()) {
+            for (String line : hand.getItemMeta().getLore()) {
+               if (line != null && line.startsWith("BRX_WEAPON:")) {
+                  String[] seg = line.split(":");
+                  // TaCZ token -> Italian category name ("fucile di precisione", "pistola", ...)
+                  return seg.length >= 3 ? Utils.getWeaponCategory(seg[2]) : "arma";
+               }
+            }
+         }
+
+         if (hand != null && !hand.getType().equals(Material.AIR)) {
+            if (hand.getItemMeta() != null && hand.getItemMeta().hasDisplayName()) {
+               return org.bukkit.ChatColor.stripColor(hand.getItemMeta().getDisplayName());
+            }
+
+            String mat = hand.getType().name();
+            if (mat.contains("SWORD")) return "spada";
+            if (mat.contains("AXE")) return "ascia";
+            if (mat.equals("BOW")) return "arco";
+            if (mat.equals("FISHING_ROD")) return "canna da pesca";
+         }
+      } catch (Throwable ignored) {
+      }
+
+      return "arma";
+   }
+
    private String getDeathMessage(Player var1, Player var2) {
       if (var2 != null) {
          return var2.getName().equals(var1.getName())
             ? Customization.getInstance().player_suicide.replace("%player%", var1.getName())
             : ((String)Customization.getInstance().killMessages.get(Utils.random.nextInt(Customization.getInstance().killMessages.size())))
                .replace("%player%", var1.getName())
-               .replace("%killer%", var2.getName());
+               .replace("%killer%", var2.getName())
+               .replace("%weapon%", this.getWeaponDisplayName(var2));
       } else {
          return var1.getLastDamageCause() != null && Customization.getInstance().deathMessages.containsKey(var1.getLastDamageCause().getCause().name())
             ? ((String)Customization.getInstance().deathMessages.get(var1.getLastDamageCause().getCause().name())).replace("%player%", var1.getName())

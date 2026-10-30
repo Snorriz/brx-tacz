@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -589,6 +590,18 @@ public class Utils {
             Object rawBuilt = taczGunItemBuilderBuild.invoke(builder);
             ItemStack result = asBukkitItemStack(rawBuilt);
             if (result != null && !result.getType().equals(Material.AIR)) {
+               // TaxBattle: tag the item with a readable weapon name so death messages can say
+               // "X ha ucciso Y con un fucile di precisione" instead of a raw material name.
+               try {
+                  ItemMeta tagMeta = result.getItemMeta();
+                  if (tagMeta != null) {
+                     List<String> tagLore = tagMeta.hasLore() ? new ArrayList<>(tagMeta.getLore()) : new ArrayList<>();
+                     tagLore.add("BRX_WEAPON:" + namespace + ":" + gunId);
+                     tagMeta.setLore(tagLore);
+                     result.setItemMeta(tagMeta);
+                  }
+               } catch (Throwable ignored) {
+               }
                if (!configuredBeforeBuild) {
                   try {
                      Object iGun = taczIGunGetIGunOrNull.invoke(null, rawBuilt);
@@ -625,6 +638,20 @@ public class Utils {
             return null;
          }
       }
+   }
+
+   /** TaxBattle: readable Italian weapon category for death messages, keyed by TaCZ gun id. */
+   public static String getWeaponCategory(String gunId) {
+      if (gunId == null) return "arma";
+      String g = gunId.toLowerCase();
+      if (g.contains("awp") || g.contains("m95") || g.contains("sniper") || g.contains("barrett")) return "fucile di precisione";
+      if (g.contains("m249") || g.contains("rpk") || g.contains("minigun") || g.contains("mg42") || g.contains("lmg")) return "mitragliatrice pesante";
+      if (g.contains("aa12") || g.contains("m870") || g.contains("spas") || g.contains("saiga") || g.contains("shotgun") || g.contains("winchester")) return "fucile a pompa";
+      if (g.contains("ak47") || g.contains("m4a1") || g.contains("hk416") || g.contains("scar") || g.contains("aug") || g.contains("l85") || g.contains("groza") || g.contains("assault")) return "fucile d'assalto";
+      if (g.contains("vector") || g.contains("mp5") || g.contains("ump") || g.contains("p90") || g.contains("uzi") || g.contains("smg") || g.contains("cz3")) return "mitra";
+      if (g.contains("glock") || g.contains("m1911") || g.contains("deagle") || g.contains("desert") || g.contains("pistol") || g.contains("revolver") || g.contains("hk_usp") || g.contains("cz75")) return "pistola";
+      if (g.contains("melee") || g.contains("knife") || g.contains("machete")) return "arma da mischia";
+      return "arma";
    }
 
    // ---- Generic Forge-mod item support (Miklos's Military Armor, lrTactical, ...) ----
