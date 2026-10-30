@@ -111,9 +111,82 @@ public class FlexibleScoreboard {
    }
 
    private String format(String var1) {
-      return var1.length() > 16
-         ? (Bukkit.getBukkitVersion().contains("1.7") ? var1.substring(0, 16) : (var1.length() > 32 ? var1.substring(0, 32) : var1))
-         : var1;
+      // Hex color tags &#RRGGBB are natively supported on 1.16+ (we run 1.20.1): convert them
+      // to the legacy \u00A7x code sequence so gradients work in scoreboard titles/lines too.
+      var1 = hexToLegacy(var1);
+      int visible = visibleLength(var1);
+      if (visible > 32) {
+         var1 = truncateToVisible(var1, 32);
+      } else if (visible > 16 && var1.startsWith("\u00A7x")) {
+         // animated gradient headers can legitimately exceed the old 16-char limit on modern versions
+      }
+      return var1;
+   }
+
+   public static String hexToLegacy(String input) {
+      if (input == null || input.indexOf('#') < 0) {
+         return input;
+      }
+      StringBuilder out = new StringBuilder();
+      int i = 0;
+      while (i < input.length()) {
+         if (input.charAt(i) == '&' && i + 7 < input.length() && input.charAt(i + 1) == '#') {
+            String hex = input.substring(i + 2, i + 8);
+            if (hex.matches("[0-9a-fA-F]{6}")) {
+               out.append('\u00A7').append('x');
+               for (char c : hex.toCharArray()) {
+                  out.append('\u00A7').append(c);
+               }
+               i += 8;
+               continue;
+            }
+         }
+         out.append(input.charAt(i));
+         i++;
+      }
+      return out.toString();
+   }
+
+   public static int visibleLength(String s) {
+      int len = 0;
+      for (int i = 0; i < s.length(); i++) {
+         char c = s.charAt(i);
+         if (c == '\u00A7' && i + 1 < s.length()) {
+            char code = Character.toLowerCase(s.charAt(i + 1));
+            i++;
+            if (code == 'x') {
+               i += 6; // \u00A7x + six single-hex color codes
+            }
+         } else {
+            len++;
+         }
+      }
+      return len;
+   }
+
+   public static String truncateToVisible(String s, int maxVisible) {
+      StringBuilder out = new StringBuilder();
+      int visible = 0;
+      boolean pendingX = false;
+      for (int i = 0; i < s.length() && visible < maxVisible; i++) {
+         char c = s.charAt(i);
+         if (c == '\u00A7' && i + 1 < s.length()) {
+            char code = Character.toLowerCase(s.charAt(i + 1));
+            out.append(c).append(s.charAt(++i));
+            if (code == 'x') {
+               // copy up to 6 following hex color codes without counting them as visible
+               int copied = 0;
+               while (i + 2 < s.length() && s.charAt(i + 1) == '\u00A7' && copied < 6) {
+                  out.append(s.charAt(++i)).append(s.charAt(++i));
+                  copied++;
+               }
+            }
+         } else {
+            out.append(c);
+            visible++;
+         }
+      }
+      return out.toString();
    }
 
    public Team registerTeam(String var1) {
@@ -125,7 +198,12 @@ public class FlexibleScoreboard {
    }
 
    public void setName(String var1) {
-      this.objective.setDisplayName(var1);
+      this.objective.setDisplayName(hexToLegacy(var1));
+   }
+
+   /** Replaces the display name every tick (used by the animated TaxPhobia gradient header). */
+   public void setTitle(String var1) {
+      this.setName(var1);
    }
 
    public void apply(Player var1) {
