@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -298,6 +299,20 @@ public class Utils {
             }
 
             var5 = new ItemStackBuilder(var32);
+         } else if (isForgeModItemPrefix(var4.split(":")[0])) {
+            // Generic Forge-mod item support for ArcLight: creates the item directly from its
+            // registry id via Forge's ItemRegistry (reflection, so this compiles without Forge).
+            // Syntax examples (namespace:id is the exact in-game /give id):
+            //   MM_ARMOR:mm_armor:helmet_6b_47emrribbon_helmet : 1 :: 20%
+            //   LRTACTICAL:lrtactical:melee : 1 :: 20%
+            //   MOD:<any_namespace>:<item_id>[:qty] : amount
+            String[] var33 = var3[0].split(":");
+            ItemStack var34 = getForgeModItemStack(var33);
+            if (var34 == null) {
+               return null;
+            }
+
+            var5 = new ItemStackBuilder(var34);
          } else if (var4.split(":")[0].equals("ITEMEDIT")) {
             ItemStack var14 = null;
             if (BattleRoyaleX.getInstance().itemEdit != null) {
@@ -575,6 +590,18 @@ public class Utils {
             Object rawBuilt = taczGunItemBuilderBuild.invoke(builder);
             ItemStack result = asBukkitItemStack(rawBuilt);
             if (result != null && !result.getType().equals(Material.AIR)) {
+               // TaxBattle: tag the item with a readable weapon name so death messages can say
+               // "X ha ucciso Y con un fucile di precisione" instead of a raw material name.
+               try {
+                  ItemMeta tagMeta = result.getItemMeta();
+                  if (tagMeta != null) {
+                     List<String> tagLore = tagMeta.hasLore() ? new ArrayList<>(tagMeta.getLore()) : new ArrayList<>();
+                     tagLore.add("BRX_WEAPON:" + namespace + ":" + gunId);
+                     tagMeta.setLore(tagLore);
+                     result.setItemMeta(tagMeta);
+                  }
+               } catch (Throwable ignored) {
+               }
                if (!configuredBeforeBuild) {
                   try {
                      Object iGun = taczIGunGetIGunOrNull.invoke(null, rawBuilt);
@@ -610,6 +637,79 @@ public class Utils {
             var7.printStackTrace();
             return null;
          }
+      }
+   }
+
+   /** TaxBattle: readable Italian weapon category for death messages, keyed by TaCZ gun id. */
+   public static String getWeaponCategory(String gunId) {
+      if (gunId == null) return "arma";
+      String g = gunId.toLowerCase();
+      if (g.contains("awp") || g.contains("m95") || g.contains("sniper") || g.contains("barrett")) return "fucile di precisione";
+      if (g.contains("m249") || g.contains("rpk") || g.contains("minigun") || g.contains("mg42") || g.contains("lmg")) return "mitragliatrice pesante";
+      if (g.contains("aa12") || g.contains("m870") || g.contains("spas") || g.contains("saiga") || g.contains("shotgun") || g.contains("winchester")) return "fucile a pompa";
+      if (g.contains("ak47") || g.contains("m4a1") || g.contains("hk416") || g.contains("scar") || g.contains("aug") || g.contains("l85") || g.contains("groza") || g.contains("assault")) return "fucile d'assalto";
+      if (g.contains("vector") || g.contains("mp5") || g.contains("ump") || g.contains("p90") || g.contains("uzi") || g.contains("smg") || g.contains("cz3")) return "mitra";
+      if (g.contains("glock") || g.contains("m1911") || g.contains("deagle") || g.contains("desert") || g.contains("pistol") || g.contains("revolver") || g.contains("hk_usp") || g.contains("cz75")) return "pistola";
+      if (g.contains("melee") || g.contains("knife") || g.contains("machete")) return "arma da mischia";
+      return "arma";
+   }
+
+   // ---- Generic Forge-mod item support (Miklos's Military Armor, lrTactical, ...) ----
+   private static final java.util.Set<String> FORGE_MOD_ITEM_PREFIXES = new java.util.HashSet<>(
+         java.util.Arrays.asList("MM_ARMOR", "MMARMOR", "MIKLOSARMOR", "LR_TACTICAL", "LRTACTICAL", "MOD"));
+
+   public static boolean isForgeModItemPrefix(String prefix) {
+      return prefix != null && FORGE_MOD_ITEM_PREFIXES.contains(prefix.toUpperCase());
+   }
+
+   /**
+    * Creates a Bukkit ItemStack from any Forge-mod registry id using pure reflection on
+    * Forge's Registries.ITEM + Item#asItemStack(), bridged to Bukkit through CraftItemStack
+    * (see asBukkitItemStack). Works on ArcLight 1.20.1 (Forge 47.x) with no compile-time
+    * dependency on Forge/Minecraft classes.
+    * Accepted token segments: [PREFIX, namespace, itemId] or [PREFIX, "namespace:itemId"]
+    */
+   public static ItemStack getForgeModItemStack(String[] parts) {
+      if (parts == null || parts.length < 2) {
+         return null;
+      }
+      String namespace = null;
+      String path = null;
+      if (parts.length >= 3) {
+         namespace = parts[1];
+         path = parts[2];
+      } else {
+         int idx = parts[1].indexOf(':');
+         if (idx > 0 && idx < parts[1].length() - 1) {
+            namespace = parts[1].substring(0, idx);
+            path = parts[1].substring(idx + 1);
+         } else {
+            return null;
+         }
+      }
+      try {
+         ClassLoader serverCl = Bukkit.getServer().getClass().getClassLoader();
+         Class<?> rlClass = loadTaCZClass(serverCl, "net.minecraft.resources.ResourceLocation");
+         Object rl = rlClass.getConstructor(String.class, String.class).newInstance(namespace, path);
+
+         Class<?> registriesClass = loadTaCZClass(serverCl, "net.minecraftforge.registries.ForgeRegistries");
+         Object itemRegistry = registriesClass.getField("ITEMS").get(null);
+         Object mcItem = itemRegistry.getClass().getMethod("getValue", rlClass).invoke(itemRegistry, rl);
+         if (mcItem == null) {
+            error("Unknown Forge item id \"" + namespace + ":" + path + "\" (not in the item registry)");
+            return null;
+         }
+
+         Object nmsStack = mcItem.getClass().getMethod("asItemStack").invoke(mcItem);
+         ItemStack result = asBukkitItemStack(nmsStack);
+         if (result == null || result.getType().equals(Material.AIR)) {
+            error("Could not convert Forge item \"" + namespace + ":" + path + "\" to a Bukkit ItemStack");
+            return null;
+         }
+         return result;
+      } catch (Throwable t) {
+         error("Could not generate Forge mod item for \"" + namespace + ":" + path + "\": " + t);
+         return null;
       }
    }
 
@@ -963,20 +1063,112 @@ public class Utils {
    }
 
    public static void fillChest(Block var0, ChestType var1, Location var2) {
+      fillChest(var0, var1, var2, false);
+   }
+
+   // ===== TaxBattle: hot-zone loot & anti-duplicate per casse vicine =====
+   private static final java.util.HashMap<String, String> recentLootByChunk = new java.util.HashMap<>();
+   private static final java.util.HashMap<String, Long> recentLootTimeByChunk = new java.util.HashMap<>();
+
+   /** Restituisce una "firma" dell'item per il dedup locale (categoria arma / tipo). */
+   public static String lootSignature(ItemStack stack) {
+      if (stack == null) {
+         return null;
+      }
+      if (stack.hasItemMeta() && stack.getItemMeta().hasLore()) {
+         for (String line : stack.getItemMeta().getLore()) {
+            if (line.startsWith("BRX_WEAPON:")) {
+               String[] seg = line.split(":");
+               if (seg.length >= 3) {
+                  return "WPN:" + getWeaponCategory(seg[2]);
+               }
+            }
+         }
+      }
+      return stack.getType().name();
+   }
+
+   /** True se la posizione ricade in una Hot-Zone definita in config.yml. */
+   public static boolean isHotZone(Location loc) {
+      if (loc == null || loc.getWorld() == null) {
+         return false;
+      }
+      org.bukkit.configuration.file.FileConfiguration cfg = BattleRoyaleX.getInstance().getConfig();
+      for (String key : cfg.getConfigurationSection("Hot-Zones") != null ? cfg.getConfigurationSection("Hot-Zones").getKeys(false) : new java.util.HashSet<String>()) {
+         String world = cfg.getString("Hot-Zones." + key + ".world");
+         if (world == null || !world.equalsIgnoreCase(loc.getWorld().getName())) {
+            continue;
+         }
+         double x = cfg.getDouble("Hot-Zones." + key + ".x");
+         double z = cfg.getDouble("Hot-Zones." + key + ".z");
+         double r = cfg.getDouble("Hot-Zones." + key + ".radius", 50.0);
+         double dx = loc.getX() - x;
+         double dz = loc.getZ() - z;
+         if (dx * dx + dz * dz <= r * r) {
+            return true;
+         }
+      }
+      return false;
+   }
+
+   /** True se l'item e un'arma base (pistola/mischia): esclusa dal pool delle hot-zone. */
+   public static boolean isBasicWeaponStack(ItemStack stack) {
+      if (stack == null || !stack.hasItemMeta() || !stack.getItemMeta().hasLore()) {
+         return false;
+      }
+      for (String line : stack.getItemMeta().getLore()) {
+         if (line.startsWith("BRX_WEAPON:")) {
+            String[] seg = line.split(":");
+            if (seg.length >= 3) {
+               String cat = getWeaponCategory(seg[2]);
+               return cat.equals("pistola") || cat.equals("arma da mischia");
+            }
+         }
+      }
+      return false;
+   }
+
+   /** True se l'item e un'arma o munizione TaCZ/mod (per il blocco "stessa tipologia in casse vicine"). */
+   private static boolean isWeaponOrAmmo(ItemStack stack) {
+      String sig = lootSignature(stack);
+      return sig != null && (sig.startsWith("WPN:") || sig.toLowerCase().contains("ammo"));
+   }
+
+   public static void fillChest(Block var0, ChestType var1, Location var2, boolean forceHot) {
+      boolean hot = forceHot || isHotZone(var0.getLocation());
       int var3 = random.nextInt(var1.maxItems - var1.minItems + 1) + var1.minItems;
+      String chunkKey = var0.getWorld().getName() + ";" + (var0.getX() >> 4) + ";" + (var0.getZ() >> 4);
+      long now = System.currentTimeMillis();
+      String recent = recentLootByChunk.remove(chunkKey);
+      Long t = recentLootTimeByChunk.remove(chunkKey);
+      if (recent != null && t != null && now - t > 60000L) {
+         recent = null; // troppo vecchio, non bloccare piu
+      }
+
       if (Config.getInstance().realisticChests) {
          RealisticItems.getInstance().playChestAnimation(var0, true);
-         ArrayList var4 = new ArrayList();
+         ArrayList<ItemStack> var4 = new ArrayList<ItemStack>();
 
          for (int var5 = 0; var5 < var3; var5++) {
-            Object var6 = null;
+            ItemStack var6 = null;
             int var7 = 0;
 
-            while (var7 < 3 && var4.contains(var6 = var1.content.getRandom(random))) {
+            while (var7 < 6) {
+               var6 = var1.content.getRandom(random, hot);
+               String sig = lootSignature(var6);
+               boolean dup = var6 == null || var4.contains(var6) || (recent != null && recent.equals(sig));
+               if (!dup) {
+                  break;
+               }
                var7++;
             }
 
             var4.add(var6);
+            if (isWeaponOrAmmo(var6)) {
+               recent = lootSignature(var6);
+               recentLootByChunk.put(chunkKey, recent);
+               recentLootTimeByChunk.put(chunkKey, now);
+            }
          }
 
          RealisticItems.getInstance().giveItemsFromBlock(var0, var4, var2);
@@ -995,11 +1187,22 @@ public class Utils {
             ItemStack var13 = null;
             int var8 = 0;
 
-            while (var8 < 3 && var9.getInventory().contains((var13 = var1.content.getRandom(random)).getType())) {
+            while (var8 < 6) {
+               var13 = var1.content.getRandom(random, hot);
+               String sig = lootSignature(var13);
+               boolean dup = var13 == null || var9.getInventory().contains(var13.getType()) || (recent != null && recent.equals(sig));
+               if (!dup) {
+                  break;
+               }
                var8++;
             }
 
             var9.getInventory().setItem(var11, var13);
+            if (isWeaponOrAmmo(var13)) {
+               recent = lootSignature(var13);
+               recentLootByChunk.put(chunkKey, recent);
+               recentLootTimeByChunk.put(chunkKey, now);
+            }
          }
       }
    }

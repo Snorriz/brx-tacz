@@ -287,12 +287,8 @@ public class PlayerListener implements Listener {
 
                if (BattleRoyaleX.getInstance().lobbyPlayers.contains(var2.getName())) {
                   if (Utils.compareItem(var2.getItemInHand(), (ItemStack)Customization.getInstance().items.get("Party"))) {
-                     if (var11.party == null) {
-                        var2.openInventory(BattleRoyaleX.getInstance().partyMenu);
-                     } else {
-                        var2.openInventory(var11.party.gui);
-                     }
-
+                     // TaxBattle: sistema party rimosso
+                     var2.sendMessage(org.bukkit.ChatColor.RED + "Il sistema dei party e' stato rimosso da TaxBattle.");
                      return;
                   }
 
@@ -1460,13 +1456,49 @@ public class PlayerListener implements Listener {
       }
    }
 
+   /** TaxBattle: readable weapon name from the BRX_WEAPON lore tag (TaCZ guns), else vanilla-ish name. */
+   private String getWeaponDisplayName(Player killer) {
+      try {
+         ItemStack hand = killer.getItemInHand();
+         if ((hand == null || hand.getType().equals(Material.AIR)) && killer.getInventory().getItemInOffHand() != null) {
+            hand = killer.getInventory().getItemInOffHand();
+         }
+
+         if (hand != null && hand.hasItemMeta() && hand.getItemMeta().hasLore()) {
+            for (String line : hand.getItemMeta().getLore()) {
+               if (line != null && line.startsWith("BRX_WEAPON:")) {
+                  String[] seg = line.split(":");
+                  // TaCZ token -> Italian category name ("fucile di precisione", "pistola", ...)
+                  return seg.length >= 3 ? Utils.getWeaponCategory(seg[2]) : "arma";
+               }
+            }
+         }
+
+         if (hand != null && !hand.getType().equals(Material.AIR)) {
+            if (hand.getItemMeta() != null && hand.getItemMeta().hasDisplayName()) {
+               return org.bukkit.ChatColor.stripColor(hand.getItemMeta().getDisplayName());
+            }
+
+            String mat = hand.getType().name();
+            if (mat.contains("SWORD")) return "spada";
+            if (mat.contains("AXE")) return "ascia";
+            if (mat.equals("BOW")) return "arco";
+            if (mat.equals("FISHING_ROD")) return "canna da pesca";
+         }
+      } catch (Throwable ignored) {
+      }
+
+      return "arma";
+   }
+
    private String getDeathMessage(Player var1, Player var2) {
       if (var2 != null) {
          return var2.getName().equals(var1.getName())
             ? Customization.getInstance().player_suicide.replace("%player%", var1.getName())
             : ((String)Customization.getInstance().killMessages.get(Utils.random.nextInt(Customization.getInstance().killMessages.size())))
                .replace("%player%", var1.getName())
-               .replace("%killer%", var2.getName());
+               .replace("%killer%", var2.getName())
+               .replace("%weapon%", this.getWeaponDisplayName(var2));
       } else {
          return var1.getLastDamageCause() != null && Customization.getInstance().deathMessages.containsKey(var1.getLastDamageCause().getCause().name())
             ? ((String)Customization.getInstance().deathMessages.get(var1.getLastDamageCause().getCause().name())).replace("%player%", var1.getName())
@@ -1517,6 +1549,10 @@ public class PlayerListener implements Listener {
       var1.playSound(var1.getLocation(), SoundsManager.NOTE_PLING, 1.0F, 1.0F);
       RanksManager.getInstance().addExp(var1, var7);
       var5.killers.put(var1.getName(), var5.killers.containsKey(var1.getName()) ? (Integer)var5.killers.get(var1.getName()) + 1 : 1);
+      // TaxBattle: aggiorna le kill personali in scoreboard
+      if (var5.scoreboard != null) {
+         var5.scoreboard.updateForPlayer(var1, "%player_kills%", String.valueOf((Integer)var5.killers.get(var1.getName())));
+      }
       TitleManager.getInstance()
          .sendForcedActionBar(var1, ChatColor.RED + "You now have: " + ChatColor.YELLOW + var5.killers.get(var1.getName()) + ChatColor.RED + " kills!", var4);
       PAData var8 = (PAData)var5.players.get(var1.getName());

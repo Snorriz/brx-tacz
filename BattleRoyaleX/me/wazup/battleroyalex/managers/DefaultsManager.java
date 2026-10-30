@@ -24,6 +24,54 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class DefaultsManager {
    public static void createDefaultKits(FileConfiguration var0) {
+      // TaxBattle: kit unico di default con le basi TaCZ (pistola + munizioni + mischia).
+      HashMap<String, String> var1 = new HashMap<>();
+      HashMap<String, List<String>> var2 = new HashMap<>();
+      HashMap<String, List<String>> var3 = new HashMap<>();
+      var1.put("TaxBattle", "TACZ:tacz:glock_17 : 1, false, COMMON, 0, MM_ARMOR:mm_armor:helmet_6b_47emrribbon_helmet, MM_ARMOR:mm_armor:vest_6b_45_chestplate, MM_ARMOR:mm_armor:emruniformribbon_leggins, MM_ARMOR:mm_armor:desertboots_boots");
+      var2.put("TaxBattle", Arrays.asList(new String[]{
+         "TACZ:tacz:glock_17 : 1 :: name:&eGlock 17",
+         "TACZAMMO:tacz:9mm : 1 :: name:&eMunizioni 9mm",
+         "LRTACTICAL:lrtactical:melee : 1 :: name:&eColtello Tattico",
+         "GOLDEN_APPLE : 1 :: name:&cMela d'Oro"
+      }));
+      var3.put("TaxBattle", Arrays.asList(new String[]{"&7Il tuo equipaggiamento base:", "&7Pistola, munizioni e armatura Miklos."}));
+
+      StringBuilder varSb = new StringBuilder();
+      for (String key : var1.keySet()) {
+         varSb.append("Kits.").append(key).append(".item: ").append(var1.get(key)).append("\n");
+         varSb.append("Kits.").append(key).append(".permission: ''\n");
+         varSb.append("Kits.").append(key).append(".rarity: COMMON\n");
+         varSb.append("Kits.").append(key).append(".value: 0\n");
+         String[] armor = var1.get(key).split(", ");
+         varSb.append("Kits.").append(key).append(".boots: ").append(armor[armor.length - 1]).append("\n");
+         varSb.append("Kits.").append(key).append(".leggings: ").append(armor[armor.length - 2]).append("\n");
+         varSb.append("Kits.").append(key).append(".chestplate: ").append(armor[armor.length - 3]).append("\n");
+         varSb.append("Kits.").append(key).append(".helmet: ").append(armor[armor.length - 4]).append("\n");
+         varSb.append("Kits.").append(key).append(".items:\n");
+         for (String it : var2.get(key)) {
+            varSb.append("- '").append(it).append("'\n");
+         }
+         varSb.append("Kits.").append(key).append(".description:\n");
+         for (String de : var3.get(key)) {
+            varSb.append("- '").append(de).append("'\n");
+         }
+      }
+      try {
+         java.io.FileWriter fw = new java.io.FileWriter(new java.io.File(BattleRoyaleX.getInstance().getDataFolder(), "kits.yml"));
+         fw.write(varSb.toString());
+         fw.close();
+      } catch (Exception ignored) {
+      }
+
+      // Ricarica il FileConfiguration in memoria cosi' il chiamante vede subito le chiavi.
+      try {
+         var0.load(new java.io.File(BattleRoyaleX.getInstance().getDataFolder(), "kits.yml"));
+      } catch (Exception ignored) {
+      }
+   }
+
+   public static void createDefaultKitsUNUSED(FileConfiguration var0) {
       HashMap<String, String> var1 = new HashMap<>();
       HashMap<String, List<String>> var2 = new HashMap<>();
       HashMap<String, List<String>> var3 = new HashMap<>();

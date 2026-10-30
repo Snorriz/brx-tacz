@@ -1,34 +1,86 @@
-# Simple Format: 'Item : Amount :: Chance'
-# Complex Format: 'Item:Durability : Amount : name:<name> : lore:<lore> : enchant:<enchantment>:level :: Chance'
-# Example (1): 'IRON_SWORD : 1 :: 20%' -> This will give a normal iron sword
-# Example (2): 'IRON_SWORD : 1 : name:&cSword :: 20%' -> This will give a normal iron sword, but with a custom name!
-# Example (3): 'IRON_SWORD : 1 : name:&6God Sword : enchant:DAMAGE_ALL:1 :: 5%' -> This will give an iron sword named 'God Sword' with a sharpness 1 enchantment
-# For a list of enchantments, visit https://hub.spigotmc.org/javadocs/spigot/org/bukkit/enchantments/Enchantment.html
-# There is no lock on the enchantment level!
-# For POTIONS, if your server is below 1.9 then use  POTION:DURABILITY to make potions like POTION:16421, otherwise you should use the form
-# POTION/SPLASH_POTION/LINGERING_POTION:POTION_TYPE:EXTENDED:UPGRADED
-# Example of the form -> 'SPLASH_POTION:INSTANT_DAMAGE:false:true : 1'
-# List of potion types: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionType.html
-# TIPPED_ARROW has the same format as potions -> # Example of the form -> 'TIPPED_ARROW:POISON:false:true : 1'
-# If you want to add QualityArmor guns / items, the format is: 'QualityArmory:<Item> : Amount :: Chance'
-# For example, 'QualityArmory:awp : 1 :: 15%'
-# If QualityArmory was installed on the server before this file was generated, the plugin will automatically add QualityArmory items to the lists below.
-# For CrackShot, format is 'CrackShot:<Item> : Amount :: Chance'
-# For CrackShotPlus, format is 'CrackShotPlus:<Item> : Amount :: Chance'
-# For ItemEdit, format is 'ItemEdit:<ITEM_ID> : Amount :: Chance'
-# For WeaponMechanics, format is 'WeaponMechanics:<ITEM_ID> : Amount :: Chance'
-# For ItemsAdder, format is 'ItemsAdder:<your_item> : Amount :: Chance'
-# For MMOItems, format is 'MMOItems:<type>:<name> : Amount :: Chance'
-# For TaCZ (Timeless and Classy Guns, Forge mod on ArcLight), format is 'TACZ:<namespace>:<gun_id>[:ammo] : Amount :: Chance'
-# For example, 'TACZ:tacz:ak47 : 1 :: 15%' or 'TACZ:tacz:ai_awp:5 : 1 :: 10%' (5 rounds in the magazine)
-# 'TIMELESS:<gun_id>' also works and defaults to the 'tacz' namespace.
+# ============================================================
+#  TaxBattle - Loot table TaCZ bilanciata (con Hot-Zones)
+#  Formato: 'Item : Amount :: Chance'
+#  Armi:    'TACZ:<namespace>:<gun_id>[:ammo] : Amount : name:<nome> :: Chance'
+#  Mun.:    'TACZAMMO:<namespace>:<ammo_id> : Amount : name:<nome> :: Chance'
+#  Armatura mod: 'MM_ARMOR:mm_armor:<id>' | Altre mod: 'LRTACTICAL:lrtactical:<id>'
+#  HOT-ZONE: le casse dentro le aree "Hot-Zones" di config.yml pescano
+#            SOLO da questo pool escludendo pistole/mischia (le armi base),
+#            quindi privilegiano fucili, cecchini, LMG e munizioni pesanti.
+#  Anti-duplicate: due casse nello stesso chunk non ripetono la stessa
+#            categoria arma/tipo munizione a distanza ravvicinata.
+# ============================================================
 
 Chests:
   Normal:
     min-items: 2
-    max-items: 5
-    items: []
+    max-items: 4
+    items:
+    # --- Pistole TaCZ (arma primaria garantita ~35% totale) ---
+    - 'TACZ:tacz:glock_17 : 1 : name:&aGlock 17 :: 12%'
+    - 'TACZ:tacz:m1911 : 1 : name:&aM1911 :: 10%'
+    - 'TACZ:tacz:cz75 : 1 : name:&aCZ75 :: 8%'
+    - 'TACZ:tacz:deagle : 1 : name:&6Desert Eagle :: 5%'
+    # --- Mischia ---
+    - 'LRTACTICAL:lrtactical:melee : 1 : name:&7Coltello Tattico :: 8%'
+    # --- Munizioni leggere (frequenti, in stack) ---
+    - 'TACZAMMO:tacz:9mm : 2 : name:&eMunizioni 9mm x2 :: 18%'
+    - 'TACZAMMO:tacz:45acp : 2 : name:&eMunizioni .45 ACP x2 :: 12%'
+    - 'TACZAMMO:tacz:50ae : 1 : name:&6Munizioni .50 AE :: 6%'
+    # --- Difesa / utility ---
+    - 'LEATHER_CHESTPLATE : 1 : name:&fGiubbotto Leggero :: 10%'
+    - 'CHAINMAIL_CHESTPLATE : 1 : name:&fCorazza di Maglia :: 6%'
+    - 'IRON_HELMET : 1 : name:&fElmo di Ferro :: 5%'
+    - 'SPLASH_POTION:INSTANT_HEAL:false:false : 1 : name:&cPozione Curativa :: 8%'
+    - 'SPLASH_POTION:SPEED:false:false : 1 : name:&bPozione Velocita'' :: 6%'
+    - 'GOLDEN_APPLE : 1 : name:&6Mela d''Oro :: 4%'
+    - 'TNT : 2 : name:&cEsplosivo :: 4%'
+    - 'WEB : 2 : name:&fRagnatela :: 5%'
+    - 'COMPASS : 1 : name:&eBussola :: 4%'
   Carepackage:
-    min-items: 2
+    min-items: 3
     max-items: 5
-    items: []
+    items:
+    # --- Armi mid-tier: SMG / pompa (DPS alto, gittata media) ---
+    - 'TACZ:tacz:hk_mp5a5 : 1 : name:&bMP5A5 :: 12%'
+    - 'TACZ:tacz:vector45 : 1 : name:&bVektor .45 :: 10%'
+    - 'TACZ:tacz:ump45 : 1 : name:&bUMP45 :: 10%'
+    - 'TACZ:tacz:m870 : 1 : name:&bM870 :: 10%'
+    # --- Assalti base come alternativa ---
+    - 'TACZ:tacz:ak47 : 1 : name:&6AK-47 :: 6%'
+    - 'TACZ:tacz:m4a1 : 1 : name:&6M4A1 :: 6%'
+    # --- Munizioni abbinate ---
+    - 'TACZAMMO:tacz:9mm : 2 : name:&eMunizioni 9mm x2 :: 12%'
+    - 'TACZAMMO:tacz:45acp : 2 : name:&eMunizioni .45 ACP x2 :: 12%'
+    - 'TACZAMMO:tacz:12g : 1 : name:&eMunizioni Calibro 12 :: 10%'
+    - 'TACZAMMO:tacz:762x39 : 1 : name:&eMunizioni 7.62x39 :: 6%'
+    - 'TACZAMMO:tacz:556x45 : 1 : name:&eMunizioni 5.56 NATO :: 6%'
+    # --- Equipaggiamento forte ---
+    - 'MM_ARMOR:mm_armor:vest_6b_45_chestplate : 1 : name:&2Giubbotto 6B45 :: 10%'
+    - 'GOLDEN_APPLE : 2 : name:&6Mela d''Oro x2 :: 12%'
+    - 'DIAMOND_HELMET : 1 : name:&bElmo di Diamante :: 5%'
+  Supply-Drops:
+    min-items: 3
+    max-items: 5
+    items:
+    # --- Top tier: precisione / supporto pesante ---
+    - 'TACZ:tacz:ai_awp : 1 : name:&dAWP :: 8%'
+    - 'TACZ:tacz:m95 : 1 : name:&dBarrett M95 :: 5%'
+    - 'TACZ:tacz:rpk : 1 : name:&cRPK :: 8%'
+    - 'TACZ:tacz:m249 : 1 : name:&cM249 :: 5%'
+    - 'TACZ:tacz:p90 : 1 : name:&cP90 :: 7%'
+    - 'TACZ:tacz:aa12 : 1 : name:&cAA-12 :: 5%'
+    - 'TACZ:tacz:ak47 : 1 : name:&6AK-47 :: 6%'
+    - 'TACZ:tacz:m4a1 : 1 : name:&6M4A1 :: 6%'
+    # --- Munizioni pesanti dedicate ---
+    - 'TACZAMMO:tacz:338 : 1 : name:&dMunizioni .338 Lapua :: 8%'
+    - 'TACZAMMO:tacz:50bmg : 1 : name:&dMunizioni .50 BMG :: 5%'
+    - 'TACZAMMO:tacz:762x39 : 2 : name:&eMunizioni 7.62x39 x2 :: 10%'
+    - 'TACZAMMO:tacz:556x45 : 2 : name:&eMunizioni 5.56 NATO x2 :: 10%'
+    - 'TACZAMMO:tacz:57x28 : 1 : name:&eMunizioni 5.7x28 :: 6%'
+    - 'TACZAMMO:tacz:12g : 1 : name:&eMunizioni Calibro 12 :: 6%'
+    # --- Economia e sopravvivenza ---
+    - 'BattleRoyaleX:Cash:50 : 2 :: 20%'
+    - 'BattleRoyaleX:Cash:100 : 1 :: 8%'
+    - 'GOLDEN_APPLE : 3 : name:&6Mela d''Oro x3 :: 12%'
+    - 'MM_ARMOR:mm_armor:helmet_6b_47emrribbon_helmet : 1 : name:&2Elmo EMR Ribbon :: 8%'

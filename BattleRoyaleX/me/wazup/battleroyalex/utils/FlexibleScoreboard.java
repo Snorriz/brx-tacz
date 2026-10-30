@@ -20,6 +20,19 @@ public class FlexibleScoreboard {
    private HashMap<String, FlexibleScoreboard.PlaceholderEntry> placeholders = new HashMap();
    private HashMap<Integer, List<String>> multiplePlaceholders = new HashMap();
    private boolean showHealth;
+   // TaxBattle: per-player placeholder values (e.g. %kills%) so a shared board can still show
+   // personal info. Each player receives their own clone of the Bukkit scoreboard with these
+   // values applied to the "%player%"-anchored line. See apply(Player).
+   private final java.util.HashMap<String, String> globalValues = new java.util.HashMap<>();
+   private final java.util.HashMap<String, java.util.HashMap<String, String>> playerValues = new java.util.HashMap<>();
+
+   public void setPlaceholderValue(String ph, String value) {
+      this.globalValues.put(ph, value);
+   }
+
+   public void setPlayerPlaceholder(String playerName, String ph, String value) {
+      this.playerValues.computeIfAbsent(playerName, k -> new java.util.HashMap<>()).put(ph, value);
+   }
 
    public FlexibleScoreboard(boolean var1, boolean var2, String var3, String... var4) {
       this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
@@ -111,9 +124,82 @@ public class FlexibleScoreboard {
    }
 
    private String format(String var1) {
-      return var1.length() > 16
-         ? (Bukkit.getBukkitVersion().contains("1.7") ? var1.substring(0, 16) : (var1.length() > 32 ? var1.substring(0, 32) : var1))
-         : var1;
+      // Hex color tags &#RRGGBB are natively supported on 1.16+ (we run 1.20.1): convert them
+      // to the legacy \u00A7x code sequence so gradients work in scoreboard titles/lines too.
+      var1 = hexToLegacy(var1);
+      int visible = visibleLength(var1);
+      if (visible > 32) {
+         var1 = truncateToVisible(var1, 32);
+      } else if (visible > 16 && var1.startsWith("\u00A7x")) {
+         // animated gradient headers can legitimately exceed the old 16-char limit on modern versions
+      }
+      return var1;
+   }
+
+   public static String hexToLegacy(String input) {
+      if (input == null || input.indexOf('#') < 0) {
+         return input;
+      }
+      StringBuilder out = new StringBuilder();
+      int i = 0;
+      while (i < input.length()) {
+         if (input.charAt(i) == '&' && i + 7 < input.length() && input.charAt(i + 1) == '#') {
+            String hex = input.substring(i + 2, i + 8);
+            if (hex.matches("[0-9a-fA-F]{6}")) {
+               out.append('\u00A7').append('x');
+               for (char c : hex.toCharArray()) {
+                  out.append('\u00A7').append(c);
+               }
+               i += 8;
+               continue;
+            }
+         }
+         out.append(input.charAt(i));
+         i++;
+      }
+      return out.toString();
+   }
+
+   public static int visibleLength(String s) {
+      int len = 0;
+      for (int i = 0; i < s.length(); i++) {
+         char c = s.charAt(i);
+         if (c == '\u00A7' && i + 1 < s.length()) {
+            char code = Character.toLowerCase(s.charAt(i + 1));
+            i++;
+            if (code == 'x') {
+               i += 6; // \u00A7x + six single-hex color codes
+            }
+         } else {
+            len++;
+         }
+      }
+      return len;
+   }
+
+   public static String truncateToVisible(String s, int maxVisible) {
+      StringBuilder out = new StringBuilder();
+      int visible = 0;
+      boolean pendingX = false;
+      for (int i = 0; i < s.length() && visible < maxVisible; i++) {
+         char c = s.charAt(i);
+         if (c == '\u00A7' && i + 1 < s.length()) {
+            char code = Character.toLowerCase(s.charAt(i + 1));
+            out.append(c).append(s.charAt(++i));
+            if (code == 'x') {
+               // copy up to 6 following hex color codes without counting them as visible
+               int copied = 0;
+               while (i + 2 < s.length() && s.charAt(i + 1) == '\u00A7' && copied < 6) {
+                  out.append(s.charAt(++i)).append(s.charAt(++i));
+                  copied++;
+               }
+            }
+         } else {
+            out.append(c);
+            visible++;
+         }
+      }
+      return out.toString();
    }
 
    public Team registerTeam(String var1) {
@@ -125,14 +211,51 @@ public class FlexibleScoreboard {
    }
 
    public void setName(String var1) {
-      this.objective.setDisplayName(var1);
+      this.objective.setDisplayName(hexToLegacy(var1));
+   }
+
+   /** Replaces the display name every tick (used by the animated TaxPhobia gradient header). */
+   public void setTitle(String var1) {
+      this.setName(var1);
    }
 
    public void apply(Player var1) {
-      var1.setScoreboard(this.scoreboard);
+      // TaxBattle: assicura che i placeholder personali esistano e popola %player_name%
+      if (!this.playerValues.containsKey(var1.getName())) {
+         this.setPlayerPlaceholder(var1.getName(), "%player_kills%", "0");
+      }
+      this.setPlayerPlaceholder(var1.getName(), "%player_name%", var1.getName());
+      java.util.HashMap<String, String> mine = this.playerValues.get(var1.getName());
+      if (mine == null || mine.isEmpty()) {
+         var1.setScoreboard(this.scoreboard);
+      } else {
+         // Per-player clone: copy the shared board and rewrite only the lines that carry
+         // player-specific placeholders (e.g. "%player% Kills" -> "<nome> Kills").
+         Scoreboard personal = Bukkit.getScoreboardManager().getNewScoreboard();
+         Objective personalObj = personal.registerNewObjective("BRX_P", "dummy");
+         personalObj.setDisplaySlot(DisplaySlot.SIDEBAR);
+         personalObj.setDisplayName(this.objective.getDisplayName());
+         for (java.util.Map.Entry<Integer, LineEntry> e : this.lines.entrySet()) {
+            String text = e.getValue().originalText;
+            for (java.util.Map.Entry<String, String> pv : mine.entrySet()) {
+               text = text.replace(pv.getKey(), pv.getValue());
+            }
+            for (java.util.Map.Entry<String, PlaceholderEntry> g : this.placeholders.entrySet()) {
+               text = text.replace(g.getKey(), g.getValue().currentValue);
+            }
+            personalObj.getScore(this.format(text)).setScore(e.getKey());
+         }
+         var1.setScoreboard(personal);
+      }
       if (this.showHealth) {
          var1.setHealth(var1.getHealth() - 0.1);
       }
+   }
+
+   /** TaxBattle: updates a personal placeholder for one player and re-applies his board. */
+   public void updateForPlayer(Player player, String placeholder, String value) {
+      this.setPlayerPlaceholder(player.getName(), placeholder, value);
+      this.apply(player);
    }
 
    private class LineEntry {

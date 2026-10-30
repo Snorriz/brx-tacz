@@ -41,7 +41,7 @@ Disable-Hunger: true
 Auto-Remove-Potion-Bottles: true
 Load-Chunks-On-World-Load-Immediately: true
 Give-All-Kits-Compass: true
-Default-Kit: Tactician
+Default-Kit: TaxBattle
 Clear-Shopping-Station-Item-Lore-On-Purchase: false
 Broadcast-Time: [60, 30, 15, 5, 4, 3, 2, 1]
 Allowed-Commands: [battleroyale, br, battleroyalex, brx, tell, help, r, msg, ban, kick, report]
@@ -267,3 +267,7 @@ Voting-Options:
       - '&c10 Hearts : 10'
       - '&e20 Hearts : 20'
       - '&630 Hearts : 30'
+# ===== TaxBattle: Hot-Zones (aree con loot di armi potenti) =====
+# Ogni zona e' un cerchio sul mondo della mappa. Le casse al suo interno
+# pescano solo dal pool "hot" (fucili, mitra, LMG, snipers; escluse pistole/mischia).
+Hot-Zones: {}

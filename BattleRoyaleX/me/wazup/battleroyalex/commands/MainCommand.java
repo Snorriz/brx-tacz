@@ -33,7 +33,6 @@ import me.wazup.battleroyalex.commands.user.GUICommand;
 import me.wazup.battleroyalex.commands.user.JoinCommand;
 import me.wazup.battleroyalex.commands.user.LeaveCommand;
 import me.wazup.battleroyalex.commands.user.ListCommand;
-import me.wazup.battleroyalex.commands.user.PartyCommand;
 import me.wazup.battleroyalex.commands.user.RecipesCommand;
 import me.wazup.battleroyalex.managers.Config;
 import me.wazup.battleroyalex.managers.Customization;
@@ -57,7 +56,6 @@ public class MainCommand implements CommandExecutor, TabCompleter {
       this.commands.put("list", new ListCommand());
       this.commands.put("gui", new GUICommand());
       this.commands.put("recipes", new RecipesCommand());
-      this.commands.put("party", new PartyCommand());
       this.commands.put("admin", new AdminCommand());
       this.commands.put("setlobby", new SetLobbyCommand());
       this.commands.put("create", new CreateCommand());

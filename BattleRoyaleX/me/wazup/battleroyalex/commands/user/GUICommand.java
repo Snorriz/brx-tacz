@@ -30,12 +30,8 @@ public class GUICommand extends SubCommand {
             } else if (var6.equals("arenas")) {
                var1.arenaSelector.open(var5);
             } else if (var6.equals("party")) {
-               PlayerData var7 = (PlayerData)var1.playerData.get(var5.getName());
-               if (var7.party == null) {
-                  var5.openInventory(BattleRoyaleX.getInstance().partyMenu);
-               } else {
-                  var5.openInventory(var7.party.gui);
-               }
+               // TaxBattle: sistema party rimosso
+               var5.sendMessage(org.bukkit.ChatColor.RED + "Il sistema dei party è stato rimosso da TaxBattle.");
             } else if (var6.equals("profile")) {
                var5.openInventory(var1.profileInventory);
             } else if (var6.equals("quit")) {

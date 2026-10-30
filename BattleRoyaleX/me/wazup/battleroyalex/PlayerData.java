@@ -348,7 +348,7 @@ public class PlayerData {
          var1 = var1 + " :  ";
       }
 
-      this.selectedKit = var1.split(" : ")[0];
+      this.selectedKit = Config.getInstance().defaultKit; // TaxBattle: kit unico, forzato per tutti
       if (!this.ownedKits.contains(this.selectedKit)) {
          this.selectedKit = "";
       }
@@ -377,9 +377,15 @@ public class PlayerData {
 
    protected void loadKitsString(String var1) {
       this.ownedKits = new ArrayList();
+      // TaxBattle: kit unico di base, sempre posseduto e selezionato (nessuna scelta in shop).
+      String def = Config.getInstance().defaultKit;
+      if (BattleRoyaleX.getInstance().kits.containsKey(def)) {
+         this.ownedKits.add(def);
+      }
+
       if (!var1.isEmpty()) {
          for (String var5 : var1.split(" : ")) {
-            if (BattleRoyaleX.getInstance().kits.containsKey(var5)) {
+            if (BattleRoyaleX.getInstance().kits.containsKey(var5) && !this.ownedKits.contains(var5)) {
                this.ownedKits.add(var5);
             }
          }

@@ -1024,7 +1024,25 @@ public class Arena {
    }
 
    private String getFormattedTime(int var1) {
-      return var1 < 61 ? var1 + " seconds" : var1 / 60 + 1 + " minutes";
+      return var1 < 61 ? var1 + " secondi" : var1 / 60 + 1 + " minuti";
+   }
+
+   /** Formats a countdown as mm:ss (used by the storm timer line). */
+   public static String formatClock(int totalSeconds) {
+      int m = totalSeconds / 60;
+      int s = totalSeconds % 60;
+      return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+   }
+
+   /** True if the next scheduled event is a border shrink ("storm"): closing or already closed. */
+   public boolean isNextEventStorm(int nextEventTime) {
+      String name = this.shrinkageEvent.get(nextEventTime);
+      return name != null && !name.equals("Safezone Dispatch");
+   }
+
+   /** Seconds remaining before the game clock reaches the given event time. */
+   public int secondsUntil(int eventSeconds, int currentSeconds) {
+      return Math.max(0, currentSeconds - eventSeconds);
    }
 
    public void startMainTimer() {
@@ -1091,6 +1109,12 @@ public class Arena {
                   if (!((String)Arena.this.supplyDropsEvent.get(this.seconds)).equals("Supply Drop Dispatch")) {
                      Location var12 = (Location)Arena.this.supplyDrops.get(Arena.this.selectedSupplyDrop);
                      Arena.this.spawnSupplyDrop(var12);
+                     // TaxBattle: i supply drop usano SEMPRE il pool armi potenti (hot loot),
+                     // anche fuori dalle hot-zone definite in config.yml.
+                     Block varSdBlock = var12.getWorld() != null ? var12.getBlock() : null;
+                     if (varSdBlock != null && varSdBlock.getType() == Material.CHEST) {
+                        Utils.fillChest(varSdBlock, BattleRoyaleX.getInstance().chests.get("Supply-Drops"), var12, true);
+                     }
                      MapCursorCollection var16 = new MapCursorCollection();
 
                      for (ArenaMapRenderer var20 : Arena.this.activeRenderers) {
@@ -1131,7 +1155,27 @@ public class Arena {
             String var13 = Arena.this.getFormattedTime(this.seconds - this.nextEventTime);
             if (!var13.equals(this.lastEventTimer)) {
                Arena.this.scoreboard.update("%current_event_timer%", var13);
+               // TaxBattle scoreboard: storm countdown + phase label (Fortnite-style)
+               boolean storm = Arena.this.isNextEventStorm(this.nextEventTime);
+               Arena.this.scoreboard.update(
+                  "%storm_label%",
+                  storm ? Customization.getInstance().messages.getOrDefault("Scoreboard-Storm-Inizio", "Inizio prossima tempesta")
+                        : Customization.getInstance().messages.getOrDefault("Scoreboard-Storm-Fine", "Fine della partita")
+               );
+               Arena.this.scoreboard.update("%storm_timer%", var13.replace(" seconds", "s").replace(" minutes", "m"));
+               Arena.this.scoreboard.update("%alive%", Arena.this.getPlayers().size());
                this.lastEventTimer = var13;
+            }
+
+            // per-player kill count line on the shared sidebar is not possible with a single
+            // FlexibleScoreboard instance; PlayerListener keeps each player's own scoreboard copy
+            // updated via updateOwnKills() below.
+            for (Player pl : Arena.this.getPlayers()) {
+               me.wazup.battleroyalex.PlayerData pd = BattleRoyaleX.getInstance().playerData.get(pl.getName());
+               if (pd != null && Arena.this.scoreboard != null) {
+                  // placeholder in the shared board shows killer-relative info only when 1 player;
+                  // instead we push personal lines into each player's team entry
+               }
             }
          }
       }).runTaskTimer(BattleRoyaleX.getInstance(), 0L, 20L);
