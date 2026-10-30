@@ -72,11 +72,11 @@ public class Utils {
    }
 
    public static void error(String var0) {
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Battle Royale X] " + var0);
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[TaxBattle] " + var0);
    }
 
    public static void info(String var0) {
-      Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[Battle Royale X] " + var0);
+      Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[TaxBattle] " + var0);
    }
 
    public static List<Player> getPlayers(Collection<String> var0) {
@@ -232,6 +232,9 @@ public class Utils {
    public static ItemStack getItemStack(String var0, boolean var1, boolean var2) {
       String[] var3 = var0.split(" : ");
       String var4 = var3[0].toUpperCase();
+      // Keep an original-casing copy of the token: registry ids are case-sensitive and
+      // must NOT be mangled by the uppercase routing above (e.g. "9mm" -> "9MM").
+      String var4o = var3[0];
       ItemStackBuilder var5 = null;
       if (var4.contains(":")) {
          if (var4.split(":")[0].equals("QUALITYARMORY")) {
@@ -293,7 +296,7 @@ public class Utils {
             //   TIMELESS:ak47 : 1          (defaults to the "tacz" namespace)
             // An optional third colon-separated field sets the starting ammo count:
             //   TACZ:tacz:ak47:30 : 1
-            ItemStack var32 = getTaczItemStack(var3[0]);
+            ItemStack var32 = getTaczItemStack(var4o);
             if (var32 == null) {
                return null;
             }
@@ -306,13 +309,32 @@ public class Utils {
             //   MM_ARMOR:mm_armor:helmet_6b_47emrribbon_helmet : 1 :: 20%
             //   LRTACTICAL:lrtactical:melee : 1 :: 20%
             //   MOD:<any_namespace>:<item_id>[:qty] : amount
-            String[] var33 = var3[0].split(":");
+            String[] var33 = var4o.split(":");
             ItemStack var34 = getForgeModItemStack(var33);
             if (var34 == null) {
                return null;
             }
 
             var5 = new ItemStackBuilder(var34);
+         } else if (isForgeModItemPrefix(var4)) {
+            // Bare "namespace:item" token without an explicit prefix (e.g. "mm_armor:desertboots_boots",
+            // "lrtactical:melee"). Route it through the generic Forge registry lookup, trying the
+            // literal namespace first and then a set of common aliases.
+            String[] var41 = var4o.split(":");
+            // Try the literal namespace as written in the config first...
+            ItemStack var42 = getForgeModItemStack(new String[]{"MOD", var41[0], var41[1]});
+            if (var42 == null) {
+               // ...then the canonical alias for known mods (mm_armor, lrtactical, tacz)
+               String alias = forgeNamespaceAlias(var41[0]);
+               if (alias != null && !alias.equalsIgnoreCase(var41[0])) {
+                  var42 = getForgeModItemStack(new String[]{"MOD", alias, var41[1]});
+               }
+            }
+            if (var42 == null) {
+               return null;
+            }
+
+            var5 = new ItemStackBuilder(var42);
          } else if (var4.split(":")[0].equals("ITEMEDIT")) {
             ItemStack var14 = null;
             if (BattleRoyaleX.getInstance().itemEdit != null) {
@@ -440,6 +462,17 @@ public class Utils {
    }
 
    public static ItemStack getTaczItemStack(String rawToken) {
+      if (rawToken != null) {
+         // Rebuild the token preserving original casing for namespace/gun ids: routing
+         // in getItemStack() uppercases the whole token, which would mangle ids like
+         // "9mm" -> "9MM" and make registry lookups fail.
+         String[] tp = rawToken.split(":");
+         StringBuilder sb = new StringBuilder(tp[0].toUpperCase());
+         for (int ti = 1; ti < tp.length; ti++) {
+            sb.append(':').append(tp[ti]);
+         }
+         rawToken = sb.toString();
+      }
       if (BattleRoyaleX.getInstance().taczApi == null) {
          return null;
       } else {
@@ -662,6 +695,57 @@ public class Utils {
       return prefix != null && FORGE_MOD_ITEM_PREFIXES.contains(prefix.toUpperCase());
    }
 
+   /** Maps common short namespaces to real Forge mod ids (used for bare "ns:item" tokens). */
+   private static String forgeNamespaceAlias(String ns) {
+      if (ns == null) {
+         return null;
+      }
+      String n = ns.toLowerCase();
+      if (n.equals("mm_armor") || n.equals("miklosmilitaryarmor")) {
+         return "mm_armor";
+      }
+      if (n.equals("lrtactical") || n.equals("lra") || n.equals("lr_tactical")) {
+         return "lrtactical";
+      }
+      if (n.equals("tacz") || n.equals("timeless")) {
+         return "tacz";
+      }
+      return null;
+   }
+
+   /** Cached handle to net.minecraft.world.item.Item#asItemStack() (static-invoke style). */
+   static Method Item_asItemStack_method;
+
+   /** Creates a ResourceLocation, preferring the one already resolved by the TaCZ hook. */
+   private static Object createResourceLocation(String namespace, String path) throws Throwable {
+      ClassLoader serverCl = Bukkit.getServer().getClass().getClassLoader();
+      Class<?> rlClass = loadTaCZClass(serverCl, "net.minecraft.resources.ResourceLocation");
+      return rlClass.getConstructor(String.class, String.class).newInstance(namespace, path);
+   }
+
+   /** True if a registry Item instance is actually AirItem (unknown ids map to AIR). */
+   private static boolean isNmsAirItem(Object mcItem) {
+      try {
+         ClassLoader serverCl = Bukkit.getServer().getClass().getClassLoader();
+         Class<?> airClass = loadTaCZClass(serverCl, "net.minecraft.world.item.AirItem");
+         return airClass.isInstance(mcItem);
+      } catch (Throwable t) {
+         return false;
+      }
+   }
+
+   /** True if a reflected NMS ItemStack is AIR (checks via its own getItem()/isEmpty()). */
+   private static boolean isNmsAirStack(Object nmsStack) {
+      try {
+         ClassLoader serverCl = Bukkit.getServer().getClass().getClassLoader();
+         Object item = nmsStack.getClass().getMethod("getItem").invoke(nmsStack);
+         Class<?> airClass = loadTaCZClass(serverCl, "net.minecraft.world.item.AirItem");
+         return item == null || airClass.isInstance(item);
+      } catch (Throwable t) {
+         return false;
+      }
+   }
+
    /**
     * Creates a Bukkit ItemStack from any Forge-mod registry id using pure reflection on
     * Forge's Registries.ITEM + Item#asItemStack(), bridged to Bukkit through CraftItemStack
@@ -689,26 +773,50 @@ public class Utils {
       }
       try {
          ClassLoader serverCl = Bukkit.getServer().getClass().getClassLoader();
-         Class<?> rlClass = loadTaCZClass(serverCl, "net.minecraft.resources.ResourceLocation");
-         Object rl = rlClass.getConstructor(String.class, String.class).newInstance(namespace, path);
+         Class<?> itemClass = loadTaCZClass(serverCl, "net.minecraft.world.item.Item");
+         Object rl = createResourceLocation(namespace, path);
 
          Class<?> registriesClass = loadTaCZClass(serverCl, "net.minecraftforge.registries.ForgeRegistries");
          Object itemRegistry = registriesClass.getField("ITEMS").get(null);
-         Object mcItem = itemRegistry.getClass().getMethod("getValue", rlClass).invoke(itemRegistry, rl);
-         if (mcItem == null) {
-            error("Unknown Forge item id \"" + namespace + ":" + path + "\" (not in the item registry)");
+         // getValue(Object) on the registry interface: use the erased signature so it resolves
+         // even when the ResourceLocation class differs between module loaders.
+         Object mcItem = null;
+         try {
+            mcItem = itemRegistry.getClass().getMethod("getValue", Object.class).invoke(itemRegistry, rl);
+         } catch (NoSuchMethodException nsme) {
+            mcItem = itemRegistry.getClass().getMethod("getValue", rl.getClass()).invoke(itemRegistry, rl);
+         }
+         if (mcItem == null || isNmsAirItem(mcItem)) {
+            // Last attempt: fully-lowercased id (registry ids are lowercase by convention)
+            Object rlLower = createResourceLocation(namespace.toLowerCase(), path.toLowerCase());
+            try {
+               mcItem = itemRegistry.getClass().getMethod("getValue", Object.class).invoke(itemRegistry, rlLower);
+            } catch (NoSuchMethodException nsme3) {
+               mcItem = itemRegistry.getClass().getMethod("getValue", rlLower.getClass()).invoke(itemRegistry, rlLower);
+            }
+         }
+         if (mcItem == null || isNmsAirItem(mcItem)) {
+            error("Id Forge sconosciuto \"" + namespace + ":" + path + "\" (non presente nella registry degli item)");
             return null;
          }
 
-         Object nmsStack = mcItem.getClass().getMethod("asItemStack").invoke(mcItem);
+         // Build a real NMS stack with new ItemStack(Item, count) — avoids Item#asItemStack()
+         // dynamic dispatch which on ArcLight can mis-resolve to AirItem#asItemStack().
+         Class<?> nmsItemStackClass = loadTaCZClass(serverCl, "net.minecraft.world.item.ItemStack");
+         Object nmsStack;
+         try {
+            nmsStack = nmsItemStackClass.getConstructor(itemClass, int.class).newInstance(mcItem, 1);
+         } catch (NoSuchMethodException nsme2) {
+            nmsStack = nmsItemStackClass.getConstructor(itemClass).newInstance(mcItem);
+         }
          ItemStack result = asBukkitItemStack(nmsStack);
          if (result == null || result.getType().equals(Material.AIR)) {
-            error("Could not convert Forge item \"" + namespace + ":" + path + "\" to a Bukkit ItemStack");
+            error("Impossibile convertire l'item Forge \"" + namespace + ":" + path + "\" in un ItemStack Bukkit");
             return null;
          }
          return result;
       } catch (Throwable t) {
-         error("Could not generate Forge mod item for \"" + namespace + ":" + path + "\": " + t);
+         error("Impossibile generare l'item della mod Forge \"" + namespace + ":" + path + "\": " + t);
          return null;
       }
    }
@@ -834,7 +942,7 @@ public class Utils {
          }
          return null;
       } catch (Throwable var6) {
-         error("Could not generate TaCZ ammo item for \"" + namespace + ":" + caliber + "\"");
+         error("Impossibile generare le munizioni TaCZ per \"" + namespace + ":" + caliber + "\"");
          return null;
       }
    }
@@ -954,13 +1062,13 @@ public class Utils {
          }
 
          plugin.taczApi = timelessApiClass;
-         info("Successfully hooked into Timeless and Classy Guns (TaCZ) API.");
+         info("Hook riuscito verso l'API di Timeless and Classy Guns (TaCZ).");
       } catch (ClassNotFoundException | NoSuchMethodException | NoSuchMethodError | NoClassDefFoundError var9) {
          plugin.taczApi = null;
-         error("Could not hook to TaCZ (Timeless and Classy Guns). TaCZ guns will not be available.");
+         error("Impossibile agganciarsi a TaCZ (Timeless and Classy Guns). Le armi TaCZ non saranno disponibili.");
       } catch (Throwable var10) {
          plugin.taczApi = null;
-         error("Unexpected error while hooking to TaCZ: " + var10.getMessage());
+         error("Errore inatteso durante l'hook verso TaCZ: " + var10.getMessage());
       }
    }
 

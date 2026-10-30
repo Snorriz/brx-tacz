@@ -1,7 +1,7 @@
 # In death messages, you can add a new death detection message if you want to!
 # Here is a list of death causes https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html
 
-prefix: '&7[&6Battle Royale X&7] '
+prefix: '&7[&6TaxBattle&7] '
 
 Messages:
   No-Permission: You dont have the permission to do this!
@@ -288,7 +288,7 @@ Scoreboards:
 Normal-Mode-Start:
   - '&m==============================='
   - ' '
-  - '  &nBattle Royale X'
+  - '  &nTaxBattle'
   - ' '
   - '  &a&lNormal mode:'
   - '  &eEliminate all other teams and'
@@ -299,7 +299,7 @@ Normal-Mode-Start:
 Plunder-Mode-Start:
   - '&m==============================='
   - ' '
-  - '  &nBattle Royale X'
+  - '  &nTaxBattle'
   - ' '
   - '  &b&lPlunder mode $$$:'
   - '  &eGather as much cash as you can!'

@@ -103,7 +103,7 @@ public class ItemStackBuilder {
       } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | ClassNotFoundException | InstantiationException var6) {
          Bukkit.getConsoleSender()
             .sendMessage(
-               "[Battle Royale X] The used format for potions does not work on this minecraft version, please try other format which is POTION:DURABILITY"
+               "[TaxBattle] The used format for potions does not work on this minecraft version, please try other format which is POTION:DURABILITY"
             );
       }
 
