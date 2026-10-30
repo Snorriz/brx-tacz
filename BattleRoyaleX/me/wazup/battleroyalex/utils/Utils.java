@@ -387,6 +387,11 @@ public class Utils {
             var19 = XMaterial.matchXMaterial(var4.split(":")[0]);
          }
 
+         if (!var19.isPresent()) {
+            // Unknown material token: report it and skip instead of crashing on Optional.get()
+            return null;
+         }
+
          var5 = new ItemStackBuilder(((XMaterial)var19.get()).parseItem());
          if (var3[0].contains(":")) {
             String var28 = var4.split(":")[0];
@@ -622,18 +627,36 @@ public class Utils {
       if (obj instanceof ItemStack) {
          return (ItemStack)obj;
       }
+      // Cached handle to CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack).
+      // On ArcLight the NMS class is in module minecraft@ and Bukkit's in module arclight@,
+      // so a direct cast throws ClassCastException even though they are the same runtime.
       try {
          String pkg = org.bukkit.Bukkit.getServer().getClass().getPackage().getName();
          String version = pkg.substring(pkg.lastIndexOf('.') + 1);
-         Class<?> craftItemStackClass = Class.forName("org.bukkit.craftbukkit." + version + ".inventory.CraftItemStack");
-         Method asBukkitCopy = craftItemStackClass.getMethod("asBukkitCopy", obj.getClass());
-         Object converted = asBukkitCopy.invoke(null, obj);
-         if (converted instanceof ItemStack) {
-            return (ItemStack)converted;
+         ClassLoader serverCl = org.bukkit.Bukkit.getServer().getClass().getClassLoader();
+         Class<?> craftItemStackClass = null;
+         try {
+            craftItemStackClass = Class.forName("org.bukkit.craftbukkit." + version + ".inventory.CraftItemStack", true, serverCl);
+         } catch (Throwable ignored) {
+         }
+         if (craftItemStackClass == null) {
+            try {
+               craftItemStackClass = Class.forName("org.bukkit.craftbukkit." + version + ".inventory.CraftItemStack");
+            } catch (Throwable ignored) {
+            }
+         }
+         if (craftItemStackClass != null) {
+            Method asBukkitCopy = findAsBukkitCopy(craftItemStackClass, obj.getClass());
+            if (asBukkitCopy != null) {
+               Object converted = asBukkitCopy.invoke(null, obj);
+               if (converted instanceof ItemStack) {
+                  return (ItemStack)converted;
+               }
+            }
          }
       } catch (Throwable ignored) {
       }
-      // Fallback: some loaders give us a wrapper whose toString/type still works via clone trick
+      // Last resort: some wrappers expose their own conversion helper
       try {
          java.lang.reflect.Method getBukkitStack = obj.getClass().getMethod("getBukkitStack");
          Object converted = getBukkitStack.invoke(obj);
@@ -641,6 +664,24 @@ public class Utils {
             return (ItemStack)converted;
          }
       } catch (Throwable ignored) {
+      }
+      return null;
+   }
+
+   private static Method findAsBukkitCopy(Class<?> craftItemStackClass, Class<?> argRuntimeClass) {
+      // Exact-signature lookup first
+      try {
+         return craftItemStackClass.getMethod("asBukkitCopy", argRuntimeClass);
+      } catch (Throwable ignored) {
+      }
+      // Then any single-arg static "asBukkitCopy" whose parameter accepts our object
+      for (Method m : craftItemStackClass.getMethods()) {
+         if (m.getName().equals("asBukkitCopy")
+               && java.lang.reflect.Modifier.isStatic(m.getModifiers())
+               && m.getParameterCount() == 1
+               && m.getParameterTypes()[0].isAssignableFrom(argRuntimeClass)) {
+            return m;
+         }
       }
       return null;
    }
