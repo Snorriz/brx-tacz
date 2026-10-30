@@ -17,25 +17,48 @@ public class ChestType {
 
    public class ChestContent {
       private HashMap<ItemStack, ChestType.ChestContent.Interval> items = new HashMap();
+      private HashMap<ItemStack, ChestType.ChestContent.Interval> hotItems = new HashMap();
       private int total;
+      private int hotTotal;
 
       public ChestContent(HashMap<ItemStack, Integer> var2) {
          int var3 = 0;
+         int var4 = 0;
 
          for (ItemStack var5 : var2.keySet()) {
             int var6 = (Integer)var2.get(var5);
             this.items.put(var5, new ChestType.ChestContent.Interval(var3, var3 + var6));
             var3 += var6;
+            // Hot-zone pool: esclude le armi base (pistole e mischia) per privilegiare le armi potenti
+            if (!Utils.isBasicWeaponStack(var5)) {
+               this.hotItems.put(var5, new ChestType.ChestContent.Interval(var4, var4 + var6));
+               var4 += var6;
+            }
          }
 
          this.total = var3;
+         this.hotTotal = var4;
       }
 
       public ItemStack getRandom(Random var1) {
-         int var2 = var1.nextInt(this.total);
+         return this.getRandom(var1, false);
+      }
 
-         for (ItemStack var4 : this.items.keySet()) {
-            ChestType.ChestContent.Interval var5 = (ChestType.ChestContent.Interval)this.items.get(var4);
+      public ItemStack getRandom(Random var1, boolean hotZone) {
+         HashMap<ItemStack, Interval> pool;
+         int tot;
+         if (hotZone && this.hotTotal > 0) {
+            pool = this.hotItems;
+            tot = this.hotTotal;
+         } else {
+            pool = this.items;
+            tot = this.total;
+         }
+
+         int var2 = var1.nextInt(tot);
+
+         for (ItemStack var4 : pool.keySet()) {
+            ChestType.ChestContent.Interval var5 = (ChestType.ChestContent.Interval)pool.get(var4);
             if (var2 >= var5.min && var2 < var5.max) {
                return var4;
             }

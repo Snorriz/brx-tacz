@@ -157,8 +157,8 @@ public class BattleRoyaleX extends JavaPlugin {
    public void onEnable() {
       instance = this;
       MainCommand v1 = new MainCommand();
-      this.getCommand("battleroyale").setExecutor(v1);
-      this.getCommand("battleroyale").setTabCompleter(v1);
+      this.getCommand("taxbattle").setExecutor(v1);
+      this.getCommand("taxbattle").setTabCompleter(v1);
       new CustomMapsManager();
       new RealisticItems();
       new SoundsManager();

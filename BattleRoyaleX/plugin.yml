@@ -1,6 +1,6 @@
-name: BattleRoyaleX
+name: TaxBattle
 version: 4.5
-author: Wazup92
+author: Wazup92 (fork TaxPhobia)
 main: me.wazup.battleroyalex.BattleRoyaleX
 api-version: 1.13
 softdepend: [TitleManager, Vault, HolographicDisplays, PlaceholderAPI, MVdWPlaceholderAPI,
@@ -8,6 +8,6 @@ softdepend: [TitleManager, Vault, HolographicDisplays, PlaceholderAPI, MVdWPlace
              CrackShot, ItemEdit, CorpseReborn, WeaponMechanics, ItemsAdder,
              CrackShotPlus, MMOItems, DecentHolograms]
 commands:
-  battleroyale:
-    description: Shows a list of commands related to Battle Royal X!
-    aliases: [br, battleroyalex, brx]
+  taxbattle:
+    description: Mostra la lista dei comandi di TaxBattle!
+    aliases: [tb, taxb, battleroyale, br, battleroyalex, brx]

@@ -1109,6 +1109,12 @@ public class Arena {
                   if (!((String)Arena.this.supplyDropsEvent.get(this.seconds)).equals("Supply Drop Dispatch")) {
                      Location var12 = (Location)Arena.this.supplyDrops.get(Arena.this.selectedSupplyDrop);
                      Arena.this.spawnSupplyDrop(var12);
+                     // TaxBattle: i supply drop usano SEMPRE il pool armi potenti (hot loot),
+                     // anche fuori dalle hot-zone definite in config.yml.
+                     Block varSdBlock = var12.getWorld() != null ? var12.getBlock() : null;
+                     if (varSdBlock != null && varSdBlock.getType() == Material.CHEST) {
+                        Utils.fillChest(varSdBlock, BattleRoyaleX.getInstance().chests.get("Supply-Drops"), var12, true);
+                     }
                      MapCursorCollection var16 = new MapCursorCollection();
 
                      for (ArenaMapRenderer var20 : Arena.this.activeRenderers) {

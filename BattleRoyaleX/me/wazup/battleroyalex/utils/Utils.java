@@ -1063,20 +1063,112 @@ public class Utils {
    }
 
    public static void fillChest(Block var0, ChestType var1, Location var2) {
+      fillChest(var0, var1, var2, false);
+   }
+
+   // ===== TaxBattle: hot-zone loot & anti-duplicate per casse vicine =====
+   private static final java.util.HashMap<String, String> recentLootByChunk = new java.util.HashMap<>();
+   private static final java.util.HashMap<String, Long> recentLootTimeByChunk = new java.util.HashMap<>();
+
+   /** Restituisce una "firma" dell'item per il dedup locale (categoria arma / tipo). */
+   public static String lootSignature(ItemStack stack) {
+      if (stack == null) {
+         return null;
+      }
+      if (stack.hasItemMeta() && stack.getItemMeta().hasLore()) {
+         for (String line : stack.getItemMeta().getLore()) {
+            if (line.startsWith("BRX_WEAPON:")) {
+               String[] seg = line.split(":");
+               if (seg.length >= 3) {
+                  return "WPN:" + getWeaponCategory(seg[2]);
+               }
+            }
+         }
+      }
+      return stack.getType().name();
+   }
+
+   /** True se la posizione ricade in una Hot-Zone definita in config.yml. */
+   public static boolean isHotZone(Location loc) {
+      if (loc == null || loc.getWorld() == null) {
+         return false;
+      }
+      org.bukkit.configuration.file.FileConfiguration cfg = BattleRoyaleX.getInstance().getConfig();
+      for (String key : cfg.getConfigurationSection("Hot-Zones") != null ? cfg.getConfigurationSection("Hot-Zones").getKeys(false) : new java.util.HashSet<String>()) {
+         String world = cfg.getString("Hot-Zones." + key + ".world");
+         if (world == null || !world.equalsIgnoreCase(loc.getWorld().getName())) {
+            continue;
+         }
+         double x = cfg.getDouble("Hot-Zones." + key + ".x");
+         double z = cfg.getDouble("Hot-Zones." + key + ".z");
+         double r = cfg.getDouble("Hot-Zones." + key + ".radius", 50.0);
+         double dx = loc.getX() - x;
+         double dz = loc.getZ() - z;
+         if (dx * dx + dz * dz <= r * r) {
+            return true;
+         }
+      }
+      return false;
+   }
+
+   /** True se l'item e un'arma base (pistola/mischia): esclusa dal pool delle hot-zone. */
+   public static boolean isBasicWeaponStack(ItemStack stack) {
+      if (stack == null || !stack.hasItemMeta() || !stack.getItemMeta().hasLore()) {
+         return false;
+      }
+      for (String line : stack.getItemMeta().getLore()) {
+         if (line.startsWith("BRX_WEAPON:")) {
+            String[] seg = line.split(":");
+            if (seg.length >= 3) {
+               String cat = getWeaponCategory(seg[2]);
+               return cat.equals("pistola") || cat.equals("arma da mischia");
+            }
+         }
+      }
+      return false;
+   }
+
+   /** True se l'item e un'arma o munizione TaCZ/mod (per il blocco "stessa tipologia in casse vicine"). */
+   private static boolean isWeaponOrAmmo(ItemStack stack) {
+      String sig = lootSignature(stack);
+      return sig != null && (sig.startsWith("WPN:") || sig.toLowerCase().contains("ammo"));
+   }
+
+   public static void fillChest(Block var0, ChestType var1, Location var2, boolean forceHot) {
+      boolean hot = forceHot || isHotZone(var0.getLocation());
       int var3 = random.nextInt(var1.maxItems - var1.minItems + 1) + var1.minItems;
+      String chunkKey = var0.getWorld().getName() + ";" + (var0.getX() >> 4) + ";" + (var0.getZ() >> 4);
+      long now = System.currentTimeMillis();
+      String recent = recentLootByChunk.remove(chunkKey);
+      Long t = recentLootTimeByChunk.remove(chunkKey);
+      if (recent != null && t != null && now - t > 60000L) {
+         recent = null; // troppo vecchio, non bloccare piu
+      }
+
       if (Config.getInstance().realisticChests) {
          RealisticItems.getInstance().playChestAnimation(var0, true);
-         ArrayList var4 = new ArrayList();
+         ArrayList<ItemStack> var4 = new ArrayList<ItemStack>();
 
          for (int var5 = 0; var5 < var3; var5++) {
-            Object var6 = null;
+            ItemStack var6 = null;
             int var7 = 0;
 
-            while (var7 < 3 && var4.contains(var6 = var1.content.getRandom(random))) {
+            while (var7 < 6) {
+               var6 = var1.content.getRandom(random, hot);
+               String sig = lootSignature(var6);
+               boolean dup = var6 == null || var4.contains(var6) || (recent != null && recent.equals(sig));
+               if (!dup) {
+                  break;
+               }
                var7++;
             }
 
             var4.add(var6);
+            if (isWeaponOrAmmo(var6)) {
+               recent = lootSignature(var6);
+               recentLootByChunk.put(chunkKey, recent);
+               recentLootTimeByChunk.put(chunkKey, now);
+            }
          }
 
          RealisticItems.getInstance().giveItemsFromBlock(var0, var4, var2);
@@ -1095,11 +1187,22 @@ public class Utils {
             ItemStack var13 = null;
             int var8 = 0;
 
-            while (var8 < 3 && var9.getInventory().contains((var13 = var1.content.getRandom(random)).getType())) {
+            while (var8 < 6) {
+               var13 = var1.content.getRandom(random, hot);
+               String sig = lootSignature(var13);
+               boolean dup = var13 == null || var9.getInventory().contains(var13.getType()) || (recent != null && recent.equals(sig));
+               if (!dup) {
+                  break;
+               }
                var8++;
             }
 
             var9.getInventory().setItem(var11, var13);
+            if (isWeaponOrAmmo(var13)) {
+               recent = lootSignature(var13);
+               recentLootByChunk.put(chunkKey, recent);
+               recentLootTimeByChunk.put(chunkKey, now);
+            }
          }
       }
    }
