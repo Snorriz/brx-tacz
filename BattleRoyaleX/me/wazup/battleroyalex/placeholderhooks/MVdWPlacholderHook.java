@@ -11,6 +11,23 @@ import me.wazup.battleroyalex.PlayerData;
 public class MVdWPlacholderHook {
    String pluginName = "battleroyalex";
 
+   /**
+    * Estrae il parametro dinamico da un placeholder MVdW del tipo
+    * "battleroyalex_<marker><parametro>" (es. "..._arena_status_winter").
+    * Prende l'occorrenza PIU' INTERNA del marker per evitare ambiguita' fra
+    * "_arena_players_" e "_arena_max_players_". Ritorna null se assente.
+    */
+   private static String extractParam(String placeholder, String marker) {
+      if (placeholder == null) {
+         return null;
+      }
+      int idx = placeholder.lastIndexOf(marker);
+      if (idx < 0) {
+         return null;
+      }
+      return placeholder.substring(idx + marker.length());
+   }
+
    public MVdWPlacholderHook() {
       final BattleRoyaleX var1 = BattleRoyaleX.getInstance();
       PlaceholderAPI.registerPlaceholder(var1, this.pluginName + "_players_count", new PlaceholderReplacer() {
@@ -49,6 +66,32 @@ public class MVdWPlacholderHook {
             }
 
             return "NoArena";
+         }
+      });
+      // FIX: i placeholder dinamici per-arena (arena_status_<nome>, arena_players_<nome>,
+      // arena_max_players_<nome>) erano presenti solo nell'hook PlaceholderAPI e mancavano
+      // qui, rendendoli non risolvibili con MVdWPlaceholderAPI. Aggiunti con lookup sicuro.
+      PlaceholderAPI.registerPlaceholder(var1, this.pluginName + "_arena_status_", new PlaceholderReplacer() {
+         public String onPlaceholderReplace(PlaceholderReplaceEvent var1x) {
+            // MVdW: per i placeholder con prefisso dinamico l'evento espone il valore
+            // gia' risolto; se nullo (o non disponibile) estraiamo il parametro dal nome.
+            String key = extractParam(var1x.getPlaceholder(), "_arena_status_");
+            Arena arena = key != null && !key.isEmpty() ? var1.arenas.get(key.toLowerCase()) : null;
+            return arena != null ? arena.state.toString() : "NoArena";
+         }
+      });
+      PlaceholderAPI.registerPlaceholder(var1, this.pluginName + "_arena_players_", new PlaceholderReplacer() {
+         public String onPlaceholderReplace(PlaceholderReplaceEvent var1x) {
+            String key = extractParam(var1x.getPlaceholder(), "_arena_players_");
+            Arena arena = key != null && !key.isEmpty() ? var1.arenas.get(key.toLowerCase()) : null;
+            return arena != null ? String.valueOf(arena.players.size()) : "NoArena";
+         }
+      });
+      PlaceholderAPI.registerPlaceholder(var1, this.pluginName + "_arena_max_players_", new PlaceholderReplacer() {
+         public String onPlaceholderReplace(PlaceholderReplaceEvent var1x) {
+            String key = extractParam(var1x.getPlaceholder(), "_arena_max_players_");
+            Arena arena = key != null && !key.isEmpty() ? var1.arenas.get(key.toLowerCase()) : null;
+            return arena != null ? String.valueOf(arena.maxPlayers) : "NoArena";
          }
       });
       PlaceholderAPI.registerPlaceholder(var1, this.pluginName + "_modifier", new PlaceholderReplacer() {

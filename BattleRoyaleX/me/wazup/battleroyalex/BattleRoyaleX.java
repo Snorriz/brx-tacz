@@ -49,7 +49,7 @@ import me.wazup.battleroyalex.managers.RecipeManager;
 import me.wazup.battleroyalex.managers.SoundsManager;
 import me.wazup.battleroyalex.managers.TitleManager;
 import me.wazup.battleroyalex.placeholderhooks.MVdWPlacholderHook;
-import me.wazup.battleroyalex.placeholderhooks.PlaceholderAPIHook;
+import me.wazup.battleroyalex.placeholderhooks.TaxBattleExpansion;
 import me.wazup.battleroyalex.scenarios.ScenarioManager;
 import me.wazup.battleroyalex.shop.Celebration;
 import me.wazup.battleroyalex.shop.Kit;
@@ -250,7 +250,13 @@ public class BattleRoyaleX extends JavaPlugin {
 
       Object var11 = Customization.getInstance().prefix;
       if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-         Bukkit.getConsoleSender().sendMessage(var11 + "Found PlaceholderAPI, Hooked: " + new PlaceholderAPIHook().register());
+         // FIX: prima si istanziava l'hook con il metodo deprecato
+         // onPlaceholderRequest(Player,String), rimosso in PlaceholderAPI >= 2.11.2
+         // (l'espansione si registrava ma non risolveva alcun token).
+         // Ora usiamo TaxBattleExpansion basata su onRequest(OfflinePlayer,String).
+         TaxBattleExpansion expansion = new TaxBattleExpansion();
+         boolean hooked = expansion.register();
+         Bukkit.getConsoleSender().sendMessage(var11 + "Found PlaceholderAPI, Hooked: " + hooked);
       }
 
       if (Bukkit.getPluginManager().isPluginEnabled("MVdWPlaceholderAPI")) {
