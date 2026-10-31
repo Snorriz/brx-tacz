@@ -1,0 +1,7 @@
+{
+  "parent": "mm_armor:custom/light_iron_plate",
+  "textures": {
+    "0": "mm_armor:block/light_iron_plate",
+    "particle": "mm_armor:item/light_iron_plate_t"
+  }
+}

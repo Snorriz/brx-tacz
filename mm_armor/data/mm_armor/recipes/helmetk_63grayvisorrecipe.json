@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:helmetk_63gray_helmet"
+    },
+    {
+      "item": "mm_armor:k_63visorgray"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:helmetk_63grayvisor_helmet",
+    "count": 1
+  }
+}

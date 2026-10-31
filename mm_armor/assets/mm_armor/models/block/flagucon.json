@@ -1,0 +1,9 @@
+{
+  "parent": "mm_armor:custom/flag_ronograd",
+  "textures": {
+    "all": "mm_armor:block/flag_ronograd",
+    "particle": "mm_armor:block/flag_ronograd",
+    "10": "mm_armor:block/flag_ronograd"
+  },
+  "render_type": "solid"
+}

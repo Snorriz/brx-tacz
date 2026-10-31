@@ -1,0 +1,50 @@
+{
+  "bomb_fuze": {
+    "sounds": [
+      {
+        "name": "mm_armor:sparkler_fuse_nmwav-14738",
+        "stream": false
+      }
+    ]
+  },
+  "explosion_sound": {
+    "sounds": [
+      {
+        "name": "mm_armor:mixkit-explosion-with-rocks-debris-1703_1",
+        "stream": false
+      }
+    ]
+  },
+  "nvg_on": {
+    "sounds": [
+      {
+        "name": "mm_armor:sound-effect-night-vision-2_130bpm_c",
+        "stream": false
+      }
+    ]
+  },
+  "click": {
+    "sounds": [
+      {
+        "name": "mm_armor:computer-mouse-click-351398",
+        "stream": false
+      }
+    ]
+  },
+  "clothes_wear": {
+    "sounds": [
+      {
+        "name": "mm_armor:video-game-equip",
+        "stream": false
+      }
+    ]
+  },
+  "parachute_close": {
+    "sounds": [
+      {
+        "name": "mm_armor:freesound_community-clothes-drop-2-40202",
+        "stream": false
+      }
+    ]
+  }
+}

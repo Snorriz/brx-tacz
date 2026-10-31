@@ -1,0 +1,7 @@
+{
+  "parent": "mm_armor:custom/heavy_iron_plate",
+  "textures": {
+    "2": "mm_armor:block/heavy_iron_plate",
+    "particle": "mm_armor:item/heavy_iron_plate_t"
+  }
+}

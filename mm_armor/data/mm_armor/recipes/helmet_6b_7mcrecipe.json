@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:helmet_6b_7_helmet"
+    },
+    {
+      "item": "mm_armor:russianmcpattern"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:helmet_6b_7mc_helmet",
+    "count": 1
+  }
+}

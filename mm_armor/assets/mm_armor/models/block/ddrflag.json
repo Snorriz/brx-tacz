@@ -1,0 +1,9 @@
+{
+  "parent": "mm_armor:custom/flag_ddr",
+  "textures": {
+    "all": "mm_armor:block/flag_ddr",
+    "particle": "mm_armor:block/flag_ddr",
+    "7": "mm_armor:block/flag_ddr"
+  },
+  "render_type": "solid"
+}

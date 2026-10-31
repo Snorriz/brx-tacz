@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "aaa",
+    "aaa",
+    "aaa"
+  ],
+  "key": {
+    "a": {
+      "item": "mm_armor:ilmenite_ingot"
+    }
+  },
+  "result": {
+    "item": "mm_armor:ilmeniteblock",
+    "count": 1
+  }
+}

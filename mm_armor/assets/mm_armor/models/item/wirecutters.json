@@ -1,0 +1,7 @@
+{
+  "parent": "mm_armor:custom/wire_cutter",
+  "textures": {
+    "1": "mm_armor:block/wire_cutter",
+    "particle": "mm_armor:item/wire_cutter_t"
+  }
+}

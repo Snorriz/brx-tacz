@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "mm_armor:item/chestplate_mm14_plate_carrier_mm14_upgraded_green_tape_t"
+  }
+}

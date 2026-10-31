@@ -1,0 +1,9 @@
+{
+  "parent": "mm_armor:custom/flag_csou",
+  "textures": {
+    "all": "mm_armor:block/flag_csou",
+    "particle": "mm_armor:block/flag_csou",
+    "8": "mm_armor:block/flag_csou"
+  },
+  "render_type": "solid"
+}

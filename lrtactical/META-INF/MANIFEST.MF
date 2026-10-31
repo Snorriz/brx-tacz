@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Specification-Title: lrtactical
+Specification-Vendor: LesRaisins Studio
+Specification-Version: 1
+Implementation-Title: lesraisins-tactical
+Implementation-Version: 0.4.3
+Implementation-Vendor: LesRaisins Studio
+Implementation-Timestamp: 2026-08-15T15:46:12+0800
+MixinConfigs: lrtactical.mixins.json
+

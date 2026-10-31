@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "mm_armor:sovietbayonet",
+    "mm_armor:m_9bayonet",
+    "mm_armor:modernknife",
+    "mm_armor:hammer",
+    "mm_armor:wirecutters"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "aaa",
+    "aaa"
+  ],
+  "key": {
+    "a": {
+      "item": "minecraft:white_wool"
+    }
+  },
+  "result": {
+    "item": "mm_armor:whitetape",
+    "count": 1
+  }
+}

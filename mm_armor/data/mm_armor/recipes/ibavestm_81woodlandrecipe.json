@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "a a",
+    "aba",
+    " a "
+  ],
+  "key": {
+    "a": {
+      "item": "mm_armor:m_81woodlandfabric"
+    },
+    "b": {
+      "item": "mm_armor:vestplatelv_4"
+    }
+  },
+  "result": {
+    "item": "mm_armor:ibavestm_81woodland_chestplate",
+    "count": 1
+  }
+}

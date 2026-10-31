@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:multitarnuniform_chestplate"
+    },
+    {
+      "item": "mm_armor:platecarrierdesert_chestplate"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:multitarnchestplatedesertplatecarrier_chestplate",
+    "count": 1
+  }
+}

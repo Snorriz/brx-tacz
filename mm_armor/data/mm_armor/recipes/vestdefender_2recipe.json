@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "a a",
+    "aba",
+    " a "
+  ],
+  "key": {
+    "a": {
+      "item": "mm_armor:greenfabric"
+    },
+    "b": {
+      "item": "mm_armor:vestplatelv_3"
+    }
+  },
+  "result": {
+    "item": "mm_armor:vestdefender_2_chestplate",
+    "count": 1
+  }
+}

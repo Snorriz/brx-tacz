@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:platecarriermarpat_chestplate"
+    },
+    {
+      "item": "mm_armor:vestupgrade"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:platecarriermarpatupgraded_chestplate",
+    "count": 1
+  }
+}

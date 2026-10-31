@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:wintermulticamuniform_chestplate"
+    },
+    {
+      "item": "mm_armor:multicamplatecarrierupgraded_chestplate"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:wintermulticamchestplateplatecarriermulticamupgraded_chestplate",
+    "count": 1
+  }
+}

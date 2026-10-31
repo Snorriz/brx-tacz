@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " a ",
+    "aba",
+    "ccc"
+  ],
+  "key": {
+    "a": {
+      "item": "minecraft:light_blue_wool"
+    },
+    "b": {
+      "item": "mm_armor:unpattern"
+    },
+    "c": {
+      "item": "minecraft:black_wool"
+    }
+  },
+  "result": {
+    "item": "mm_armor:unberet_helmet",
+    "count": 1
+  }
+}

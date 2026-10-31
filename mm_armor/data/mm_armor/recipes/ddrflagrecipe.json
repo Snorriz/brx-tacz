@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ab",
+    "a ",
+    "a "
+  ],
+  "key": {
+    "a": {
+      "item": "minecraft:iron_ingot"
+    },
+    "b": {
+      "item": "mm_armor:ddrpattern"
+    }
+  },
+  "result": {
+    "item": "mm_armor:ddrflag",
+    "count": 1
+  }
+}

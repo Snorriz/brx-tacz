@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:m_88afghankauniform_chestplate"
+    },
+    {
+      "item": "mm_armor:vest_6b_2_chestplate"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:m_88afghankachestplate_6b_2_chestplate",
+    "count": 1
+  }
+}

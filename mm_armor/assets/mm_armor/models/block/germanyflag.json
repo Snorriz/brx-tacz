@@ -1,0 +1,9 @@
+{
+  "parent": "mm_armor:custom/flag_german",
+  "textures": {
+    "all": "mm_armor:block/flag_german",
+    "particle": "mm_armor:block/flag_german",
+    "5": "mm_armor:block/flag_german"
+  },
+  "render_type": "solid"
+}

@@ -1,0 +1,9 @@
+{
+  "parent": "mm_armor:custom/donetsk_flag",
+  "textures": {
+    "all": "mm_armor:block/donetsk_flag",
+    "particle": "mm_armor:block/donetsk_flag",
+    "4": "mm_armor:block/donetsk_flag"
+  },
+  "render_type": "solid"
+}

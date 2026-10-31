@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:emruniformredtape_chestplate"
+    },
+    {
+      "item": "mm_armor:vest_6b_45classicupgraded_chestplate"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:chestplateemrredtape_6b_45classicupgraded_chestplate",
+    "count": 1
+  }
+}

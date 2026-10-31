@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:multicamplatecarrier_chestplate"
+    },
+    {
+      "item": "mm_armor:vestupgrade"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:multicamplatecarrierupgraded_chestplate",
+    "count": 1
+  }
+}

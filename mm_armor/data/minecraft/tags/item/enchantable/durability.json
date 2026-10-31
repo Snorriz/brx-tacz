@@ -1,0 +1,26 @@
+{
+  "replace": false,
+  "values": [
+    "mm_armor:civilianpattern",
+    "mm_armor:presspattern",
+    "mm_armor:czechpattern",
+    "mm_armor:cssrpattern",
+    "mm_armor:polishpattern",
+    "mm_armor:polishprpattern",
+    "mm_armor:germanpattern",
+    "mm_armor:ddrpattern",
+    "mm_armor:frgpattern",
+    "mm_armor:holycross",
+    "mm_armor:ukrainianpattern",
+    "mm_armor:usacoldwarpattern",
+    "mm_armor:unpattern",
+    "mm_armor:usapattern",
+    "mm_armor:fsbpattern",
+    "mm_armor:coldwarpattern",
+    "mm_armor:donetskpattern",
+    "mm_armor:sovietpattern",
+    "mm_armor:vdvpattern",
+    "mm_armor:russianmcpattern",
+    "mm_armor:russianpattern"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "mm_armor:item/helmet_ssh_68_mc_t"
+  }
+}

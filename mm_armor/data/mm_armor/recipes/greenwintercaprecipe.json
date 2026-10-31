@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "aaa",
+    "a a"
+  ],
+  "key": {
+    "a": {
+      "item": "minecraft:green_wool"
+    }
+  },
+  "result": {
+    "item": "mm_armor:greenwintercap_helmet",
+    "count": 1
+  }
+}

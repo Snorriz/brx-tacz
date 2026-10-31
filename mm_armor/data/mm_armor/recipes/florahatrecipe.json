@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " a ",
+    "aaa"
+  ],
+  "key": {
+    "a": {
+      "item": "mm_armor:florafabric"
+    }
+  },
+  "result": {
+    "item": "mm_armor:florahat_helmet",
+    "count": 1
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "a"
+  ],
+  "key": {
+    "a": {
+      "item": "mm_armor:titaniumblock"
+    }
+  },
+  "result": {
+    "item": "mm_armor:titaniumingot",
+    "count": 9
+  }
+}

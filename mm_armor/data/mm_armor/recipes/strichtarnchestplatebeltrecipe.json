@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:strichtarnuniform_chestplate"
+    },
+    {
+      "item": "mm_armor:ddrbelt_chestplate"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:strichtarnchestplatebelt_chestplate",
+    "count": 1
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:helmetlshzemr_helmet"
+    },
+    {
+      "item": "mm_armor:nightvission"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:helmetlshz_1emrnvgopen_helmet",
+    "count": 1
+  }
+}

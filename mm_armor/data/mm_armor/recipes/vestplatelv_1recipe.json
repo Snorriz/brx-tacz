@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " a ",
+    "aaa",
+    "bbb"
+  ],
+  "key": {
+    "a": {
+      "item": "mm_armor:lightironplate"
+    },
+    "b": {
+      "item": "mm_armor:titaniumingot"
+    }
+  },
+  "result": {
+    "item": "mm_armor:vestplatelv_1",
+    "count": 1
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:helmetpasgt_helmet"
+    },
+    {
+      "item": "mm_armor:desertcamofabric"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:pasgthelmetdesertcamo_helmet",
+    "count": 1
+  }
+}

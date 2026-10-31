@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:emruniform_chestplate"
+    },
+    {
+      "item": "mm_armor:russianmcpattern"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:chestplateemrmc_chestplate",
+    "count": 1
+  }
+}

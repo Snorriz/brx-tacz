@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:russiantankistuniform_chestplate"
+    },
+    {
+      "item": "mm_armor:sovietbelt_3_chestplate"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:russiantankistchestplatebelt_chestplate",
+    "count": 1
+  }
+}

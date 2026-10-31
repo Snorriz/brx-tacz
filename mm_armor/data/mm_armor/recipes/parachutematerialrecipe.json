@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "aaa",
+    "aaa",
+    "aaa"
+  ],
+  "key": {
+    "a": {
+      "item": "minecraft:white_wool"
+    }
+  },
+  "result": {
+    "item": "mm_armor:parachutematerial",
+    "count": 1
+  }
+}

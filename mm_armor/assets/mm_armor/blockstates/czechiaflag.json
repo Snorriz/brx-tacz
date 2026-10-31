@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "mm_armor:block/czechiaflag"
+    },
+    "facing=east": {
+      "model": "mm_armor:block/czechiaflag",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "mm_armor:block/czechiaflag",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "mm_armor:block/czechiaflag",
+      "y": 270
+    }
+  }
+}

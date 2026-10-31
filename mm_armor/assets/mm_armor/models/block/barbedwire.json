@@ -1,0 +1,9 @@
+{
+  "parent": "mm_armor:custom/barbed_wire",
+  "textures": {
+    "all": "mm_armor:block/barbed_wire",
+    "particle": "mm_armor:block/barbed_wire",
+    "8": "mm_armor:block/barbed_wire"
+  },
+  "render_type": "solid"
+}

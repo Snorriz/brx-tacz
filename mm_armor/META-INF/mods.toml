@@ -1,0 +1,28 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="Academic Free License v3.0"
+
+[[mods]]
+modId="mm_armor"
+version="1.1.0"
+displayName="miklos_military_armor_r"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/miklos-military-armor"
+credits="Created using mod maker MCreator - https://mcreator.net/about"
+authors="M1klos"
+description="This mod will add military uniforms from modern era to your minecraft!"
+
+# Start of user code block mod configuration
+# End of user code block mod configuration
+
+[[dependencies.mm_armor]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.20.1]"
+    ordering="AFTER"
+    side="BOTH"
+
+
+
+
+# Start of user code block dependencies configuration
+# End of user code block dependencies configuration

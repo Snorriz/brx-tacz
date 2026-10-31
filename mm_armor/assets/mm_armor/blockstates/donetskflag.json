@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "mm_armor:block/donetskflag"
+    },
+    "facing=east": {
+      "model": "mm_armor:block/donetskflag",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "mm_armor:block/donetskflag",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "mm_armor:block/donetskflag",
+      "y": 270
+    }
+  }
+}

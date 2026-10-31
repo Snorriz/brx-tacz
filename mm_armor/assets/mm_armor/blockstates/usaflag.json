@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "mm_armor:block/usaflag"
+    },
+    "facing=east": {
+      "model": "mm_armor:block/usaflag",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "mm_armor:block/usaflag",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "mm_armor:block/usaflag",
+      "y": 270
+    }
+  }
+}

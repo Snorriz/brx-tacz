@@ -1,0 +1,9 @@
+{
+  "parent": "miklos_mil_arm:custom/sandbags_desert5",
+  "textures": {
+    "all": "miklos_mil_arm:block/sandbags_desert5",
+    "particle": "miklos_mil_arm:block/sandbags_desert5",
+    "4": "miklos_mil_arm:block/sandbags_desert5"
+  },
+  "render_type": "solid"
+}

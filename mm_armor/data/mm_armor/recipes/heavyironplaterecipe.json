@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "mm_armor:forgingiron"
+    },
+    {
+      "item": "mm_armor:forgingiron"
+    },
+    {
+      "item": "mm_armor:hammer"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:heavyironplate",
+    "count": 1
+  }
+}

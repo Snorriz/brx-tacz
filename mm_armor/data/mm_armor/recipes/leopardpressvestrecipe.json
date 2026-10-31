@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "aba",
+    "aca",
+    " a "
+  ],
+  "key": {
+    "a": {
+      "item": "mm_armor:civilianbluefabric"
+    },
+    "b": {
+      "item": "mm_armor:presspattern"
+    },
+    "c": {
+      "item": "mm_armor:vestplatelv_1"
+    }
+  },
+  "result": {
+    "item": "mm_armor:leopardpressvest_chestplate",
+    "count": 1
+  }
+}

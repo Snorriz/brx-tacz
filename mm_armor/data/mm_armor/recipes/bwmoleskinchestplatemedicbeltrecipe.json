@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:bwmoleskinuniform_chestplate"
+    },
+    {
+      "item": "mm_armor:medicbelt_chestplate"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:bwmoleskinchestplatemedicbelt_chestplate",
+    "count": 1
+  }
+}

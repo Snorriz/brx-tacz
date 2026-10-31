@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:desertvz_95uniform_chestplate"
+    },
+    {
+      "item": "mm_armor:platecarrierdesert_chestplate"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:desertvz_95chestplatedesertplatecarrier_chestplate",
+    "count": 1
+  }
+}

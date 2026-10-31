@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "a  ",
+    "bcb",
+    " d "
+  ],
+  "key": {
+    "a": {
+      "item": "mm_armor:usacoldwarpattern"
+    },
+    "b": {
+      "item": "mm_armor:lightironplate"
+    },
+    "c": {
+      "item": "mm_armor:helmetbaselv_2"
+    },
+    "d": {
+      "item": "minecraft:leather"
+    }
+  },
+  "result": {
+    "item": "mm_armor:cvchelmet_helmet",
+    "count": 1
+  }
+}

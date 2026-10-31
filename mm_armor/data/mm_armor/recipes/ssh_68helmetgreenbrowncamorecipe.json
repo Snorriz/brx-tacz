@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:ssh_68helmet_helmet"
+    },
+    {
+      "item": "minecraft:brown_dye"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:ssh_68helmetgreenbrowncamo_helmet",
+    "count": 1
+  }
+}

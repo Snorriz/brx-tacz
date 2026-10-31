@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "a  ",
+    "bcb",
+    "bdb"
+  ],
+  "key": {
+    "a": {
+      "item": "mm_armor:ddrpattern"
+    },
+    "b": {
+      "item": "mm_armor:lightironplate"
+    },
+    "c": {
+      "item": "mm_armor:helmetbaselv_1"
+    },
+    "d": {
+      "item": "minecraft:leather"
+    }
+  },
+  "result": {
+    "item": "mm_armor:m_56helmet_helmet",
+    "count": 1
+  }
+}

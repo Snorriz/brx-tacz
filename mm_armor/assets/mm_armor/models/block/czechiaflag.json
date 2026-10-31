@@ -1,0 +1,9 @@
+{
+  "parent": "mm_armor:custom/flag_czechia",
+  "textures": {
+    "all": "mm_armor:block/flag_czechia",
+    "particle": "mm_armor:block/flag_czechia",
+    "7": "mm_armor:block/flag_czechia"
+  },
+  "render_type": "solid"
+}

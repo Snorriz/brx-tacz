@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:helmetmichdesertmarpat_helmet"
+    },
+    {
+      "item": "mm_armor:goggles"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:helmetmichdesertmarpatgoggles_helmet",
+    "count": 1
+  }
+}

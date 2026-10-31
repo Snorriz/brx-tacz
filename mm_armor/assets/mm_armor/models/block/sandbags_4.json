@@ -1,0 +1,9 @@
+{
+  "parent": "mm_armor:custom/sandbags_4",
+  "textures": {
+    "all": "mm_armor:block/sandbags",
+    "particle": "mm_armor:block/sandbags",
+    "5": "mm_armor:block/sandbags_4"
+  },
+  "render_type": "solid"
+}

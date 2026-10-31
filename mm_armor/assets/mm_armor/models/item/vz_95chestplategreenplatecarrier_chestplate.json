@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "mm_armor:item/vz95_chestplate_green_plate_carrier_t"
+  }
+}

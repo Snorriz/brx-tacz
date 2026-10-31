@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "mm_armor:item/helmet_zsh1_without_visor_goggles_on_eyes_t"
+  }
+}

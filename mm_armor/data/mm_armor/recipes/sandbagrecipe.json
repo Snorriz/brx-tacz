@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "aba",
+    "bcb",
+    "aba"
+  ],
+  "key": {
+    "a": {
+      "item": "minecraft:string"
+    },
+    "b": {
+      "item": "minecraft:yellow_wool"
+    },
+    "c": {
+      "tag": "minecraft:sand"
+    }
+  },
+  "result": {
+    "item": "mm_armor:sandbags",
+    "count": 1
+  }
+}

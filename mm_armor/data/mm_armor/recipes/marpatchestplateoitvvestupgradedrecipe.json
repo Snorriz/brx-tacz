@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:marpatuniform_chestplate"
+    },
+    {
+      "item": "mm_armor:iotvvestmarpatupgraded_chestplate"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:marpatchestplateoitvvestupgraded_chestplate",
+    "count": 1
+  }
+}

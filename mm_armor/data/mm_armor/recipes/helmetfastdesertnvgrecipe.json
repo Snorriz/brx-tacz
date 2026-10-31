@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:helmetfasttan_helmet"
+    },
+    {
+      "item": "mm_armor:nightvission"
+    },
+    {
+      "item": "mm_armor:nightvission"
+    },
+    {
+      "item": "mm_armor:nightvission"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:helmetfastdesertnvgopen_helmet",
+    "count": 1
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "mm_armor:custom/riot_shield_blocking",
+  "textures": {
+    "6": "mm_armor:block/riot_shield",
+    "particle": "mm_armor:item/riot_shield_t"
+  }
+}

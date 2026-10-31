@@ -1,0 +1,9 @@
+{
+  "parent": "mm_armor:custom/flag_poland",
+  "textures": {
+    "all": "mm_armor:block/flag_poland",
+    "particle": "mm_armor:block/flag_poland",
+    "5": "mm_armor:block/flag_poland"
+  },
+  "render_type": "solid"
+}

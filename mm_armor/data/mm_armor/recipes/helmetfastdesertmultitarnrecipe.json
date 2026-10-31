@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:helmetfasttan_helmet"
+    },
+    {
+      "item": "mm_armor:multitarnfabric"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:helmetfastdesertmultitarn_helmet",
+    "count": 1
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:mm_14uniform_chestplate"
+    },
+    {
+      "item": "mm_armor:vestplatecarriermm_14_chestplate"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:chestplatemm_14platecarriermm_14_chestplate",
+    "count": 1
+  }
+}

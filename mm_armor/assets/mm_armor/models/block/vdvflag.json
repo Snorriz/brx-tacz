@@ -1,0 +1,9 @@
+{
+  "parent": "mm_armor:custom/flag_vdv",
+  "textures": {
+    "all": "mm_armor:block/flag_vdv",
+    "particle": "mm_armor:block/flag_vdv",
+    "5": "mm_armor:block/flag_vdv"
+  },
+  "render_type": "solid"
+}

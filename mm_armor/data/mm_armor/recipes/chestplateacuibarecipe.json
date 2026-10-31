@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:acuuniform_chestplate"
+    },
+    {
+      "item": "mm_armor:ibavestacu_chestplate"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:chestplateacuiba_chestplate",
+    "count": 1
+  }
+}

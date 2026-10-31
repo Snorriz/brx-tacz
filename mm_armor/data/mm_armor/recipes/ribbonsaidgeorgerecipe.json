@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "aaa",
+    "bcb",
+    "aaa"
+  ],
+  "key": {
+    "a": {
+      "item": "minecraft:black_wool"
+    },
+    "b": {
+      "item": "minecraft:orange_wool"
+    },
+    "c": {
+      "item": "mm_armor:russianpattern"
+    }
+  },
+  "result": {
+    "item": "mm_armor:ribbonsaintgeorge",
+    "count": 1
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:florauniform_chestplate"
+    },
+    {
+      "item": "mm_armor:sovietcommanderbelt_chestplate"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:florachestplatebelt_2_chestplate",
+    "count": 1
+  }
+}

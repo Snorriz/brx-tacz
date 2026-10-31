@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " a ",
+    "bcb",
+    "bbb"
+  ],
+  "key": {
+    "a": {
+      "item": "minecraft:green_wool"
+    },
+    "b": {
+      "item": "minecraft:black_wool"
+    },
+    "c": {
+      "item": "mm_armor:russianpattern"
+    }
+  },
+  "result": {
+    "item": "mm_armor:russianushankagreen_helmet",
+    "count": 1
+  }
+}

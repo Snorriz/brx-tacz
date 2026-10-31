@@ -1,0 +1,50 @@
+{
+  "mappings": {
+    "me/xjqsh/lrtactical/mixin/client/PlayerModelMixin": {
+      "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V": "Lnet/minecraft/client/model/PlayerModel;m_6973_(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V"
+    },
+    "me/xjqsh/lrtactical/mixin/common/LivingEntityMixin": {
+      "isBlocking": "Lnet/minecraft/world/entity/LivingEntity;m_21254_()Z",
+      "breakItem": "Lnet/minecraft/world/entity/LivingEntity;m_21278_(Lnet/minecraft/world/item/ItemStack;)V",
+      "isDamageSourceBlocked": "Lnet/minecraft/world/entity/LivingEntity;m_21275_(Lnet/minecraft/world/damagesource/DamageSource;)Z"
+    },
+    "me/xjqsh/lrtactical/mixin/client/GameRendererMixin": {
+      "render": "Lnet/minecraft/client/renderer/GameRenderer;m_109093_(FJZ)V"
+    },
+    "me/xjqsh/lrtactical/mixin/client/MinecraftMixin": {
+      "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;releaseUsingItem(Lnet/minecraft/world/entity/player/Player;)V": "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;m_105277_(Lnet/minecraft/world/entity/player/Player;)V",
+      "handleKeybinds": "Lnet/minecraft/client/Minecraft;m_91279_()V"
+    },
+    "me/xjqsh/lrtactical/mixin/common/PlayerMixin": {
+      "disableShield": "Lnet/minecraft/world/entity/player/Player;m_36384_(Z)V"
+    },
+    "me/xjqsh/lrtactical/mixin/common/AnvilMenuMixin": {
+      "createResult": "Lnet/minecraft/world/inventory/AnvilMenu;m_6640_()V"
+    }
+  },
+  "data": {
+    "searge": {
+      "me/xjqsh/lrtactical/mixin/client/PlayerModelMixin": {
+        "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V": "Lnet/minecraft/client/model/PlayerModel;m_6973_(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V"
+      },
+      "me/xjqsh/lrtactical/mixin/common/LivingEntityMixin": {
+        "isBlocking": "Lnet/minecraft/world/entity/LivingEntity;m_21254_()Z",
+        "breakItem": "Lnet/minecraft/world/entity/LivingEntity;m_21278_(Lnet/minecraft/world/item/ItemStack;)V",
+        "isDamageSourceBlocked": "Lnet/minecraft/world/entity/LivingEntity;m_21275_(Lnet/minecraft/world/damagesource/DamageSource;)Z"
+      },
+      "me/xjqsh/lrtactical/mixin/client/GameRendererMixin": {
+        "render": "Lnet/minecraft/client/renderer/GameRenderer;m_109093_(FJZ)V"
+      },
+      "me/xjqsh/lrtactical/mixin/client/MinecraftMixin": {
+        "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;releaseUsingItem(Lnet/minecraft/world/entity/player/Player;)V": "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;m_105277_(Lnet/minecraft/world/entity/player/Player;)V",
+        "handleKeybinds": "Lnet/minecraft/client/Minecraft;m_91279_()V"
+      },
+      "me/xjqsh/lrtactical/mixin/common/PlayerMixin": {
+        "disableShield": "Lnet/minecraft/world/entity/player/Player;m_36384_(Z)V"
+      },
+      "me/xjqsh/lrtactical/mixin/common/AnvilMenuMixin": {
+        "createResult": "Lnet/minecraft/world/inventory/AnvilMenu;m_6640_()V"
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "mm_armor:block/flagsoviet"
+    },
+    "facing=east": {
+      "model": "mm_armor:block/flagsoviet",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "mm_armor:block/flagsoviet",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "mm_armor:block/flagsoviet",
+      "y": 270
+    }
+  }
+}

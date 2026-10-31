@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:multicamuniform_chestplate"
+    },
+    {
+      "item": "mm_armor:iotvvestmulticamupgraded_chestplate"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:multicamchestplate_iotvvestmulticamupgraded_chestplate",
+    "count": 1
+  }
+}

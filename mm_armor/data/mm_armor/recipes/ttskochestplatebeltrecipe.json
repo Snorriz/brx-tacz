@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:ttskouniform_chestplate"
+    },
+    {
+      "item": "mm_armor:sovietbelt_chestplate"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:ttskochestplatebelt_chestplate",
+    "count": 1
+  }
+}

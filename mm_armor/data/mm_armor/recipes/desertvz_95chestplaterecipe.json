@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "a b",
+    "bbb",
+    "bbb"
+  ],
+  "key": {
+    "a": {
+      "item": "mm_armor:vz_95fabric"
+    },
+    "b": {
+      "item": "mm_armor:desertvz_95fabric"
+    }
+  },
+  "result": {
+    "item": "mm_armor:desertvz_95uniform_chestplate",
+    "count": 1
+  }
+}

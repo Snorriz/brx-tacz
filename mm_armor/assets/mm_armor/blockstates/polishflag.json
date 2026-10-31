@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "mm_armor:block/polishflag"
+    },
+    "facing=east": {
+      "model": "mm_armor:block/polishflag",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "mm_armor:block/polishflag",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "mm_armor:block/polishflag",
+      "y": 270
+    }
+  }
+}

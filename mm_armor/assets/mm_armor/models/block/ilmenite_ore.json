@@ -1,0 +1,8 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "mm_armor:block/ilmenite_ore",
+    "particle": "mm_armor:block/ilmenite_ore"
+  },
+  "render_type": "solid"
+}

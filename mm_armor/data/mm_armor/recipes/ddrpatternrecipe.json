@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "aba",
+    "cdc",
+    "bcb"
+  ],
+  "key": {
+    "a": {
+      "item": "minecraft:black_dye"
+    },
+    "b": {
+      "item": "minecraft:yellow_dye"
+    },
+    "c": {
+      "item": "minecraft:red_dye"
+    },
+    "d": {
+      "item": "mm_armor:coldwarpattern"
+    }
+  },
+  "result": {
+    "item": "mm_armor:ddrpattern",
+    "count": 1
+  }
+}

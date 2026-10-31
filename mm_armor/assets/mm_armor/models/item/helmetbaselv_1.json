@@ -1,0 +1,7 @@
+{
+  "parent": "mm_armor:custom/helmet_base",
+  "textures": {
+    "1": "mm_armor:block/helmet_base",
+    "particle": "mm_armor:item/helmet_base_t"
+  }
+}

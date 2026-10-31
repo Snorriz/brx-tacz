@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:erdluniform_chestplate"
+    },
+    {
+      "item": "mm_armor:usabelt_chestplate"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:erdlchestplatebelt_chestplate",
+    "count": 1
+  }
+}

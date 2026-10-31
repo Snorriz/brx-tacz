@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:dubokuniform_chestplate"
+    },
+    {
+      "item": "mm_armor:vest_6b_4_chestplate"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:chestplatedubok_6b_4_chestplate",
+    "count": 1
+  }
+}

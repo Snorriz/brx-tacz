@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:usahazmatuniform_helmet"
+    },
+    {
+      "item": "mm_armor:m_40gasmask_helmet"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:m_40gasmaskhazmat_helmet",
+    "count": 1
+  }
+}

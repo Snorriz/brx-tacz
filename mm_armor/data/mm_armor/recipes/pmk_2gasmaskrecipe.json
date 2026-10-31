@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "aba",
+    "ccc",
+    "def"
+  ],
+  "key": {
+    "a": {
+      "item": "minecraft:leather"
+    },
+    "b": {
+      "item": "minecraft:black_dye"
+    },
+    "c": {
+      "item": "minecraft:glass_pane"
+    },
+    "d": {
+      "item": "mm_armor:russianpattern"
+    },
+    "e": {
+      "item": "mm_armor:lightironplate"
+    },
+    "f": {
+      "item": "mm_armor:gasmaskfilter"
+    }
+  },
+  "result": {
+    "item": "mm_armor:pmk_2gasmask_helmet",
+    "count": 1
+  }
+}

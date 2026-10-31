@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "mm_armor:block/sandbags_2"
+    },
+    "facing=east": {
+      "model": "mm_armor:block/sandbags_2",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "mm_armor:block/sandbags_2",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "mm_armor:block/sandbags_2",
+      "y": 270
+    }
+  }
+}

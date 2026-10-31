@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "aaa",
+    "a a"
+  ],
+  "key": {
+    "a": {
+      "item": "mm_armor:desert_wz_93fabric"
+    }
+  },
+  "result": {
+    "item": "mm_armor:desertwz_93uniform_helmet",
+    "count": 1
+  }
+}

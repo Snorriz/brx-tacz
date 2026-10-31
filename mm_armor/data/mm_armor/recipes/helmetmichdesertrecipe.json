@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "ab ",
+    "cdc",
+    "cec"
+  ],
+  "key": {
+    "a": {
+      "item": "mm_armor:usapattern"
+    },
+    "b": {
+      "item": "minecraft:yellow_dye"
+    },
+    "c": {
+      "item": "mm_armor:lightironplate"
+    },
+    "d": {
+      "item": "mm_armor:helmetbaselv_2"
+    },
+    "e": {
+      "item": "minecraft:leather"
+    }
+  },
+  "result": {
+    "item": "mm_armor:helmetmichdesert_helmet",
+    "count": 1
+  }
+}

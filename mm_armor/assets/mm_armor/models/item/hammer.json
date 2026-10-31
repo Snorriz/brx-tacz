@@ -1,0 +1,7 @@
+{
+  "parent": "mm_armor:custom/hammer",
+  "textures": {
+    "1": "mm_armor:block/hammer",
+    "particle": "mm_armor:item/hammer_t"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "a a",
+    "bcb",
+    "aaa"
+  ],
+  "key": {
+    "a": {
+      "item": "minecraft:leather"
+    },
+    "b": {
+      "item": "minecraft:iron_nugget"
+    },
+    "c": {
+      "item": "mm_armor:russianpilotuniformblue_chestplate"
+    }
+  },
+  "result": {
+    "item": "mm_armor:russianpilotchestplatebluebelt_chestplate",
+    "count": 1
+  }
+}

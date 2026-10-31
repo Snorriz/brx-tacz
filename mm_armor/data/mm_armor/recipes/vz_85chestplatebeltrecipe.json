@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:vz_85uniform_chestplate"
+    },
+    {
+      "item": "mm_armor:cssrbelt_chestplate"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:vz_85chestplatebelt_chestplate",
+    "count": 1
+  }
+}

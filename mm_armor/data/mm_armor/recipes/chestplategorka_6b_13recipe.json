@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:gorkauniform_chestplate"
+    },
+    {
+      "item": "mm_armor:vest_6b_13emr_chestplate"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:chestplategorka_6b_13_chestplate",
+    "count": 1
+  }
+}

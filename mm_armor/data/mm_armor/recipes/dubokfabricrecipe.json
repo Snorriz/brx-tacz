@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "mm_armor:ukrainianpattern"
+    },
+    {
+      "item": "minecraft:brown_wool"
+    },
+    {
+      "item": "minecraft:black_wool"
+    },
+    {
+      "item": "minecraft:gray_concrete"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:dubokfabric",
+    "count": 3
+  }
+}

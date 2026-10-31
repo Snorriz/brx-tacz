@@ -1,0 +1,15 @@
+{
+  "parent": "mm_armor:custom/riot_shield",
+  "textures": {
+    "6": "mm_armor:block/riot_shield",
+    "particle": "mm_armor:item/riot_shield_t"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "blocking": 1
+      },
+      "model": "mm_armor:item/riotshields_0"
+    }
+  ]
+}

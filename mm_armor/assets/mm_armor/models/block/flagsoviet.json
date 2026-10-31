@@ -1,0 +1,9 @@
+{
+  "parent": "mm_armor:custom/flag_soviet",
+  "textures": {
+    "all": "mm_armor:block/flag_soviet",
+    "particle": "mm_armor:block/flag_soviet",
+    "8": "mm_armor:block/flag_soviet"
+  },
+  "render_type": "solid"
+}

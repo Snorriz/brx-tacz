@@ -1,0 +1,58 @@
+package net.mcreator.miklosmilitaryarmorr.init;
+
+import net.mcreator.miklosmilitaryarmorr.block.BarbedwireBlock;
+import net.mcreator.miklosmilitaryarmorr.block.BarbedwiredestroyedBlock;
+import net.mcreator.miklosmilitaryarmorr.block.CzechiaflagBlock;
+import net.mcreator.miklosmilitaryarmorr.block.DdrflagBlock;
+import net.mcreator.miklosmilitaryarmorr.block.DonetskflagBlock;
+import net.mcreator.miklosmilitaryarmorr.block.FlagcsouBlock;
+import net.mcreator.miklosmilitaryarmorr.block.FlagsovietBlock;
+import net.mcreator.miklosmilitaryarmorr.block.FlaguconBlock;
+import net.mcreator.miklosmilitaryarmorr.block.GermanyflagBlock;
+import net.mcreator.miklosmilitaryarmorr.block.IlmeniteOreBlock;
+import net.mcreator.miklosmilitaryarmorr.block.IlmeniteblockBlock;
+import net.mcreator.miklosmilitaryarmorr.block.PolishflagBlock;
+import net.mcreator.miklosmilitaryarmorr.block.RussianflagBlock;
+import net.mcreator.miklosmilitaryarmorr.block.Sandbags2Block;
+import net.mcreator.miklosmilitaryarmorr.block.Sandbags3Block;
+import net.mcreator.miklosmilitaryarmorr.block.Sandbags4Block;
+import net.mcreator.miklosmilitaryarmorr.block.Sandbags5Block;
+import net.mcreator.miklosmilitaryarmorr.block.Sandbags6Block;
+import net.mcreator.miklosmilitaryarmorr.block.SandbagsBlock;
+import net.mcreator.miklosmilitaryarmorr.block.TitaniumblockBlock;
+import net.mcreator.miklosmilitaryarmorr.block.UkrainianflagBlock;
+import net.mcreator.miklosmilitaryarmorr.block.UnflagBlock;
+import net.mcreator.miklosmilitaryarmorr.block.UsaflagBlock;
+import net.mcreator.miklosmilitaryarmorr.block.VdvflagBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
+
+public class MmArmorModBlocks {
+   public static final DeferredRegister<Block> REGISTRY = DeferredRegister.create(ForgeRegistries.BLOCKS, "mm_armor");
+   public static final RegistryObject<Block> RUSSIANFLAG = REGISTRY.register("russianflag", () -> new RussianflagBlock());
+   public static final RegistryObject<Block> VDVFLAG = REGISTRY.register("vdvflag", () -> new VdvflagBlock());
+   public static final RegistryObject<Block> FLAGSOVIET = REGISTRY.register("flagsoviet", () -> new FlagsovietBlock());
+   public static final RegistryObject<Block> DONETSKFLAG = REGISTRY.register("donetskflag", () -> new DonetskflagBlock());
+   public static final RegistryObject<Block> USAFLAG = REGISTRY.register("usaflag", () -> new UsaflagBlock());
+   public static final RegistryObject<Block> UNFLAG = REGISTRY.register("unflag", () -> new UnflagBlock());
+   public static final RegistryObject<Block> UKRAINIANFLAG = REGISTRY.register("ukrainianflag", () -> new UkrainianflagBlock());
+   public static final RegistryObject<Block> SANDBAGS = REGISTRY.register("sandbags", () -> new SandbagsBlock());
+   public static final RegistryObject<Block> SANDBAGS_2 = REGISTRY.register("sandbags_2", () -> new Sandbags2Block());
+   public static final RegistryObject<Block> SANDBAGS_3 = REGISTRY.register("sandbags_3", () -> new Sandbags3Block());
+   public static final RegistryObject<Block> SANDBAGS_4 = REGISTRY.register("sandbags_4", () -> new Sandbags4Block());
+   public static final RegistryObject<Block> SANDBAGS_5 = REGISTRY.register("sandbags_5", () -> new Sandbags5Block());
+   public static final RegistryObject<Block> SANDBAGS_6 = REGISTRY.register("sandbags_6", () -> new Sandbags6Block());
+   public static final RegistryObject<Block> ILMENITE_ORE = REGISTRY.register("ilmenite_ore", () -> new IlmeniteOreBlock());
+   public static final RegistryObject<Block> ILMENITEBLOCK = REGISTRY.register("ilmeniteblock", () -> new IlmeniteblockBlock());
+   public static final RegistryObject<Block> TITANIUMBLOCK = REGISTRY.register("titaniumblock", () -> new TitaniumblockBlock());
+   public static final RegistryObject<Block> BARBEDWIRE = REGISTRY.register("barbedwire", () -> new BarbedwireBlock());
+   public static final RegistryObject<Block> BARBEDWIREDESTROYED = REGISTRY.register("barbedwiredestroyed", () -> new BarbedwiredestroyedBlock());
+   public static final RegistryObject<Block> GERMANYFLAG = REGISTRY.register("germanyflag", () -> new GermanyflagBlock());
+   public static final RegistryObject<Block> DDRFLAG = REGISTRY.register("ddrflag", () -> new DdrflagBlock());
+   public static final RegistryObject<Block> POLISHFLAG = REGISTRY.register("polishflag", () -> new PolishflagBlock());
+   public static final RegistryObject<Block> CZECHIAFLAG = REGISTRY.register("czechiaflag", () -> new CzechiaflagBlock());
+   public static final RegistryObject<Block> FLAGCSOU = REGISTRY.register("flagcsou", () -> new FlagcsouBlock());
+   public static final RegistryObject<Block> FLAGUCON = REGISTRY.register("flagucon", () -> new FlaguconBlock());
+}

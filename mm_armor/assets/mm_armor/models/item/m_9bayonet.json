@@ -1,0 +1,7 @@
+{
+  "parent": "mm_armor:custom/m9_bayonet",
+  "textures": {
+    "17": "mm_armor:block/m9_bayonet",
+    "particle": "mm_armor:item/m9_bayonet_t"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "mm_armor:item/acu_chestplate_iba_vest_upgraded_t"
+  }
+}

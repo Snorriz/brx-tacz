@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:emruniform_chestplate"
+    },
+    {
+      "item": "mm_armor:redtape"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:emruniformredtape_chestplate",
+    "count": 1
+  }
+}

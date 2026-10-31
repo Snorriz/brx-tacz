@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:helmetpasgt_helmet"
+    },
+    {
+      "item": "mm_armor:dcufabric"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:pasgthelmetdcu_helmet",
+    "count": 1
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "mm_armor:custom/soviet_bayonet",
+  "textures": {
+    "34": "mm_armor:block/soviet_bayonet",
+    "particle": "mm_armor:item/soviet_bayonet_t"
+  }
+}

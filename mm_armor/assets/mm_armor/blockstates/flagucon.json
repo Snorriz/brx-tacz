@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "mm_armor:block/flagucon"
+    },
+    "facing=east": {
+      "model": "mm_armor:block/flagucon",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "mm_armor:block/flagucon",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "mm_armor:block/flagucon",
+      "y": 270
+    }
+  }
+}

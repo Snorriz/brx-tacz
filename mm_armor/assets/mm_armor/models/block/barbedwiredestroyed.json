@@ -1,0 +1,9 @@
+{
+  "parent": "mm_armor:custom/barbed_wire_destroyed",
+  "textures": {
+    "all": "mm_armor:block/barbed_wire_destroyed",
+    "particle": "mm_armor:block/barbed_wire_destroyed",
+    "12": "mm_armor:block/barbed_wire_destroyed"
+  },
+  "render_type": "solid"
+}

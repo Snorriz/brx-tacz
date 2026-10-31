@@ -1,0 +1,7 @@
+{
+  "parent": "mm_armor:custom/vest_plate1",
+  "textures": {
+    "3": "mm_armor:block/vest_plate1",
+    "particle": "mm_armor:item/vest_plate_t"
+  }
+}

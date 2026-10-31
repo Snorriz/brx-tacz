@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:desertcamouniform_chestplate"
+    },
+    {
+      "item": "mm_armor:pasgtdesertcamovest_chestplate"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:desertcamochestplatepasgtdesertcamo_chestplate",
+    "count": 1
+  }
+}

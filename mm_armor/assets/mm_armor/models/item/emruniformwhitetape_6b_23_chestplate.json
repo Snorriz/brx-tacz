@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "mm_armor:item/chestplate_emr_white_tape_6b23_t"
+  }
+}

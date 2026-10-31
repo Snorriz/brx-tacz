@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:adidasuniform_chestplate"
+    },
+    {
+      "item": "mm_armor:vest_6b_13tan_chestplate"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:adidaschestplate_6b_13_chestplate",
+    "count": 1
+  }
+}

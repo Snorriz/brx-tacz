@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:emruniform_chestplate"
+    },
+    {
+      "item": "mm_armor:ribbonsaintgeorge"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:emruniformribbon_chestplate",
+    "count": 1
+  }
+}

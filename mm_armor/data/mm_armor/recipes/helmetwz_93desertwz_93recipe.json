@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:helmetwz_93_helmet"
+    },
+    {
+      "item": "mm_armor:desert_wz_93fabric"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:helmetwz_93desertwz_93_helmet",
+    "count": 1
+  }
+}

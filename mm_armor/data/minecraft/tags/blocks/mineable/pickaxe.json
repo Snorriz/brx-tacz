@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "mm_armor:titaniumblock",
+    "mm_armor:ilmeniteblock",
+    "mm_armor:ilmenite_ore"
+  ]
+}

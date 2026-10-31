@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "mm_armor:item/helmet_k6_3_green_without_visor_t"
+  }
+}

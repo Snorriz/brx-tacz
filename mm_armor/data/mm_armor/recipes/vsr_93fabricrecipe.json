@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "mm_armor:russianpattern"
+    },
+    {
+      "item": "minecraft:brown_wool"
+    },
+    {
+      "item": "minecraft:yellow_wool"
+    },
+    {
+      "item": "minecraft:lime_wool"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:vsr_93fabric",
+    "count": 3
+  }
+}

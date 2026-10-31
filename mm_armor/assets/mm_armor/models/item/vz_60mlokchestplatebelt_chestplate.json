@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "mm_armor:item/vz_60_mlok_chestplate_belt_t"
+  }
+}

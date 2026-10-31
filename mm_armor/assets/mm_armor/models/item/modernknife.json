@@ -1,0 +1,7 @@
+{
+  "parent": "mm_armor:custom/knife",
+  "textures": {
+    "4": "mm_armor:block/knife",
+    "particle": "mm_armor:item/knife_t"
+  }
+}

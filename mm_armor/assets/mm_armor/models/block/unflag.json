@@ -1,0 +1,9 @@
+{
+  "parent": "mm_armor:custom/un_flag",
+  "textures": {
+    "all": "mm_armor:block/un_flag",
+    "particle": "mm_armor:block/un_flag",
+    "4": "mm_armor:block/un_flag"
+  },
+  "render_type": "solid"
+}

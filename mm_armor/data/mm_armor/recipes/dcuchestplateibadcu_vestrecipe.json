@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:dcuuniform_chestplate"
+    },
+    {
+      "item": "mm_armor:ibavestdcu_chestplate"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:dcuchestplateibadcu_vest_chestplate",
+    "count": 1
+  }
+}

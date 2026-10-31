@@ -1,0 +1,7 @@
+{
+  "parent": "mm_armor:custom/filter",
+  "textures": {
+    "5": "mm_armor:block/filter",
+    "particle": "mm_armor:item/filter_t"
+  }
+}

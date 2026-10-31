@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:ssh_68helmet_helmet"
+    },
+    {
+      "item": "mm_armor:vsr_93fabric"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:ssh_68helmetvsr_93_helmet",
+    "count": 1
+  }
+}

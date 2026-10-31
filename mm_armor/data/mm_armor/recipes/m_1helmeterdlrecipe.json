@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:m_1helmet_helmet"
+    },
+    {
+      "item": "mm_armor:erdlfabric"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:m_1helmeterdl_helmet",
+    "count": 1
+  }
+}

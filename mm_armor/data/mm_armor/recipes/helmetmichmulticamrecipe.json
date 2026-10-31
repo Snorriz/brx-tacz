@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:helmetmich_helmet"
+    },
+    {
+      "item": "mm_armor:multicamfabric"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:helmetmichmulticam_helmet",
+    "count": 1
+  }
+}

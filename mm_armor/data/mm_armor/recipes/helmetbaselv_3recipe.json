@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " a ",
+    "aba",
+    "c c"
+  ],
+  "key": {
+    "a": {
+      "item": "mm_armor:lightironplate"
+    },
+    "b": {
+      "item": "mm_armor:helmetbaselv_2"
+    },
+    "c": {
+      "item": "mm_armor:titaniumingot"
+    }
+  },
+  "result": {
+    "item": "mm_armor:helmetbaselv_3",
+    "count": 1
+  }
+}

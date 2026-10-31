@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "aaa",
+    "aba",
+    "aaa"
+  ],
+  "key": {
+    "a": {
+      "item": "minecraft:blue_dye"
+    },
+    "b": {
+      "item": "mm_armor:russianpattern"
+    }
+  },
+  "result": {
+    "item": "mm_armor:russianmcpattern",
+    "count": 1
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "parent": "mm_armor:custom/flag_ukrainian",
+  "textures": {
+    "all": "mm_armor:block/flag_ukrainian",
+    "particle": "mm_armor:block/flag_ukrainian",
+    "4": "mm_armor:block/flag_ukrainian"
+  },
+  "render_type": "solid"
+}

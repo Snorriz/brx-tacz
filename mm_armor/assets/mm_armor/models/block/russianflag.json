@@ -1,0 +1,9 @@
+{
+  "parent": "mm_armor:custom/flag_russian",
+  "textures": {
+    "all": "mm_armor:block/flag_russian",
+    "particle": "mm_armor:block/flag_russian",
+    "3": "mm_armor:block/flag_russian"
+  },
+  "render_type": "solid"
+}

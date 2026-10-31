@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:m_81woodlanduniform_chestplate"
+    },
+    {
+      "item": "mm_armor:ibavestm_81woodland_chestplate"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:chestplatem_81woodlandibavest_chestplate",
+    "count": 1
+  }
+}

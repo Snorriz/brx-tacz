@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "aaa",
+    "aaa"
+  ],
+  "key": {
+    "a": {
+      "item": "minecraft:yellow_wool"
+    }
+  },
+  "result": {
+    "item": "mm_armor:yellowtape",
+    "count": 1
+  }
+}

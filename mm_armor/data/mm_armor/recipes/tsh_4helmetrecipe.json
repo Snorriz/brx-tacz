@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "ab ",
+    "cdc",
+    "cec"
+  ],
+  "key": {
+    "a": {
+      "item": "mm_armor:sovietpattern"
+    },
+    "b": {
+      "item": "minecraft:black_dye"
+    },
+    "c": {
+      "item": "mm_armor:lightironplate"
+    },
+    "d": {
+      "item": "mm_armor:helmetbaselv_1"
+    },
+    "e": {
+      "item": "minecraft:leather"
+    }
+  },
+  "result": {
+    "item": "mm_armor:tsh_4helmet_helmet",
+    "count": 1
+  }
+}

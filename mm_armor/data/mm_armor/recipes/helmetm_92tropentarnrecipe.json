@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "mm_armor:helmetkaska_1m_helmet"
+    },
+    {
+      "item": "mm_armor:tropentarnfabric"
+    }
+  ],
+  "result": {
+    "item": "mm_armor:helmetm_92tropentarn_helmet",
+    "count": 1
+  }
+}

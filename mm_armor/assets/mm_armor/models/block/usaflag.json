@@ -1,0 +1,9 @@
+{
+  "parent": "mm_armor:custom/usa_flag",
+  "textures": {
+    "all": "mm_armor:block/usa_flag",
+    "particle": "mm_armor:block/usa_flag",
+    "4": "mm_armor:block/usa_flag"
+  },
+  "render_type": "solid"
+}
