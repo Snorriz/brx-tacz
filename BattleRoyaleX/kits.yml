@@ -6,13 +6,13 @@ Kits:
     permission: ''
     rarity: COMMON
     value: 0
-    helmet: 'MM_ARMOR:mm_armor:helmet_6b_47emrribbon_helmet : 1 :: name:&2Elmo EMR Ribbon'
-    chestplate: 'MM_ARMOR:mm_armor:vest_6b_45_chestplate : 1 :: name:&2Giubbotto 6B45'
-    leggings: 'MM_ARMOR:mm_armor:emruniformribbon_leggins : 1 :: name:&2Pantaloni EMR Ribbon'
-    boots: 'MM_ARMOR:mm_armor:desertboots_boots : 1 :: name:&2Scarpe Desert'
+    helmet: 'mm_armor:helmet_6b_47emrribbon_helmet : 1 :: name:&2Elmo EMR Ribbon'
+    chestplate: 'mm_armor:vest_6b_45_chestplate : 1 :: name:&2Giubbotto 6B45'
+    leggings: 'mm_armor:emruniformribbon_leggins : 1 :: name:&2Pantaloni EMR Ribbon'
+    boots: 'mm_armor:desertboots_boots : 1 :: name:&2Scarpe Desert'
     items:
     - 'TACZAMMO:tacz:9mm : 1 :: name:&eMunizioni 9mm'
-    - 'LRTACTICAL:lrtactical:melee : 1 :: name:&eColtello Tattico'
+    - 'lrtactical:melee : 1 :: name:&eColtello Tattico'
     - 'GOLDEN_APPLE : 1 :: name:&cMela d''Oro'
     description:
     - '&7Il tuo equipaggiamento base:'

@@ -628,7 +628,22 @@ public class BattleRoyaleX extends JavaPlugin {
 
       for (String var5 : var2.getConfigurationSection("Kits").getKeys(false)) {
          String var6 = "Kits." + var5 + ".";
-         ItemStack var7 = Utils.getItemStack(var2.getString(var6 + "item"), false, false);
+         String varItemTok = var2.getString(var6 + "item");
+         ItemStack var7 = Utils.getItemStack(varItemTok, false, false);
+         if (var7 == null && varItemTok != null && !varItemTok.isEmpty()) {
+            // Token failed to parse (missing mod/id unknown): fall back to a plain compass so the
+            // kit icon never crashes plugin enable.
+            Bukkit.getConsoleSender()
+               .sendMessage(
+                  Customization.getInstance().prefix
+                     + ChatColor.RED
+                     + "Un item in kits.yml nel kit: "
+                     + var5
+                     + " non e' corretto! il formato e': "
+                     + varItemTok
+               );
+            var7 = new ItemStack(Material.PAPER);
+         }
          String var8 = var2.getString(var6 + "permission");
          Rarity var9 = Rarity.valueOf(var2.getString(var6 + "rarity").toUpperCase());
          int var10 = var2.getInt(var6 + "value");
@@ -639,15 +654,15 @@ public class BattleRoyaleX extends JavaPlugin {
 
             try {
                ItemStack var14 = Utils.getItemStack(var13, false, true);
-               var11[var12] = var14;
-            } catch (Exception var22) {
+               var11[var12] = var14 != null ? var14 : new ItemStack(Material.AIR);
+            } catch (Throwable var22) {
                Bukkit.getConsoleSender()
                   .sendMessage(
                      Customization.getInstance().prefix
                         + ChatColor.RED
-                        + "One of the armors in kits.yml in the kit: "
+                        + "Un'armatura in kits.yml nel kit: "
                         + var5
-                        + " is incorrect! the armor has the following format: "
+                        + " non e' corretta! il formato e': "
                         + var13
                   );
                var22.printStackTrace();
@@ -658,16 +673,20 @@ public class BattleRoyaleX extends JavaPlugin {
 
          for (String var60 : var2.getStringList(var6 + "items")) {
             try {
-               ItemStackBuilder var15 = new ItemStackBuilder(Utils.getItemStack(var60, true, true));
+               ItemStack parsedItem = Utils.getItemStack(var60, true, true);
+               if (parsedItem == null) {
+                  throw new IllegalArgumentException("null item");
+               }
+               ItemStackBuilder var15 = new ItemStackBuilder(parsedItem);
                var53.add(var15.build());
-            } catch (Exception var21) {
+            } catch (Throwable var21) {
                Bukkit.getConsoleSender()
                   .sendMessage(
                      Customization.getInstance().prefix
                         + ChatColor.RED
-                        + "One of the items in kits.yml in the kit: "
+                        + "Un item in kits.yml nel kit: "
                         + var5
-                        + " is incorrect! the item has the following format: "
+                        + " non e' corretto! il formato e': "
                         + var60
                   );
             }
@@ -695,7 +714,7 @@ public class BattleRoyaleX extends JavaPlugin {
          this.kits.put(var5.toLowerCase(), new Kit(var5, var7, var8, var53, var11, var58, (List)var62, var65, var9, var10));
       }
 
-      this.kitsShop = new SmartInventory(ChatColor.BLUE + "Shop");
+      this.kitsShop = new SmartInventory(ChatColor.BLUE + "Negozio");
       FileConfiguration var23 = FilesManager.getInstance().getConfig("shop.yml");
       if (var23.getConfigurationSection("Normal-Mode-Kits") == null || var23.getConfigurationSection("Normal-Mode-Kits").getKeys(false).isEmpty()) {
          DefaultsManager.createDefaultKitsShop(var23);
@@ -741,7 +760,7 @@ public class BattleRoyaleX extends JavaPlugin {
                      .sendMessage(
                         Customization.getInstance().prefix
                            + ChatColor.RED
-                           + "One of the items in chest.yml could not be loaded (Maybe because of a missing dependency?), the item has the following format: "
+                           + "Un item in chest.yml non puo' essere caricato (forse manca una dipendenza?), il formato e': "
                            + var54
                      );
                } else {
@@ -754,7 +773,7 @@ public class BattleRoyaleX extends JavaPlugin {
                   .sendMessage(
                      Customization.getInstance().prefix
                         + ChatColor.RED
-                        + "One of the items in chest.yml is incorrect! the item has the following format: "
+                        + "Un item in chest.yml non e' corretto! il formato e': "
                         + var54
                   );
             }
@@ -785,7 +804,7 @@ public class BattleRoyaleX extends JavaPlugin {
                .sendMessage(
                   Customization.getInstance().prefix
                      + ChatColor.RED
-                     + "One of the items in shopping-station.yml is incorrect! the item has the following format: "
+                     + "Un item in shopping-station.yml non e' corretto! il formato e': "
                      + var39
                );
          }
@@ -797,19 +816,19 @@ public class BattleRoyaleX extends JavaPlugin {
       new MysteryBox();
       this.loadVehicles();
       Broadcaster.getInstance().loadMessages();
-      this.partyMenu = Bukkit.createInventory(null, 9, ChatColor.RED + "Select your option!");
+      this.partyMenu = Bukkit.createInventory(null, 9, ChatColor.RED + "Scegli un opzione!");
       Utils.cageInventory(this.partyMenu, true);
       this.partyMenu
          .setItem(
             2,
             new ItemStackBuilder(Material.BEACON)
-               .setName(ChatColor.GREEN + "Create")
-               .addLore(new String[]{ChatColor.GRAY + "Click to create a party!"})
+               .setName(ChatColor.GREEN + "Crea")
+               .addLore(new String[]{ChatColor.GRAY + "Clicca per creare un gruppo!"})
                .build()
          );
       this.partyMenu
          .setItem(
-            6, new ItemStackBuilder(Material.CHEST).setName(ChatColor.RED + "Join").addLore(new String[]{ChatColor.GRAY + "Click to join a party!"}).build()
+            6, new ItemStackBuilder(Material.CHEST).setName(ChatColor.RED + "Unisciti").addLore(new String[]{ChatColor.GRAY + "Clicca per unirti a un gruppo!"}).build()
          );
       this.parties = new ArrayList();
 
@@ -817,10 +836,10 @@ public class BattleRoyaleX extends JavaPlugin {
          var40.party = null;
       }
 
-      this.partySelector = new SmartInventory(ChatColor.BLUE + "Parties");
+      this.partySelector = new SmartInventory(ChatColor.BLUE + "Gruppi");
       this.partySelector.addInventory(ChatColor.RED + "List #1");
       this.partySelector.setItem(0, 49, (ItemStack)Customization.getInstance().items.get("Back"));
-      this.playerInviter = new SmartInventory(ChatColor.BLUE + "Invite Players");
+      this.playerInviter = new SmartInventory(ChatColor.BLUE + "Invita Giocatori");
       this.profileInventory = Bukkit.createInventory(null, 45, (String)Customization.getInstance().inventories.get("Profile-Inventory"));
       Utils.cageInventory(this.profileInventory, true);
       this.profileInventory.setItem(10, (ItemStack)Customization.getInstance().items.get("Stats"));

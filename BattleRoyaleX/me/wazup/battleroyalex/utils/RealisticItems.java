@@ -63,7 +63,7 @@ public class RealisticItems {
             this.chestAnimationEnabled = true;
          } catch (NoSuchMethodException | ClassNotFoundException | NoSuchFieldException | IllegalAccessException var8) {
             Bukkit.getConsoleSender()
-               .sendMessage(ChatColor.RED + "[Battle Royale X] The error below simply means that chest opening animations will not work on this server!");
+               .sendMessage(ChatColor.RED + "[TaxBattle] The error below simply means that chest opening animations will not work on this server!");
             var8.printStackTrace();
             this.chestAnimationEnabled = false;
          }

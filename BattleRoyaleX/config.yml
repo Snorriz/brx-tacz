@@ -181,7 +181,7 @@ Hotbar-Items:
 
 Executed-Commands:
   Player-Win: []
-  Arena-Countdown: [broadcast Battle Royale X Arena %arena% is about to start in %seconds% seconds!]
+  Arena-Countdown: [broadcast TaxBattle Arena %arena% is about to start in %seconds% seconds!]
   Arena-Start: []
   Arena-End: []
 
@@ -199,12 +199,12 @@ Scoreboard-Title-Animation:
   enabled: false
   interval: 8
   frames:
-  - '&b&lBattle Royale X'
-  - '&e&lBattle Royale X'
-  - '&b&lBattle Royale X'
-  - '&a&lBattle Royale X'
-  - '&b&lBattle Royale X'
-  - '&c&lBattle Royale X'
+  - '&b&lTaxBattle'
+  - '&e&lTaxBattle'
+  - '&b&lTaxBattle'
+  - '&a&lTaxBattle'
+  - '&b&lTaxBattle'
+  - '&c&lTaxBattle'
   - '&e&lB&b&lattle Royale X'
   - '&b&lB&e&la&b&lttle Royale X'
   - '&b&lBa&e&lt&b&ltle Royale X'
@@ -217,7 +217,7 @@ Scoreboard-Title-Animation:
   - '&b&lBattle Roy&e&la&b&lle X'
   - '&b&lBattle Roya&e&ll&b&le X'
   - '&b&lBattle Royal&e&le &b&lX'
-  - '&b&lBattle Royale &e&lX'
+  - '&b&lTaxBattle'
   
 Action-Bar-Enabled: true
 Titles-Enabled: true
@@ -232,7 +232,7 @@ Custom-Maps:
 
 Play-Again-Message:
   enabled: true
-  header: '&b&m---------&e Battle Royale X &b&m---------'
+  header: '&b&m---------&e TaxBattle &b&m---------'
   content:
     - ' '
     - '         &6Click to play again!'

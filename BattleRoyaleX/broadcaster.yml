@@ -1,6 +1,6 @@
 enabled: true
 send-interval-in-seconds: 60
-top-line: '&3&m----------&b Battle Royale X &3&m----------'
+top-line: '&3&m----------&b TaxBattle &3&m----------'
 bottom-line: '&3&m----------------------------------'
 Messages:
 - '&b- &eRemember that you can always create a party or join one to play with your friends!'
