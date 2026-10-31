@@ -32,7 +32,7 @@ public class PartyCommand extends SubCommand {
                + ChatColor.STRIKETHROUGH
                + "------------"
                + ChatColor.YELLOW
-               + " Battle Royale X "
+               + " TaxBattle "
                + ChatColor.RED
                + "Party Manager "
                + var11

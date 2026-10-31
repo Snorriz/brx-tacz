@@ -33,7 +33,19 @@ public class Kit extends Sellable {
    ) {
       this.name = (String)var1;
       this.permission = var3.equalsIgnoreCase("none") ? "" : var3;
+      // Rimuove gli item null (token non risolvibili: es. mod Forge assente) per evitare NPE a runtime
+      if (var4 != null) {
+         var4.removeIf(java.util.Objects::isNull);
+      }
       this.items = var4;
+      if (var5 == null) {
+         var5 = new ItemStack[4];
+      }
+      for (int ai = 0; ai < var5.length; ai++) {
+         if (var5[ai] == null) {
+            var5[ai] = new ItemStack(Material.AIR);
+         }
+      }
       this.armor = var5;
       this.effects = var6;
       this.commands = var7;
@@ -58,15 +70,14 @@ public class Kit extends Sellable {
       String[] var16 = new String[]{"Boots", "Leggings", "Chestplate", "Helmet"};
 
       for (int var17 = var16.length - 1; var17 > -1; var17--) {
+         ItemStack armorPiece = var17 < var5.length ? var5[var17] : null;
+         String armorName = armorPiece == null || armorPiece.getType().equals(Material.AIR)
+            ? (String)var11.lores.get("No-Items")
+            : armorPiece.getType().name().replace("_", " ");
          var12.addLore(
             new String[]{
                ((String)var11.lores.get(var16[var17]))
-                  .replace(
-                     "%" + var16[var17].toLowerCase() + "%",
-                     (CharSequence)(var5[var17].getType().equals(Material.AIR)
-                        ? (CharSequence)var11.lores.get("No-Items")
-                        : var5[var17].getType().name().replace("_", " "))
-                  )
+                  .replace("%" + var16[var17].toLowerCase() + "%", (CharSequence)armorName)
             }
          );
       }
@@ -74,7 +85,9 @@ public class Kit extends Sellable {
       var12.addLore(new String[]{" ", (String)var11.lores.get("Items")});
 
       for (ItemStack var15 : var4) {
-         var12.addLore(new String[]{((String)var11.lores.get("Item")).replace("%item%", var15.getType().name() + " x" + var15.getAmount())});
+         if (var15 != null) {
+            var12.addLore(new String[]{((String)var11.lores.get("Item")).replace("%item%", var15.getType().name() + " x" + var15.getAmount())});
+         }
       }
 
       if (var4.isEmpty()) {
