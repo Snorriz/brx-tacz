@@ -747,6 +747,101 @@ public class Utils {
    }
 
    /**
+    * LR Tactical (lrtactical) melee support. The mod registers ONE generic item
+    * ("lrtactical:melee", class MeleeItem); the actual weapon (karambit, dagger, baseball_bat...)
+    * is selected by the NBT string tag "MeleeWeaponId" (see IMeleeWeapon.ID_TAG / setId in the
+    * mod sources: stack.getOrCreateTag().putString("MeleeWeaponId", id.toString())).
+    * A bare melee stack without that tag resolves to an EMPTY index -> no damage, no model,
+    * so we must stamp the tag ourselves. Accepted token segments:
+    *   [LRTACTICAL, lrtactical, melee, karambit]   (explicit sub-id)
+    *   [LRTACTICAL, lrtactical, karambit]          (weapon id used directly as path)
+    * Returns null when the server has no lrtactical loaded (caller falls back to the plain
+    * registry lookup for backward compatibility).
+    */
+   public static ItemStack getLrTacticalMeleeStack(String[] parts) {
+      if (parts == null || parts.length < 3) {
+         return null;
+      }
+      String path = parts[2];
+      String meleeId = parts.length >= 4 ? parts[3] : path;
+      // [PREFIX, lrtactical, melee] -> no weapon chosen: default to karambit (the mod's own
+      // creative-tab stack does exactly this, see ModItems.java line ~90)
+      if ("melee".equalsIgnoreCase(meleeId)) {
+         meleeId = "karambit";
+      }
+      try {
+         ClassLoader serverCl = Bukkit.getServer().getClass().getClassLoader();
+         Object rl = createResourceLocation("lrtactical", "melee");
+         Class<?> registriesClass = loadTaCZClass(serverCl, "net.minecraftforge.registries.ForgeRegistries");
+         Object itemRegistry = registriesClass.getField("ITEMS").get(null);
+         Object mcItem = null;
+         try {
+            mcItem = itemRegistry.getClass().getMethod("getValue", Object.class).invoke(itemRegistry, rl);
+         } catch (NoSuchMethodException nsme) {
+            mcItem = itemRegistry.getClass().getMethod("getValue", rl.getClass()).invoke(itemRegistry, rl);
+         }
+         if (mcItem == null || isNmsAirItem(mcItem)) {
+            return null; // lrtactical not installed -> let the generic parser handle it
+         }
+         // validate the requested weapon id against the mod's melee index (karambit/dagger/baseball_bat)
+         try {
+            Class<?> apiClass = loadTaCZClass(serverCl, "me.xjqsh.lrtactical.api.LrTacticalAPI");
+            Class<?> amClass = loadTaCZClass(serverCl, "me.xjqsh.lrtactical.resource.CommonAssetsManager");
+            Object mgr = apiClass.getMethod("getMeleeIndexes").invoke(null);
+            boolean known = false;
+            for (Object idx : (Collection<?>)mgr) {
+               Object id = idx.getClass().getMethod("getId").invoke(idx);
+               if (id != null && meleeId.equalsIgnoreCase(id.toString())) {
+                  known = true;
+                  break;
+               }
+            }
+            if (!known) {
+               error("Arma mischia lrtactical sconosciuta \"" + meleeId + "\" (disponibili: karambit, dagger, baseball_bat)");
+               return null;
+            }
+         } catch (Throwable ignored) {
+            // API not reachable: keep going, worst case the client shows a missing index
+         }
+         Class<?> itemClass = loadTaCZClass(serverCl, "net.minecraft.world.item.Item");
+         Class<?> nmsItemStackClass = loadTaCZClass(serverCl, "net.minecraft.world.item.ItemStack");
+         Object nmsStack;
+         try {
+            nmsStack = nmsItemStackClass.getConstructor(itemClass, int.class).newInstance(mcItem, 1);
+         } catch (NoSuchMethodException nsme2) {
+            nmsStack = nmsItemStackClass.getConstructor(itemClass).newInstance(mcItem);
+         }
+         // stamp the weapon id exactly like MeleeWeaponIndex#createItemStack does
+         Object tag = nmsStack.getClass().getMethod("getOrCreateTag").invoke(nmsStack);
+         Class<?> compoundClass = tag.getClass();
+         Method putString = null;
+         for (Method m : compoundClass.getMethods()) {
+            if ((m.getName().equals("putString") || m.getName().equals("m_128359_"))
+               && m.getParameterCount() == 2
+               && m.getParameterTypes()[0] == String.class
+               && m.getParameterTypes()[1] == String.class) {
+               putString = m;
+               break;
+            }
+         }
+         if (putString == null) {
+            error("Impossibile scrivere il tag MeleeWeaponId su questo server");
+            return null;
+         }
+         putString.invoke(tag, "MeleeWeaponId", "lrtactical:" + meleeId.toLowerCase());
+         ItemStack result = asBukkitItemStack(nmsStack);
+         if (result == null || result.getType().equals(Material.AIR)) {
+            error("Impossibile convertire l'item melee lrtactical in un ItemStack Bukkit");
+            return null;
+         }
+         return result;
+      } catch (Throwable t) {
+         error("Impossibile generare la mischia lrtactical \"" + meleeId + "\": " + t);
+         return null;
+      }
+   }
+
+   /**
     * Creates a Bukkit ItemStack from any Forge-mod registry id using pure reflection on
     * Forge's Registries.ITEM + Item#asItemStack(), bridged to Bukkit through CraftItemStack
     * (see asBukkitItemStack). Works on ArcLight 1.20.1 (Forge 47.x) with no compile-time
@@ -756,6 +851,13 @@ public class Utils {
    public static ItemStack getForgeModItemStack(String[] parts) {
       if (parts == null || parts.length < 2) {
          return null;
+      }
+      // LR Tactical melee items share one registry entry and need their NBT id stamped
+      if (parts.length >= 3 && forgeNamespaceAlias(parts[1]).equals("lrtactical") && "melee".equalsIgnoreCase(parts[2])) {
+         ItemStack lr = getLrTacticalMeleeStack(parts);
+         if (lr != null) {
+            return lr;
+         }
       }
       String namespace = null;
       String path = null;

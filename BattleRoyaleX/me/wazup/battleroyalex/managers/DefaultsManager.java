@@ -28,7 +28,7 @@ public class DefaultsManager {
       HashMap<String, String> var1 = new HashMap<>();
       HashMap<String, List<String>> var2 = new HashMap<>();
       HashMap<String, List<String>> var3 = new HashMap<>();
-      var1.put("TaxBattle", "TACZ:tacz:glock_17 : 1, false, COMMON, 0, MM_ARMOR:mm_armor:helmet_6b_47emrribbon_helmet, MM_ARMOR:mm_armor:vest_6b_45_chestplate, MM_ARMOR:mm_armor:emruniformribbon_leggins, MM_ARMOR:mm_armor:desertboots_boots");
+      var1.put("TaxBattle", "TACZ:tacz:glock_17 : 1, false, COMMON, 0, MM_ARMOR:mm_armor:helmet_6b_47emrribbon_helmet, MM_ARMOR:mm_armor:vest_6b_45_chestplate, MM_ARMOR:mm_armor:emruniformribbon_leggings, MM_ARMOR:mm_armor:desertboots_boots");
       var2.put("TaxBattle", Arrays.asList(new String[]{
          "TACZ:tacz:glock_17 : 1 :: name:&eGlock 17",
          "TACZAMMO:tacz:9mm : 1 :: name:&eMunizioni 9mm",

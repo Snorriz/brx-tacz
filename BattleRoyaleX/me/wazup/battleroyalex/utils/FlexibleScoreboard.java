@@ -25,9 +25,21 @@ public class FlexibleScoreboard {
    // values applied to the "%player%"-anchored line. See apply(Player).
    private final java.util.HashMap<String, String> globalValues = new java.util.HashMap<>();
    private final java.util.HashMap<String, java.util.HashMap<String, String>> playerValues = new java.util.HashMap<>();
+   // TaxBattle: keeps a handle on the per-player clone boards created by apply(Player), so that
+   // update()/setName() (global placeholders like %storm_timer%, %alive% and the animated
+   // gradient title) are propagated to the boards players actually display. Without this the
+   // shared board updates but every personal clone stays frozen at its creation values.
+   private final java.util.HashMap<String, Scoreboard> personalBoards = new java.util.HashMap<>();
 
    public void setPlaceholderValue(String ph, String value) {
       this.globalValues.put(ph, value);
+   }
+
+   /** Re-applies the given player's personal clone with the current global placeholder values. */
+   private void refreshPersonal(Player player) {
+      if (player != null && player.isOnline() && this.personalBoards.containsKey(player.getName())) {
+         this.apply(player);
+      }
    }
 
    public void setPlayerPlaceholder(String playerName, String ph, String value) {
@@ -104,6 +116,18 @@ public class FlexibleScoreboard {
          var6 = this.format(var6);
          this.objective.getScore(var6).setScore(var4);
          var5.currentText = var6;
+         // TaxBattle fix: propagate the new global value to every personal clone currently shown,
+         // otherwise %storm_timer% / %alive% / %timer% stay frozen on players' boards.
+         if (!this.personalBoards.isEmpty()) {
+            for (String pname : new java.util.ArrayList<>(this.personalBoards.keySet())) {
+               Player p = Bukkit.getServer().getPlayer(pname);
+               if (p != null && p.isOnline()) {
+                  this.apply(p);
+               } else {
+                  this.personalBoards.remove(pname);
+               }
+            }
+         }
       }
    }
 
@@ -212,6 +236,24 @@ public class FlexibleScoreboard {
 
    public void setName(String var1) {
       this.objective.setDisplayName(hexToLegacy(var1));
+      // TaxBattle fix: personal clones have their own Objective; the animated gradient title set
+      // on the shared board must be pushed to every clone currently displayed, otherwise players
+      // keep seeing the static default title (the header animation "doesn't work" in game).
+      if (!this.personalBoards.isEmpty()) {
+         for (java.util.Map.Entry<String, Scoreboard> e : new java.util.HashMap<>(this.personalBoards).entrySet()) {
+            Objective ob = e.getValue().getObjective(DisplaySlot.SIDEBAR);
+            if (ob != null) {
+               ob.setDisplayName(hexToLegacy(var1));
+            } else {
+               Player p = Bukkit.getServer().getPlayer(e.getKey());
+               if (p != null && p.isOnline()) {
+                  this.apply(p);
+               } else {
+                  this.personalBoards.remove(e.getKey());
+               }
+            }
+         }
+      }
    }
 
    /** Replaces the display name every tick (used by the animated TaxPhobia gradient header). */
