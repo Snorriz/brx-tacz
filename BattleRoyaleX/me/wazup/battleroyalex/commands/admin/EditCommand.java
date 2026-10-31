@@ -24,7 +24,7 @@ public class EditCommand extends SubCommand {
          } else {
             Arena var7 = (Arena)var1.arenas.get(var6);
             if (var7.editor == null) {
-               var5.sendMessage(var2.prefix + "Could not open arena editor gui. Arena name is probably too long for GUI inventory");
+               var5.sendMessage(var2.prefix + "Impossibile aprire la GUI editor dell'arena: probabilmente il nome e' troppo lungo");
                return true;
             } else {
                var5.openInventory(var7.editor);

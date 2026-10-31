@@ -225,7 +225,7 @@ public class DefaultsManager {
                var0.set("Loadout-Items.Items", var1);
             }
          } catch (Exception var4) {
-            Bukkit.getConsoleSender().sendMessage(Customization.getInstance().prefix + ChatColor.RED + "Could not manually add QualityArmory guns to shop.yml");
+            Bukkit.getConsoleSender().sendMessage(Customization.getInstance().prefix + ChatColor.RED + "Impossibile aggiungere manualmente le pistole QualityArmory a shop.yml");
             var4.printStackTrace();
          }
       }

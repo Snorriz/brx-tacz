@@ -666,7 +666,7 @@ public class Utils {
                return null;
             }
          } catch (IllegalAccessException | InvocationTargetException | InstantiationException var7) {
-            error("Could not generate TaCZ item for \"" + rawToken + "\"");
+            error("Impossibile generare l'item TaCZ per \"" + rawToken + "\"");
             var7.printStackTrace();
             return null;
          }

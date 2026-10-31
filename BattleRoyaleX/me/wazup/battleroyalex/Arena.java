@@ -320,7 +320,7 @@ public class Arena {
       } catch (Exception var15) {
          Bukkit.getConsoleSender()
             .sendMessage(
-               Customization.getInstance().prefix + "Could not create arena editor gui. Arena name is too long for gui inventory or something else went wrong"
+               Customization.getInstance().prefix + "Impossibile creare la GUI editor dell'arena: nome troppo lungo o altro errore"
             );
       }
    }

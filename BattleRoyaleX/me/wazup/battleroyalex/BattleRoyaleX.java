@@ -211,7 +211,7 @@ public class BattleRoyaleX extends JavaPlugin {
          try {
             this.weaponMechanicsAPI = Class.forName("me.deecaad.weaponmechanics.WeaponMechanicsAPI");
          } catch (ClassNotFoundException var6) {
-            Utils.error("Could not hook to WeaponMechanicsAPI");
+            Utils.error("Hook verso WeaponMechanicsAPI fallito");
             var6.printStackTrace();
          }
       }
@@ -233,7 +233,7 @@ public class BattleRoyaleX extends JavaPlugin {
             this.mmoItems = Class.forName("net.Indyuce.mmoitems.MMOItems");
             this.mmoItemsInstance = this.mmoItems.getField("plugin").get(null);
          } catch (NoSuchFieldException | ClassNotFoundException | IllegalAccessException var5) {
-            Utils.error("Could not hook to MMOItems");
+            Utils.error("Hook verso MMOItems fallito");
             var5.printStackTrace();
          }
       }
@@ -323,10 +323,15 @@ public class BattleRoyaleX extends JavaPlugin {
                   this.index = 0;
                }
 
-               for (String var4 : (List<String>)BattleRoyaleX.this.lobbyPlayers.clone()) {
-                  PlayerData var5 = (PlayerData)BattleRoyaleX.this.playerData.get(var4);
-                  if (var5.lobbyScoreboard != null) {
-                     var5.lobbyScoreboard.setName(var1x);
+               // TaxBattle: il titolo gradient (\"TaxPhobia\") supera il limite di 32 caratteri
+               // dell'oggettivo sidebar usato dal tab-list/lobby scoreboard: lo applichiamo solo
+               // alle board che lo supportano (arena/in-game), la lobby tiene il titolo statico.
+               if (me.wazup.battleroyalex.utils.FlexibleScoreboard.visibleLength(var1x) <= 32) {
+                  for (String var4 : (List<String>)BattleRoyaleX.this.lobbyPlayers.clone()) {
+                     PlayerData var5 = (PlayerData)BattleRoyaleX.this.playerData.get(var4);
+                     if (var5.lobbyScoreboard != null) {
+                        var5.lobbyScoreboard.setName(var1x);
+                     }
                   }
                }
 

@@ -37,7 +37,7 @@ public class WinnersMapRenderer extends MapRenderer {
          int var2 = this.texts.isEmpty() ? 128 : 64;
          this.image = ImageIO.read(new URL(var1)).getScaledInstance(var2, var2, 4);
       } catch (Exception var3) {
-         Utils.error("Could not load your custom map image (in config.yml) with the url: " + var1 + ". Try a different image or a different hosting site.");
+         Utils.error("Impossibile caricare l'immagine della mappa custom (config.yml) con l'url: " + var1 + ". Prova un'altra immagine o un altro sito di hosting.");
       }
    }
 

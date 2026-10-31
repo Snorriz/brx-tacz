@@ -45,7 +45,7 @@ public class LoadoutsManager {
                      .sendMessage(
                         Customization.getInstance().prefix
                            + ChatColor.RED
-                           + "One of the items in shop.yml Loadout-Items could not be loaded (Maybe because of a missing dependency?), the item has the following format: "
+                           + "Un item in shop.yml Loadout-Items non puo essere caricato (forse dipendenza mancante?), il formato e': "
                            + var9
                      );
                } else {
@@ -55,7 +55,7 @@ public class LoadoutsManager {
                   var7++;
                }
             } catch (Exception var12) {
-               Bukkit.getConsoleSender().sendMessage(Customization.getInstance().prefix + ChatColor.RED + "Could not load loadout item " + var9);
+               Bukkit.getConsoleSender().sendMessage(Customization.getInstance().prefix + ChatColor.RED + "Impossibile caricare l'item loadout " + var9);
                var12.printStackTrace();
             }
          }

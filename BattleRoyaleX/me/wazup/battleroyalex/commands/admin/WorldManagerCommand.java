@@ -32,7 +32,7 @@ public class WorldManagerCommand extends SubCommand {
                + ChatColor.STRIKETHROUGH
                + "------------"
                + ChatColor.YELLOW
-               + " Battle Royale X "
+               + " TaxBattle "
                + ChatColor.RED
                + "WorldManager "
                + var14

@@ -104,7 +104,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                + ChatColor.STRIKETHROUGH
                + "-------------"
                + ChatColor.YELLOW
-               + " Battle Royale X "
+               + " TaxBattle "
                + ChatColor.GRAY
                + "["
                + var5.getDescription().getVersion()

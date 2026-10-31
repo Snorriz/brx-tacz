@@ -196,29 +196,26 @@ Saving-Task:
   Save-Every-Minutes: 10
 
 Scoreboard-Title-Animation:
-  enabled: false
-  interval: 8
+  enabled: true
+  interval: 3
   frames:
-  - '&b&lTaxBattle'
-  - '&e&lTaxBattle'
-  - '&b&lTaxBattle'
-  - '&a&lTaxBattle'
-  - '&b&lTaxBattle'
-  - '&c&lTaxBattle'
-  - '&e&lB&b&lattle Royale X'
-  - '&b&lB&e&la&b&lttle Royale X'
-  - '&b&lBa&e&lt&b&ltle Royale X'
-  - '&b&lBat&e&lt&b&lle Royale X'
-  - '&b&lBatt&e&ll&b&le Royale X'
-  - '&b&lBattl&e&le &b&lRoyale X'
-  - '&b&lBattle &e&lR&b&loyale X'
-  - '&b&lBattle R&e&lo&b&lyale X'
-  - '&b&lBattle Ro&e&ly&b&lale X'
-  - '&b&lBattle Roy&e&la&b&lle X'
-  - '&b&lBattle Roya&e&ll&b&le X'
-  - '&b&lBattle Royal&e&le &b&lX'
-  - '&b&lTaxBattle'
-  
+  - '&#9900FFTaxP&#B039BFh&#C87380o&#DFAC40b&#F6E500ia'
+  - '&#9900FFTaxPh&#B039BFo&#C87380b&#DFAC40i&#F6E500a'
+  - '&#B039BFT&#9900FFaxPho&#B039BFb&#C87380i&#DFAC40a'
+  - '&#C87380T&#B039BFa&#9900FFxPhob&#B039BFi&#C87380a'
+  - '&#DFAC40T&#C87380a&#B039BFx&#9900FFPhobi&#B039BFa'
+  - '&#F6E500T&#DFAC40a&#C87380x&#B039BFP&#9900FFhobia'
+  - '&#F6E500Ta&#DFAC40x&#C87380P&#B039BFh&#9900FFobia'
+  - '&#F6E500Tax&#DFAC40P&#C87380h&#B039BFo&#9900FFbia'
+  - '&#F6E500TaxP&#DFAC40h&#C87380o&#B039BFb&#9900FFia'
+  - '&#F6E500TaxPh&#DFAC40o&#C87380b&#B039BFi&#9900FFa'
+  - '&#DFAC40T&#F6E500axPho&#DFAC40b&#C87380i&#B039BFa'
+  - '&#C87380T&#DFAC40a&#F6E500xPhob&#DFAC40i&#C87380a'
+  - '&#B039BFT&#C87380a&#DFAC40x&#F6E500Phobi&#DFAC40a'
+  - '&#9900FFT&#B039BFa&#C87380x&#DFAC40P&#F6E500hobia'
+  - '&#9900FFTa&#B039BFx&#C87380P&#DFAC40h&#F6E500obia'
+  - '&#9900FFTax&#B039BFP&#C87380h&#DFAC40o&#F6E500bia'
+
 Action-Bar-Enabled: true
 Titles-Enabled: true
  

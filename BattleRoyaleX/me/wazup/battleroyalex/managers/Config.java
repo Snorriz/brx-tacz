@@ -221,7 +221,7 @@ public class Config {
       this.scoreboardTitleAnimationFrames = new ArrayList();
 
       for (String var21 : var1.getStringList("Scoreboard-Title-Animation.frames")) {
-         this.scoreboardTitleAnimationFrames.add(Utils.colorize(var21));
+         this.scoreboardTitleAnimationFrames.add(me.wazup.battleroyalex.utils.FlexibleScoreboard.hexToLegacy(Utils.colorize(var21)));
       }
 
       if (this.scoreboardTitleAnimationFrames.size() < 2) {

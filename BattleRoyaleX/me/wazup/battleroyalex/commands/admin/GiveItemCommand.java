@@ -22,7 +22,7 @@ public class GiveItemCommand extends SubCommand {
 
       Player var5 = Bukkit.getPlayer(var4[1]);
       if (var5 == null) {
-         var3.sendMessage(var2.prefix + "Could not find the player " + var4[1]);
+         var3.sendMessage(var2.prefix + "Giocatore non trovato: " + var4[1]);
          return true;
       }
 
@@ -40,7 +40,7 @@ public class GiveItemCommand extends SubCommand {
       }
 
       if (var10 == null) {
-         var3.sendMessage(var2.prefix + "Could not parse the item!");
+         var3.sendMessage(var2.prefix + "Impossibile interpretare l'item!");
          return true;
       }
 

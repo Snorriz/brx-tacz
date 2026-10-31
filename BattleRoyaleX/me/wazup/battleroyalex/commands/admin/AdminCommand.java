@@ -22,7 +22,7 @@ public class AdminCommand extends SubCommand {
             + ChatColor.STRIKETHROUGH
             + "-------"
             + ChatColor.YELLOW
-            + " Battle Royale X "
+            + " TaxBattle "
             + ChatColor.RED
             + "Admin"
             + ChatColor.GRAY

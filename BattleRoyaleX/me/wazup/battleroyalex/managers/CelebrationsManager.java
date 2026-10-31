@@ -59,7 +59,7 @@ public class CelebrationsManager {
             } catch (Exception var12) {
                Bukkit.getConsoleSender()
                   .sendMessage(
-                     Customization.getInstance().prefix + ChatColor.RED + "Could not load celebration " + var3 + ", please check file for incorrect input"
+                     Customization.getInstance().prefix + ChatColor.RED + "Impossibile caricare la celebrazione " + var3 + ", controlla il file per input errato"
                   );
                var12.printStackTrace();
             }

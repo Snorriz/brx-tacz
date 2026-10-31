@@ -148,7 +148,7 @@ public class RecipeManager {
                customRecipes.put(var7, var43);
                Bukkit.addRecipe((Recipe)var34);
             } catch (Exception var20) {
-               Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Battle Royal X] Could not load the custom recipe (custom-recipes.yml) named " + var26);
+               Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[TaxBattle] Impossibile caricare la ricetta custom (custom-recipes.yml) denominata " + var26);
                var20.printStackTrace();
             }
          }
